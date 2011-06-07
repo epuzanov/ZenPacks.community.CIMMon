@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<configure xmlns="http://namespaces.zope.org/zope"
+           xmlns:browser="http://namespaces.zope.org/browser"
+           xmlns:zcml="http://namespaces.zope.org/zcml">
+
+    <configure zcml:condition="installed Products.Zuul">
+
+        <adapter factory="ZenPacks.community.deviceAdvDetail.info.MemoryModuleInfo"
+                 for=".CIM_PhysicalMemory.CIM_PhysicalMemory"
+                 provides="ZenPacks.community.deviceAdvDetail.interfaces.IMemoryModuleInfo"
+                 />
+
+        <adapter factory="ZenPacks.community.deviceAdvDetail.info.HardDiskInfo"
+                 for=".CIM_DiskDrive.CIM_DiskDrive"
+                 provides="ZenPacks.community.deviceAdvDetail.interfaces.IHardDiskInfo"
+                 />
+
+        <adapter factory="ZenPacks.community.deviceAdvDetail.info.LogicalDiskInfo"
+                 for=".CIM_StorageVolume.CIM_StorageVolume"
+                 provides="ZenPacks.community.deviceAdvDetail.interfaces.ILogicalDiskInfo"
+                 />
+
+        <adapter factory="ZenPacks.community.deviceAdvDetail.info.FanInfo"
+                 for=".CIM_Fan.CIM_Fan"
+                 provides="ZenPacks.community.deviceAdvDetail.interfaces.IFanInfo"
+                 />
+
+        <adapter factory="ZenPacks.community.deviceAdvDetail.info.FanInfo"
+                 for=".CIM_Tachometer.CIM_Tachometer"
+                 provides="ZenPacks.community.deviceAdvDetail.interfaces.IFanInfo"
+                 />
+
+        <adapter factory="ZenPacks.community.deviceAdvDetail.info.TemperatureSensorInfo"
+                 for=".CIM_TemperatureSensor.CIM_TemperatureSensor"
+                 provides="ZenPacks.community.deviceAdvDetail.interfaces.ITemperatureSensorInfo"
+                 />
+
+        <adapter factory="ZenPacks.community.deviceAdvDetail.info.PowerSupplyInfo"
+                 for=".CIM_PowerSupply.CIM_PowerSupply"
+                 provides="ZenPacks.community.deviceAdvDetail.interfaces.IPowerSupplyInfo"
+                 />
+
+    </configure>
+</configure>
