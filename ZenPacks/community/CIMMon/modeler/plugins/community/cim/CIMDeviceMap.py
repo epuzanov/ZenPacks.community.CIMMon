@@ -13,9 +13,9 @@ __doc__="""DeviceMap
 DeviceMap maps CIM_ComputerSystem and CIM_OperationSystem classes to get hw and
 os products.
 
-$Id: DeviceMap.py,v 1.0 2011/06/07 20:29:42 egor Exp $"""
+$Id: DeviceMap.py,v 1.1 2011/06/10 01:11:15 egor Exp $"""
 
-__version__ = '$Revision: 1.0 $'[11:-2]
+__version__ = '$Revision: 1.1 $'[11:-2]
 
 
 from ZenPacks.community.SQLDataSource.SQLPlugin import SQLPlugin
@@ -60,13 +60,13 @@ class CIMDeviceMap(SQLPlugin):
                 ),
             "CIM_OperatingSystem":
                 (
-                    "SELECT Name,TotalVisibleMemorySize,SizeStoredInPagingFiles FROM CIM_OperatingSystem",
+                    "SELECT Name,TotalVirtualMemorySize,TotalVisibleMemorySize FROM CIM_OperatingSystem",
                     None,
                     cs,
                     {
                         'Name':'setOSProductKey',
                         'TotalVisibleMemorySize':'_totalMemory',
-                        'SizeStoredInPagingFiles':'_totalSwap',
+                        'TotalVirtualMemorySize':'_totalSwap',
                     },
                 ),
             }

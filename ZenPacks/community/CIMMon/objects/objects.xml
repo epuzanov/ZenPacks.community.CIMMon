@@ -93,7 +93,7 @@ True
 0
 </property>
 <property type="string" id="eventClass" mode="w" >
-/Status/CIMFan
+/Status/CIM_Fan
 </property>
 </object>
 </tomanycont>
@@ -150,7 +150,7 @@ True
 0
 </property>
 <property type="string" id="eventClass" mode="w" >
-/Status/CIMPhysicalMemory
+/Status/CIM_PhysicalMemory
 </property>
 </object>
 </tomanycont>
@@ -207,8 +207,156 @@ True
 0
 </property>
 <property type="string" id="eventClass" mode="w" >
-/Status/CIMPowerSupply
+/Status/CIM_PowerSupply
 </property>
+</object>
+</tomanycont>
+</object>
+<!-- ('', 'zport', 'dmd', 'Devices', 'CIM', 'rrdTemplates', 'CIM_Processor') -->
+<object id='/zport/dmd/Devices/CIM/rrdTemplates/CIM_Processor' module='Products.ZenModel.RRDTemplate' class='RRDTemplate'>
+<property type="text" id="description" mode="w" >
+CIM_Processor Template
+</property>
+<property type="string" id="targetPythonClass" mode="w" >
+Products.ZenModel.Device
+</property>
+<tomanycont id='datasources'>
+<object id='CIM_Processor' module='ZenPacks.community.SQLDataSource.datasources.SQLDataSource' class='SQLDataSource'>
+<property select_variable="sourcetypes" type="selection" id="sourcetype" mode="w" >
+SQL
+</property>
+<property type="boolean" id="enabled" mode="w" >
+True
+</property>
+<property type="int" id="severity" mode="w" >
+3
+</property>
+<property type="int" id="cycletime" mode="w" >
+300
+</property>
+<property type="string" id="cs" mode="w" >
+${dev/zCIMConnectionString},user='${dev/zWinUser}',password='${dev/zWinPassword}',host='${dev/manageIp}',namespace='root/cimv2'
+</property>
+<property type="string" id="sql" mode="w" >
+SELECT LoadPercentage FROM CIM_Processor
+</property>
+<tomanycont id='datapoints'>
+<object id='LoadPercentage_avg' module='Products.ZenModel.RRDDataPoint' class='RRDDataPoint'>
+<property select_variable="rrdtypes" type="selection" id="rrdtype" mode="w" >
+GAUGE
+</property>
+<property type="boolean" id="isrow" mode="w" >
+True
+</property>
+<tomanycont id='aliases'>
+<object id='LoadPercentage' module='Products.ZenModel.RRDDataPointAlias' class='RRDDataPointAlias'>
+</object>
+<object id='cpu__pct' module='Products.ZenModel.RRDDataPointAlias' class='RRDDataPointAlias'>
+</object>
+</tomanycont>
+</object>
+<object id='LoadPercentage_count' module='Products.ZenModel.RRDDataPoint' class='RRDDataPoint'>
+<property select_variable="rrdtypes" type="selection" id="rrdtype" mode="w" >
+GAUGE
+</property>
+<property type="boolean" id="isrow" mode="w" >
+True
+</property>
+<tomanycont id='aliases'>
+<object id='LoadPercentage' module='Products.ZenModel.RRDDataPointAlias' class='RRDDataPointAlias'>
+</object>
+</tomanycont>
+</object>
+</tomanycont>
+</object>
+</tomanycont>
+<tomanycont id='thresholds'>
+<object id='CPU Utilization over 90' module='Products.ZenModel.MinMaxThreshold' class='MinMaxThreshold'>
+<property type="lines" id="dsnames" mode="w" >
+['CIM_Processor_LoadPercentage_avg']
+</property>
+<property type="boolean" id="enabled" mode="w" >
+True
+</property>
+<property type="string" id="maxval" mode="w" >
+90
+</property>
+<property type="string" id="eventClass" mode="w" >
+/Perf/CPU
+</property>
+<property type="int" id="severity" mode="w" >
+3
+</property>
+<property type="int" id="escalateCount" mode="w" >
+5
+</property>
+</object>
+</tomanycont>
+<tomanycont id='graphDefs'>
+<object id='CPU' module='Products.ZenModel.GraphDefinition' class='GraphDefinition'>
+<property type="int" id="height" mode="w" >
+100
+</property>
+<property type="int" id="width" mode="w" >
+500
+</property>
+<property type="string" id="units" mode="w" >
+percentage
+</property>
+<property type="boolean" id="log" mode="w" >
+False
+</property>
+<property type="boolean" id="base" mode="w" >
+False
+</property>
+<property type="int" id="miny" mode="w" >
+0
+</property>
+<property type="int" id="maxy" mode="w" >
+100
+</property>
+<property type="boolean" id="hasSummary" mode="w" >
+True
+</property>
+<tomanycont id='graphPoints'>
+<object id='CPU Utilization over 90' module='Products.ZenModel.ThresholdGraphPoint' class='ThresholdGraphPoint'>
+<property type="string" id="threshId" mode="w" >
+CPU Utilization over 90
+</property>
+<property type="string" id="legend" mode="w" >
+${graphPoint/id}
+</property>
+</object>
+<object id='LoadPercentage_avg' module='Products.ZenModel.DataPointGraphPoint' class='DataPointGraphPoint'>
+<property type="long" id="sequence" mode="w" >
+1
+</property>
+<property select_variable="lineTypes" type="selection" id="lineType" mode="w" >
+LINE
+</property>
+<property type="long" id="lineWidth" mode="w" >
+1
+</property>
+<property type="boolean" id="stacked" mode="w" >
+False
+</property>
+<property type="string" id="format" mode="w" >
+%5.1lf%%
+</property>
+<property type="string" id="legend" mode="w" >
+Load
+</property>
+<property type="long" id="limit" mode="w" >
+-1
+</property>
+<property type="string" id="dpName" mode="w" >
+CIM_Processor_LoadPercentage_avg
+</property>
+<property type="string" id="cFunc" mode="w" >
+AVERAGE
+</property>
+</object>
+</tomanycont>
 </object>
 </tomanycont>
 </object>
@@ -218,7 +366,7 @@ True
 CIM_StorageVolume Template
 </property>
 <property type="string" id="targetPythonClass" mode="w" >
-ZenPacks.community.CIMHMon.CIM_StorageVolume
+ZenPacks.community.CIMMon.CIM_StorageVolume
 </property>
 <tomanycont id='datasources'>
 <object id='CIM_StorageVolume' module='ZenPacks.community.SQLDataSource.datasources.SQLDataSource' class='SQLDataSource'>
@@ -264,7 +412,7 @@ True
 0
 </property>
 <property type="string" id="eventClass" mode="w" >
-/Status/CIMStorageVolume
+/Status/CIM_StorageVolume
 </property>
 </object>
 </tomanycont>
@@ -329,7 +477,7 @@ True
 0
 </property>
 <property type="string" id="eventClass" mode="w" >
-/Status/CIMTachometer
+/Status/CIM_Tachometer
 </property>
 </object>
 </tomanycont>
@@ -450,7 +598,7 @@ True
 0
 </property>
 <property type="string" id="eventClass" mode="w" >
-/Status/CIMTemperatureSensor
+/Status/CIM_TemperatureSensor
 </property>
 </object>
 </tomanycont>
@@ -523,58 +671,7 @@ CIM_OperatingSystem template that requires SQLDataSource Zenpack
 Products.ZenModel.Device
 </property>
 <tomanycont id='datasources'>
-<object id='Processor' module='ZenPacks.community.SQLDataSource.datasources.SQLDataSource' class='SQLDataSource'>
-<property select_variable="sourcetypes" type="selection" id="sourcetype" mode="w" >
-SQL
-</property>
-<property type="boolean" id="enabled" mode="w" >
-True
-</property>
-<property type="string" id="eventClass" mode="w" >
-/Cmd/Fail
-</property>
-<property type="int" id="severity" mode="w" >
-3
-</property>
-<property type="int" id="cycletime" mode="w" >
-300
-</property>
-<property type="string" id="cs" mode="w" >
-${dev/zCIMConnectionString},user='${dev/zWinUser}',password='${dev/zWinPassword}',host='${dev/manageIp}',namespace='root/cimv2'
-</property>
-<property type="string" id="sql" mode="w" >
-SELECT LoadPercentage FROM CIM_Processor
-</property>
-<tomanycont id='datapoints'>
-<object id='LoadPercentage_avg' module='Products.ZenModel.RRDDataPoint' class='RRDDataPoint'>
-<property select_variable="rrdtypes" type="selection" id="rrdtype" mode="w" >
-GAUGE
-</property>
-<property type="boolean" id="isrow" mode="w" >
-True
-</property>
-<tomanycont id='aliases'>
-<object id='LoadPercentage' module='Products.ZenModel.RRDDataPointAlias' class='RRDDataPointAlias'>
-</object>
-<object id='cpu__pct' module='Products.ZenModel.RRDDataPointAlias' class='RRDDataPointAlias'>
-</object>
-</tomanycont>
-</object>
-<object id='LoadPercentage_count' module='Products.ZenModel.RRDDataPoint' class='RRDDataPoint'>
-<property select_variable="rrdtypes" type="selection" id="rrdtype" mode="w" >
-GAUGE
-</property>
-<property type="boolean" id="isrow" mode="w" >
-True
-</property>
-<tomanycont id='aliases'>
-<object id='LoadPercentage' module='Products.ZenModel.RRDDataPointAlias' class='RRDDataPointAlias'>
-</object>
-</tomanycont>
-</object>
-</tomanycont>
-</object>
-<object id='sysUpTime' module='ZenPacks.community.SQLDataSource.datasources.SQLDataSource' class='SQLDataSource'>
+<object id='CIM_OperatingSystem' module='ZenPacks.community.SQLDataSource.datasources.SQLDataSource' class='SQLDataSource'>
 <property select_variable="sourcetypes" type="selection" id="sourcetype" mode="w" >
 SQL
 </property>
@@ -662,6 +759,31 @@ True
 </object>
 </tomanycont>
 </object>
+</tomanycont>
+</object>
+<object id='sysUpTime' module='ZenPacks.community.SQLDataSource.datasources.SQLDataSource' class='SQLDataSource'>
+<property select_variable="sourcetypes" type="selection" id="sourcetype" mode="w" >
+SQL
+</property>
+<property type="boolean" id="enabled" mode="w" >
+True
+</property>
+<property type="string" id="eventClass" mode="w" >
+/Cmd/Fail
+</property>
+<property type="int" id="severity" mode="w" >
+3
+</property>
+<property type="int" id="cycletime" mode="w" >
+300
+</property>
+<property type="string" id="cs" mode="w" >
+${dev/zCIMConnectionString},user='${dev/zWinUser}',password='${dev/zWinPassword}',host='${dev/manageIp}',namespace='root/cimv2'
+</property>
+<property type="string" id="sql" mode="w" >
+SELECT FreePhysicalMemory,FreeSpaceInPagingFiles,FreeVirtualMemory,LastBootUpTime,NumberOfLicensedUsers,NumberOfProcesses,NumberOfUsers,SizeStoredInPagingFiles FROM CIM_OperatingSystem
+</property>
+<tomanycont id='datapoints'>
 <object id='sysUpTime' module='Products.ZenModel.RRDDataPoint' class='RRDDataPoint'>
 <property select_variable="rrdtypes" type="selection" id="rrdtype" mode="w" >
 GAUGE
@@ -680,228 +802,7 @@ True
 </tomanycont>
 </object>
 </tomanycont>
-<tomanycont id='graphs'>
-<object id='CPU' module='Products.ZenModel.RRDGraph' class='RRDGraph'>
-<property type="lines" id="dsnames" mode="w" >
-['cpuPercentProcessorTime_cpuPercentProcessorTime']
-</property>
-<property type="int" id="sequence" mode="w" >
-0
-</property>
-<property type="int" id="height" mode="w" >
-100
-</property>
-<property type="int" id="width" mode="w" >
-500
-</property>
-<property type="string" id="units" mode="w" >
-percentage
-</property>
-<property type="int" id="linewidth" mode="w" >
-1
-</property>
-<property type="boolean" id="log" mode="w" >
-False
-</property>
-<property type="boolean" id="base" mode="w" >
-False
-</property>
-<property type="boolean" id="stacked" mode="w" >
-False
-</property>
-<property type="boolean" id="summary" mode="w" >
-True
-</property>
-<property type="int" id="miny" mode="w" >
--1
-</property>
-<property type="int" id="maxy" mode="w" >
--1
-</property>
-<property type="lines" id="colors" mode="w" >
-['#00cc00', '#0000ff', '#00ffff', '#ff0000', '#ffff00', '#cc0000', '#0000cc', '#0080c0', '#8080c0', '#ff0080', '#800080', '#0000a0', '#408080', '#808000', '#000000', '#00ff00', '#fb31fb', '#0080ff', '#ff8000', '#800000']
-</property>
-<property type="boolean" id="hasSummary" mode="w" >
-True
-</property>
-</object>
-<object id='Free Memory' module='Products.ZenModel.RRDGraph' class='RRDGraph'>
-<property type="lines" id="dsnames" mode="w" >
-['memoryAvailableKBytes_memoryAvailableKBytes']
-</property>
-<property type="int" id="sequence" mode="w" >
-1
-</property>
-<property type="int" id="height" mode="w" >
-100
-</property>
-<property type="int" id="width" mode="w" >
-500
-</property>
-<property type="string" id="units" mode="w" >
-bytes
-</property>
-<property type="int" id="linewidth" mode="w" >
-1
-</property>
-<property type="boolean" id="log" mode="w" >
-False
-</property>
-<property type="boolean" id="base" mode="w" >
-True
-</property>
-<property type="boolean" id="stacked" mode="w" >
-False
-</property>
-<property type="boolean" id="summary" mode="w" >
-True
-</property>
-<property type="int" id="miny" mode="w" >
-0
-</property>
-<property type="int" id="maxy" mode="w" >
--1
-</property>
-<property type="lines" id="colors" mode="w" >
-['#00cc00', '#0000ff', '#00ffff', '#ff0000', '#ffff00', '#cc0000', '#0000cc', '#0080c0', '#8080c0', '#ff0080', '#800080', '#0000a0', '#408080', '#808000', '#000000', '#00ff00', '#fb31fb', '#0080ff', '#ff8000', '#800000']
-</property>
-<property type="boolean" id="hasSummary" mode="w" >
-True
-</property>
-</object>
-<object id='Paging' module='Products.ZenModel.RRDGraph' class='RRDGraph'>
-<property type="lines" id="dsnames" mode="w" >
-['memoryPagesPerSec_memoryPagesPerSec']
-</property>
-<property type="int" id="sequence" mode="w" >
-2
-</property>
-<property type="int" id="height" mode="w" >
-100
-</property>
-<property type="int" id="width" mode="w" >
-500
-</property>
-<property type="string" id="units" mode="w" >
-page/sec
-</property>
-<property type="int" id="linewidth" mode="w" >
-1
-</property>
-<property type="boolean" id="log" mode="w" >
-False
-</property>
-<property type="boolean" id="base" mode="w" >
-False
-</property>
-<property type="boolean" id="stacked" mode="w" >
-False
-</property>
-<property type="boolean" id="summary" mode="w" >
-True
-</property>
-<property type="int" id="miny" mode="w" >
--1
-</property>
-<property type="int" id="maxy" mode="w" >
--1
-</property>
-<property type="lines" id="colors" mode="w" >
-('#00cc00', '#0000ff', '#00ffff', '#ff0000', '#ffff00', '#cc0000', '#0000cc', '#0080c0', '#8080c0', '#ff0080', '#800080', '#0000a0', '#408080', '#808000', '#000000', '#00ff00', '#fb31fb', '#0080ff', '#ff8000', '#800000')
-</property>
-<property type="boolean" id="hasSummary" mode="w" >
-True
-</property>
-</object>
-</tomanycont>
-<tomanycont id='thresholds'>
-<object id='CPU Utilization over 90' module='Products.ZenModel.MinMaxThreshold' class='MinMaxThreshold'>
-<property type="lines" id="dsnames" mode="w" >
-['Processor_LoadPercentage_avg']
-</property>
-<property type="boolean" id="enabled" mode="w" >
-True
-</property>
-<property type="string" id="maxval" mode="w" >
-90
-</property>
-<property type="string" id="eventClass" mode="w" >
-/Perf/CPU
-</property>
-<property type="int" id="severity" mode="w" >
-3
-</property>
-<property type="int" id="escalateCount" mode="w" >
-5
-</property>
-</object>
-</tomanycont>
 <tomanycont id='graphDefs'>
-<object id='CPU' module='Products.ZenModel.GraphDefinition' class='GraphDefinition'>
-<property type="int" id="height" mode="w" >
-100
-</property>
-<property type="int" id="width" mode="w" >
-500
-</property>
-<property type="string" id="units" mode="w" >
-percentage
-</property>
-<property type="boolean" id="log" mode="w" >
-False
-</property>
-<property type="boolean" id="base" mode="w" >
-False
-</property>
-<property type="int" id="miny" mode="w" >
-0
-</property>
-<property type="int" id="maxy" mode="w" >
-100
-</property>
-<property type="boolean" id="hasSummary" mode="w" >
-True
-</property>
-<tomanycont id='graphPoints'>
-<object id='CPU Utilization over 90' module='Products.ZenModel.ThresholdGraphPoint' class='ThresholdGraphPoint'>
-<property type="string" id="threshId" mode="w" >
-CPU Utilization over 90
-</property>
-<property type="string" id="legend" mode="w" >
-${graphPoint/id}
-</property>
-</object>
-<object id='LoadPercentage_avg' module='Products.ZenModel.DataPointGraphPoint' class='DataPointGraphPoint'>
-<property type="long" id="sequence" mode="w" >
-1
-</property>
-<property select_variable="lineTypes" type="selection" id="lineType" mode="w" >
-LINE
-</property>
-<property type="long" id="lineWidth" mode="w" >
-1
-</property>
-<property type="boolean" id="stacked" mode="w" >
-False
-</property>
-<property type="string" id="format" mode="w" >
-%5.1lf%%
-</property>
-<property type="string" id="legend" mode="w" >
-Load
-</property>
-<property type="long" id="limit" mode="w" >
--1
-</property>
-<property type="string" id="dpName" mode="w" >
-Processor_LoadPercentage_avg
-</property>
-<property type="string" id="cFunc" mode="w" >
-AVERAGE
-</property>
-</object>
-</tomanycont>
-</object>
 <object id='Memory Utilization' module='Products.ZenModel.GraphDefinition' class='GraphDefinition'>
 <property type="int" id="height" mode="w" >
 100
@@ -954,7 +855,7 @@ Used
 -1024,*,${here/hw/totalMemory},/,1,+,100,*
 </property>
 <property type="string" id="dpName" mode="w" >
-sysUpTime_memoryAvailableKBytes
+CIM_OperatingSystem_memoryAvailableKBytes
 </property>
 <property type="string" id="cFunc" mode="w" >
 AVERAGE
@@ -1017,7 +918,7 @@ Used
 -1024,*,${here/os/totalSwap},/,1,+,100,*
 </property>
 <property type="string" id="dpName" mode="w" >
-sysUpTime_FreeSpaceInPagingFiles
+CIM_OperatingSystem_FreeSpaceInPagingFiles
 </property>
 <property type="string" id="cFunc" mode="w" >
 AVERAGE
@@ -1046,7 +947,7 @@ Stored
 1024,*,${here/os/totalSwap},/,100,*
 </property>
 <property type="string" id="dpName" mode="w" >
-sysUpTime_SizeStoredInPagingFiles
+CIM_OperatingSystem_SizeStoredInPagingFiles
 </property>
 <property type="string" id="cFunc" mode="w" >
 AVERAGE
@@ -1103,7 +1004,7 @@ ${graphPoint/id}
 -1
 </property>
 <property type="string" id="dpName" mode="w" >
-sysUpTime_NumberOfProcesses
+CIM_OperatingSystem_NumberOfProcesses
 </property>
 <property type="string" id="cFunc" mode="w" >
 AVERAGE
@@ -1163,7 +1064,7 @@ Licensed Users
 -1
 </property>
 <property type="string" id="dpName" mode="w" >
-sysUpTime_NumberOfLicensedUsers
+CIM_OperatingSystem_NumberOfLicensedUsers
 </property>
 <property type="string" id="cFunc" mode="w" >
 AVERAGE
@@ -1189,7 +1090,7 @@ Users
 -1
 </property>
 <property type="string" id="dpName" mode="w" >
-sysUpTime_NumberOfUsers
+CIM_OperatingSystem_NumberOfUsers
 </property>
 <property type="string" id="cFunc" mode="w" >
 AVERAGE

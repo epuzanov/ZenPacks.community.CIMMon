@@ -12,9 +12,9 @@ __doc__="""CIMUnixProcessMap
 
 CIMUnixProcessMap finds various software packages installed on a device.
 
-$Id: CIMUnixProcessMap.py,v 1.0 2011/06/07 20:37:53 egor Exp $"""
+$Id: CIMUnixProcessMap.py,v 1.1 2011/06/09 20:28:12 egor Exp $"""
 
-__version__ = '$Revision: 1.0 $'[11:-2]
+__version__ = '$Revision: 1.1 $'[11:-2]
 
 from ZenPacks.community.SQLDataSource.SQLPlugin import SQLPlugin
 
@@ -68,6 +68,7 @@ class CIMUnixProcessMap(SQLPlugin):
                 if not getattr(om, 'procName', False): 
                     log.warning("Skipping process with no name")
                     continue
+                om.procName = str(om.procName)
                 om.parameters = ' '.join(getattr(om, 'parameters', []))
                 rm.append(om)
             except AttributeError:
