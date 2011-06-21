@@ -12,9 +12,9 @@ __doc__="""CIMPhysicalMemoryMap
 
 CIMPhysicalMemoryMap maps the CIM_PhysicalMemory to CIMPhysicalMemory objects
 
-$Id: CIMPhysicalMemoryMap.py,v 1.0 2011/06/07 20:34:28 egor Exp $"""
+$Id: CIMPhysicalMemoryMap.py,v 1.1 2011/06/21 21:25:24 egor Exp $"""
 
-__version__ = '$Revision: 1.0 $'[11:-2]
+__version__ = '$Revision: 1.1 $'[11:-2]
 
 from Products.ZenUtils.Utils import convToUnits
 from ZenPacks.community.SQLDataSource.SQLPlugin import SQLPlugin
@@ -25,7 +25,7 @@ MODULENAME = re.compile(r'.*(\d).*(\d).*')
 class CIMPhysicalMemoryMap(SQLPlugin):
     """Map CIM_PhysicalMemoryMap class to CIMPhysicalMemory class"""
 
-    maptype = "CIMPhysicalMemoryMap"
+    maptype = "PhysicalMemoryMap"
     modname = "ZenPacks.community.CIMMon.CIM_PhysicalMemory"
     relname = "memorymodules"
     compname = "hw"

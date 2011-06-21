@@ -12,9 +12,9 @@ __doc__="""CIMTachometerMap
 
 CIMTachometerMap maps CIM_Tachometer class to CIMTachometer class.
 
-$Id: CIMTachometerMap.py,v 1.0 2011/06/07 20:36:45 egor Exp $"""
+$Id: CIMTachometerMap.py,v 1.1 2011/06/21 21:27:24 egor Exp $"""
 
-__version__ = '$Revision: 1.0 $'[11:-2]
+__version__ = '$Revision: 1.1 $'[11:-2]
 
 
 from ZenPacks.community.SQLDataSource.SQLPlugin import SQLPlugin
@@ -22,7 +22,7 @@ from ZenPacks.community.SQLDataSource.SQLPlugin import SQLPlugin
 class CIMTachometerMap(SQLPlugin):
     """Map CIM_Tachometer class to Fan class"""
 
-    maptype = "CIMTachometerMap"
+    maptype = "FanMap"
     modname = "ZenPacks.community.CIMMon.CIM_Tachometer"
     relname = "fans"
     compname = "hw"

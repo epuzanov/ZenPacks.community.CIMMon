@@ -13,9 +13,9 @@ __doc__="""CIMTemperatureSensorMap
 CIMTemperatureSensorMap maps CIM_TemperatureSensor class to TemperatureSensor
 class.
 
-$Id: CIMTemperatureSensorMap.py,v 1.0 2011/06/07 20:37:19 egor Exp $"""
+$Id: CIMTemperatureSensorMap.py,v 1.1 2011/06/21 21:27:42 egor Exp $"""
 
-__version__ = '$Revision: 1.0 $'[11:-2]
+__version__ = '$Revision: 1.1 $'[11:-2]
 
 
 from ZenPacks.community.SQLDataSource.SQLPlugin import SQLPlugin
@@ -23,7 +23,7 @@ from ZenPacks.community.SQLDataSource.SQLPlugin import SQLPlugin
 class CIMTemperatureSensorMap(SQLPlugin):
     """Map CIM_TemperatureSensor class to TemperatureSensor class"""
 
-    maptype = "CIMTemperatureSensorMap"
+    maptype = "TemperatureSensorMap"
     modname = "ZenPacks.community.CIMMon.CIM_TemperatureSensor"
     relname = "temperaturesensors"
     compname = "hw"

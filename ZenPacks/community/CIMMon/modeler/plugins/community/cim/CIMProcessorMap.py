@@ -12,9 +12,9 @@ __doc__="""CIMProcessorMap
 
 CIMProcessorMap maps the CIM_Processor class to cpus objects
 
-$Id: CIMProcessorMap.py,v 1.0 2011/06/07 20:35:59 egor Exp $"""
+$Id: CIMProcessorMap.py,v 1.1 2011/06/21 21:26:34 egor Exp $"""
 
-__version__ = '$Revision: 1.0 $'[11:-2]
+__version__ = '$Revision: 1.1 $'[11:-2]
 
 from ZenPacks.community.SQLDataSource.SQLPlugin import SQLPlugin
 from Products.DataCollector.plugins.DataMaps import MultiArgs
@@ -47,7 +47,7 @@ def getManufacturerAndModel(key):
 
 class CIMProcessorMap(SQLPlugin):
 
-    maptype = "ProcessorMap"
+    maptype = "CPUMap"
     modname = "Products.ZenModel.CPU"
     compname = "hw"
     relname = "cpus"

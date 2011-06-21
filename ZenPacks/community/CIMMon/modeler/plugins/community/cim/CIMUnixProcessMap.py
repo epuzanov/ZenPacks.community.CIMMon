@@ -12,15 +12,15 @@ __doc__="""CIMUnixProcessMap
 
 CIMUnixProcessMap finds various software packages installed on a device.
 
-$Id: CIMUnixProcessMap.py,v 1.1 2011/06/09 20:28:12 egor Exp $"""
+$Id: CIMUnixProcessMap.py,v 1.2 2011/06/21 21:28:58 egor Exp $"""
 
-__version__ = '$Revision: 1.1 $'[11:-2]
+__version__ = '$Revision: 1.2 $'[11:-2]
 
 from ZenPacks.community.SQLDataSource.SQLPlugin import SQLPlugin
 
 class CIMUnixProcessMap(SQLPlugin):
 
-    maptype = "ProcessMap"
+    maptype = "OSProcessMap"
     compname = "os"
     relname = "processes"
     modname = "Products.ZenModel.OSProcess"

@@ -8,28 +8,27 @@
 #
 ################################################################################
 
-__doc__="""CIMPowerSupplyMap
+__doc__="""HPComputerSystemChassisMap
 
-CIMPowerSupplyMap maps CIM_PowerSupply CIM class to CIMPowerSupply class.
+HPComputerSystemChassisMap maps HP_ComputerSystemChassis class hw product.
 
-$Id: CIMPowerSupplyMap.py,v 1.1 2011/06/21 21:25:50 egor Exp $"""
+$Id: HPComputerSystemChassisMap.py,v 1.0 2011/06/21 21:29:18 egor Exp $"""
 
-__version__ = '$Revision: 1.1 $'[11:-2]
+__version__ = '$Revision: 1.0 $'[11:-2]
 
 
 from ZenPacks.community.SQLDataSource.SQLPlugin import SQLPlugin
+from Products.DataCollector.plugins.DataMaps import MultiArgs
 
-class CIMPowerSupplyMap(SQLPlugin):
-    """Map CIM_PowerSupply class to PowerSupply class"""
+class HPComputerSystemChassisMap(SQLPlugin):
+    """HPComputerSystemChassisMap maps HP_ComputerSystemChassis class to hw
+    products.
+    """
 
-    maptype = "PowerSupplyMap"
-    modname = "ZenPacks.community.CIMMon.CIM_PowerSupply"
-    relname = "powersupplies"
-    compname = "hw"
+    maptype = "DeviceMap"
     deviceProperties = SQLPlugin.deviceProperties + ('zWinUser',
                                                     'zWinPassword',
                                                     'zCIMConnectionString',
-                                                    'zCIMHWNamespace',
                                                     )
 
 
@@ -43,35 +42,35 @@ class CIMPowerSupplyMap(SQLPlugin):
             args.append("user='%s'"%getattr(device, 'zWinUser', ''))
         if 'password' not in kwargs:
             args.append("password='%s'"%getattr(device, 'zWinPassword', ''))
-        if 'namespace' not in kwargs:
-            args.append("namespace='%s'"%getattr(device, 'zCIMHWNamespace',
-                                                'root/cimv2'))
+        if 'namespace' not in kwargs: args.append("namespace='root/HPQ'")
         cs = ','.join(args)
         return {
-            "CIM_PowerSupply":
+            "CIM_ComputerSystem":
                 (
-                    "SELECT * FROM CIM_PowerSupply",
+                    "SELECT Manufacturer,Model,ProductID,SerialNumber FROM HP_ComputerSystemChassis",
                     None,
                     cs,
                     {
-                        '__PATH':'_path',
-                        '__NAMESPACE':'cimNamespace',
-                        'DeviceID':'id',
-                        'TotalOutputPower':'watts',
+                        'Manufacturer': '_manuf',
+                        'Model': 'setHWProductKey',
+                        'ProductID': 'setHWTag',
+                        'SerialNumber': 'setHWSerialNumber',
                     },
                 ),
             }
 
+
     def process(self, device, results, log):
         """collect CIM information from this device"""
         log.info('processing %s for device %s', self.name(), device.id)
-        rm = self.relMap()
-        for instance in results.get("CIM_PowerSupply", []):
-            om = self.objectMap(instance)
-            om.id = self.prepId(om.id)
-            om.cimClassName, om.cimKeybindings = om._path.split('.', 1)
-            if om.watts: om.watts = int(om.watts) / 1000
-            rm.append(om)
-        return rm
-
+        try:
+            cs = results.get('CIM_ComputerSystem', [{}])[0]
+            if not cs: return
+            om = self.objectMap(cs)
+            if not om._manuf: om._manuf = 'Unknown'
+            om.setHWProductKey = MultiArgs(om.setHWProductKey, om._manuf)
+        except:
+            log.warning('processing error')
+            return
+        return [om]
 

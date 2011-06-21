@@ -12,15 +12,15 @@ __doc__="""ProcessMap
 
 ProcessMap finds various software packages installed on a device.
 
-$Id: ProcessMap.py,v 1.0 2011/06/07 20:35:47 egor Exp $"""
+$Id: ProcessMap.py,v 1.1 2011/06/21 21:26:15 egor Exp $"""
 
-__version__ = '$Revision: 1.0 $'[11:-2]
+__version__ = '$Revision: 1.1 $'[11:-2]
 
 from ZenPacks.community.SQLDataSource.SQLPlugin import SQLPlugin
 
 class CIMProcessMap(SQLPlugin):
 
-    maptype = "ProcessMap"
+    maptype = "OSProcessMap"
     compname = "os"
     relname = "processes"
     modname = "Products.ZenModel.OSProcess"

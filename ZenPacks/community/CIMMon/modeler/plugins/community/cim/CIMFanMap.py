@@ -12,9 +12,9 @@ __doc__="""CIMFanMap
 
 CIMFanMap maps CIM_Fan class to Fan class.
 
-$Id: CIMFanMap.py,v 1.0 2011/06/07 20:33:12 egor Exp $"""
+$Id: CIMFanMap.py,v 1.1 2011/06/21 21:23:52 egor Exp $"""
 
-__version__ = '$Revision: 1.0 $'[11:-2]
+__version__ = '$Revision: 1.1 $'[11:-2]
 
 
 from ZenPacks.community.SQLDataSource.SQLPlugin import SQLPlugin
@@ -22,7 +22,7 @@ from ZenPacks.community.SQLDataSource.SQLPlugin import SQLPlugin
 class CIMFanMap(SQLPlugin):
     """Map CIM_Fan class to Fan class"""
 
-    maptype = "CIMFanMap"
+    maptype = "FanMap"
     modname = "ZenPacks.community.CIMMon.CIM_Fan"
     relname = "fans"
     compname = "hw"

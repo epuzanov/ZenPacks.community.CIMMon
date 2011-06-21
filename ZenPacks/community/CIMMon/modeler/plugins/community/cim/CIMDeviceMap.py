@@ -13,9 +13,9 @@ __doc__="""DeviceMap
 DeviceMap maps CIM_ComputerSystem and CIM_OperationSystem classes to get hw and
 os products.
 
-$Id: DeviceMap.py,v 1.1 2011/06/10 01:11:15 egor Exp $"""
+$Id: DeviceMap.py,v 1.2 2011/06/21 21:22:47 egor Exp $"""
 
-__version__ = '$Revision: 1.1 $'[11:-2]
+__version__ = '$Revision: 1.2 $'[11:-2]
 
 
 from ZenPacks.community.SQLDataSource.SQLPlugin import SQLPlugin
@@ -26,7 +26,7 @@ class CIMDeviceMap(SQLPlugin):
        os products.
     """
 
-    maptype = "CIMDeviceMap" 
+    maptype = "DeviceMap"
     deviceProperties = SQLPlugin.deviceProperties + ('zWinUser',
                                                     'zWinPassword',
                                                     'zCIMConnectionString',
@@ -49,24 +49,25 @@ class CIMDeviceMap(SQLPlugin):
         return {
             "CIM_ComputerSystem":
                 (
-                    "SELECT Name,Description,PrimaryOwnerContact FROM CIM_ComputerSystem",
+                    "SELECT PrimaryOwnerContact FROM CIM_ComputerSystem",
                     None,
                     cs,
                     {
-                        'Name':'snmpSysName',
-                        'Descriptions':'snmpDescr',
                         'PrimaryOwnerContact': 'snmpContact',
                     },
                 ),
             "CIM_OperatingSystem":
                 (
-                    "SELECT Name,TotalVirtualMemorySize,TotalVisibleMemorySize FROM CIM_OperatingSystem",
+                    "SELECT CSName,Description,Name,TotalVirtualMemorySize,TotalVisibleMemorySize FROM CIM_OperatingSystem",
                     None,
                     cs,
                     {
-                        'Name':'setOSProductKey',
+                        'CSName':'snmpSysName',
+                        'Description':'setOSProductKey',
+                        'Name':'_name',
                         'TotalVisibleMemorySize':'_totalMemory',
                         'TotalVirtualMemorySize':'_totalSwap',
+                        'Version':'_version',
                     },
                 ),
             }
@@ -81,13 +82,22 @@ class CIMDeviceMap(SQLPlugin):
             if not os: return
             maps = []
             om = self.objectMap(os)
-            om.snmpLocation = ''
-            om.snmpOid = ''
             maps.append(om)
-            maps.append(ObjectMap({"totalMemory": (os['_totalMemory'] * 1024)},
-                                                                compname="hw"))
-            maps.append(ObjectMap({"totalSwap": (os['_totalSwap'] * 1024)},
-                                                                compname="os"))
+            if om._name.startswith('Microsoft'):
+                om.setOSProductKey = om._name.split('|', 1)[0]
+                om.snmpDescr = '%s (%s)'%(om.setOSProductKey, om._version)
+            elif om.setOSProductKey.startswith('A class'):
+                om.setOSProductKey = om._version
+                om.snmpDescr = om._version
+            else:
+                om.setOSProductKey = om.setOSProductKey.split('\n', 1)[0]
+                om.snmpDescr = '%s (%s)'%(om.setOSProductKey, om._version)
+            om.setOSProductKey =  MultiArgs(om.setOSProductKey,
+                                            om.setOSProductKey.split(' ', 1)[0])
+            maps.append(ObjectMap({"totalMemory": (
+                            os.get('_totalMemory', 0) * 1024)}, compname="hw"))
+            maps.append(ObjectMap({"totalSwap": (
+                            os.get('_totalSwap', 0) * 1024)}, compname="os"))
         except:
             log.warning('processing error')
             return

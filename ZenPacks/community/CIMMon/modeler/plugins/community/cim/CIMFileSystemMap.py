@@ -12,16 +12,16 @@ __doc__="""CIMFileSystemMap
 
 CIMFileSystemMap maps the CIM_FileSystem class to filesystems objects
 
-$Id: CIMFileSystemMap.py,v 1.0 2011/06/07 20:33:39 egor Exp $"""
+$Id: CIMFileSystemMap.py,v 1.1 2011/06/21 21:24:14 egor Exp $"""
 
-__version__ = '$Revision: 1.0 $'[11:-2]
+__version__ = '$Revision: 1.1 $'[11:-2]
 
 import re
 from ZenPacks.community.SQLDataSource.SQLPlugin import SQLPlugin
 
 class CIMFileSystemMap(SQLPlugin):
 
-    maptype = "CIMFileSystemMap"
+    maptype = "FileSystemMap"
     compname = "os"
     relname = "filesystems"
     modname = "Products.ZenModel.FileSystem"

@@ -13,9 +13,9 @@ __doc__ = """CIMNetworkPortMap
 Gather IP network interface information from CIMMOM, and 
 create DMD interface objects
 
-$Id: CIMNetworkPortMap.py,v 1.0 2011/06/07 20:34:09 egor Exp $"""
+$Id: CIMNetworkPortMap.py,v 1.1 2011/06/21 21:24:57 egor Exp $"""
 
-__version__ = '$Revision: 1.0 $'[11:-2]
+__version__ = '$Revision: 1.1 $'[11:-2]
 
 import re
 import types
@@ -50,7 +50,7 @@ class CIMNetworkPortMap(SQLPlugin):
     """
     Map IP network names and aliases to DMD 'interface' objects
     """
-    maptype = "CIMNetworkPortMap" 
+    maptype = "InterfaceMap" 
     compname = "os"
     relname = "interfaces"
     modname = "Products.ZenModel.IpInterface"
