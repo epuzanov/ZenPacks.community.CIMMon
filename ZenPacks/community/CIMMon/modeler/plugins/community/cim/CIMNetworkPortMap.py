@@ -13,9 +13,9 @@ __doc__ = """CIMNetworkPortMap
 Gather IP network interface information from CIMMOM, and 
 create DMD interface objects
 
-$Id: CIMNetworkPortMap.py,v 1.1 2011/06/21 21:24:57 egor Exp $"""
+$Id: CIMNetworkPortMap.py,v 1.2 2011/06/21 22:13:12 egor Exp $"""
 
-__version__ = '$Revision: 1.1 $'[11:-2]
+__version__ = '$Revision: 1.2 $'[11:-2]
 
 import re
 import types
@@ -159,14 +159,14 @@ class CIMNetworkPortMap(SQLPlugin):
                 for ep in results.get("CIM_IPProtocolEndpoint", []):
                     if om.id not in ep.get('name', ''): continue
                     ip = ep.get('ipAddress', '')
-                    if not ip.strip() or (dontCollectIpAddresses
+                    if not ip or not ip.strip() or (dontCollectIpAddresses
                         and re.search(dontCollectIpAddresses, ip)):
                         continue
                     # ignore IPv6 Addresses
                     if ip.__contains__(':'): continue
                     netmask = self.maskToBits(ep.get('netmask','255.255.255.0'))
                     om.setIpAddresses.append("/".join((ip, str(netmask))))
-                if not om.ifindex: om.ifindex = om.snmpindex
+                om.ifindex = om.snmpindex
                 if om.operStatus in [None, 2, 9]: om.operStatus = 1
                 else: om.operStatus = 2
                 if om.adminStatus in [0, 2]: om.adminStatus = 1
