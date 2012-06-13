@@ -1,7 +1,7 @@
 ################################################################################
 #
 # This program is part of the CIMMon Zenpack for Zenoss.
-# Copyright (C) 2011 Egor Puzanov.
+# Copyright (C) 2012 Egor Puzanov.
 #
 # This program can be used under the GNU General Public License version 2
 # You can find full information here: http://www.zenoss.com/oss
@@ -13,13 +13,13 @@ __doc__ = """CIMNetworkPortMap
 Gather IP network interface information from CIMMOM, and 
 create DMD interface objects
 
-$Id: CIMNetworkPortMap.py,v 1.2 2011/06/21 22:13:12 egor Exp $"""
+$Id: CIMNetworkPortMap.py,v 1.3 2012/06/13 20:46:01 egor Exp $"""
 
-__version__ = '$Revision: 1.2 $'[11:-2]
+__version__ = '$Revision: 1.3 $'[11:-2]
 
 import re
 import types
-from ZenPacks.community.SQLDataSource.SQLPlugin import SQLPlugin
+from ZenPacks.community.CIMMon.CIMPlugin import CIMPlugin
 
 def prepId(id, subchar='_'):
     """
@@ -46,83 +46,139 @@ def prepId(id, subchar='_'):
     return str(id)
 
 
-class CIMNetworkPortMap(SQLPlugin):
+class CIMNetworkPortMap(CIMPlugin):
     """
     Map IP network names and aliases to DMD 'interface' objects
     """
     maptype = "InterfaceMap" 
     compname = "os"
     relname = "interfaces"
-    modname = "Products.ZenModel.IpInterface"
-    deviceProperties = SQLPlugin.deviceProperties + ('zWinUser',
-                                                    'zWinPassword',
-                                                    'zCIMConnectionString',
+    modname = "ZenPacks.community.CIMMon.CIM_NetworkPort"
+    deviceProperties = CIMPlugin.deviceProperties + ('zCIMConnectionString',
                                                     'zInterfaceMapIgnoreNames',
                                                     'zInterfaceMapIgnoreTypes',
                                                'zInterfaceMapIgnoreIpAddresses')
 
     def queries(self, device):
-        args = [getattr(device, 'zCIMConnectionString',
-                                        "'pywbemdb',scheme='https',port=5989")]
-        kwargs = eval('(lambda *argsl,**kwargs:kwargs)(%s)'%args[0])
-        if 'host' not in kwargs:
-            args.append("host='%s'"%device.manageIp)
-        if 'user' not in kwargs:
-            args.append("user='%s'"%getattr(device, 'zWinUser', ''))
-        if 'password' not in kwargs:
-            args.append("password='%s'"%getattr(device, 'zWinPassword', ''))
-        if 'namespace' not in kwargs:
-            args.append("namespace='root/cimv2'")
-        cs = ','.join(args)
+        connectionString = getattr(device, 'zCIMConnectionString', '')
+        if not connectionString:
+            return {}
+        cs = self.prepareCS(device, connectionString)
         return {
-            "CIM_NetworkPort": (
-                "SELECT __PATH,ActiveMaximumTransmissionUnit,ElementName,EnabledDefault,EnabledState,LinkTechnology,PermanentAddress,Speed FROM CIM_NetworkPort",
-                None,
-                cs,
-                {
-                    '__PATH':'snmpindex',
-                    'ActiveMaximumTransmissionUnit':'mtu',
-                    'ElementName':'interfaceName',
-                    'EnabledDefault':'adminStatus',
-                    'EnabledState':'operStatus',
-                    'LinkTechnology':'type',
-                    'PermanentAddress':'macaddress',
-                    'Speed':'speed',
-                }
-            ),
-            "CIM_IPProtocolEndpoint": (
-                "SELECT ElementName,IPv4Address,ProtocolIFType,SubnetMask FROM CIM_IPProtocolEndpoint",
-                None,
-                cs,
-                {
-                    'ElementName':'name',
-                    'IPv4Address':'ipAddress',
-                    'SubnetMask':'netmask',
-                }
-            ),
-        }
+            "CIM_NetworkPort":
+                (
+                    "SELECT * FROM CIM_NetworkPort",
+                    None,
+                    cs,
+                    {
+                        "setPath":"__PATH",
+                        "description":"Description",
+                        "mtu":"ActiveMaximumTransmissionUnit",
+                        "interfaceName":"Name",
+                        "adminStatus":"EnabledDefault",
+                        "operStatus":"EnabledState",
+                        "type":"LinkTechnology",
+                        "macaddress":"PermanentAddress",
+                        "speed":"Speed",
+                        "_sysname":"SystemName",
+                    }
+                ),
+            "CIM_IPProtocolEndpoint":
+                (
+                    "SELECT * FROM CIM_IPProtocolEndpoint",
+                    None,
+                    cs,
+                    {
+                        "_path":"__PATH",
+                        "_ipAddress":"Address",
+                        "_ipSubnet":"SubnetMask",
+                    }
+                ),
+            "CIM_PortImplementsEndpoint":
+                (
+                    "SELECT Antecedent,Dependent FROM CIM_PortImplementsEndpoint",
+                    None,
+                    cs,
+                    {
+                        "ant":"Antecedent", # LogicalPort
+                        "dep":"Dependent", # ProtocolEndpoint
+                    }
+                ),
+            "CIM_ElementStatisticalData":
+                (
+                    "SELECT ManagedElement,Stats FROM CIM_ElementStatisticalData",
+                    None,
+                    cs,
+                    {
+                        "me":"ManagedElement",
+                        "stats":"Stats",
+                    },
+                ),
+            }
 
-    linkTypes = {
-        0: 'Unknown',
-        1: 'softwareLoopback',
-        2: 'ethernetCsmacd',
-        3: 'Infiniband',
-        4: 'Fibre Channel',
-        5: 'fddi',
-        6: 'atm',
-        7: 'iso88025TokenRing',
-        8: 'frame-relay',
-        9: 'Infrared',
-        10: 'Bluetooth',
-        11: 'Wireless LAN',
-    }
+    def _getMacAddress(self, value):
+        """
+        Return the wwn formatedstring
+        """
+        if not value: return ""
+        if len(str(value)) == 16 and ":" not in value:
+            return "-".join([value[s*4:s*4+4] for s in range(4)])
+        return value
+
+    def _getIpAddresses(self, results, inst, dontCollectIpAddresses):
+        iPath = inst.get("setPath")
+        if not iPath: return
+        if "setIpAddresses" not in inst:
+            inst["setIpAddresses"] = []
+        for ep in results.get("CIM_IPProtocolEndpoint", ()):
+            if not self._findInstance(results, "CIM_PortImplementsEndpoint",
+                "dep",ep.get("_path","")).get("ant","").endswith(iPath):continue
+            if ('mtu' in ep) and ('mtu' not in inst):
+                inst["mtu"] = ep["mtu"]
+            ip = ep.get("_ipAddress")
+            if ip.__contains__('.'):
+                netmasks = ep.get("_ipSubnet") or "255.255.255.0"
+                ip = '/'.join((ip, str(self.maskToBits(netmask))))
+            elif ip.__contains__(':'):
+                continue
+            else:
+                continue
+            inst["setIpAddresses"].append(ip)
+
+    def _getLinkType(self, inst):
+        return {
+            0: 'Unknown',
+            1: 'softwareLoopback',
+            2: 'ethernetCsmacd',
+            3: 'Infiniband',
+            4: 'Fibre Channel',
+            5: 'fddi',
+            6: 'atm',
+            7: 'iso88025TokenRing',
+            8: 'frame-relay',
+            9: 'Infrared',
+            10: 'Bluetooth',
+            11: 'Wireless LAN',
+            }.get(int(inst.get("type") or 2)) or "ethernetCsmacd"
+
+    def _getOperStatus(self, inst):
+        return int(inst.get("operStatus") or 2) in (0, 2, 5, 9) and 1 or 2
+
+    def _getAdminStatus(self, inst):
+        return int(inst.get("adminStatus") or 0) in (0, 2) and 1 or 2
+
+    def _getController(self, results, iPath):
+        if not iPath: return ""
+        return self._findInstance(results, "CIM_SystemComponent", "pc",
+                                                        iPath).get("gc") or ""
 
     def process(self, device, results, log):
-        """collect WMI information from this device"""
+        """collect CIM information from this device"""
         log.info('processing %s for device %s', self.name(), device.id)
         dontCollectIntNames = getattr(device, 'zInterfaceMapIgnoreNames', None)
         dontCollectIntTypes = getattr(device, 'zInterfaceMapIgnoreTypes', None)
-        dontCollectIpAddresses = getattr(device, 'zInterfaceMapIgnoreIpAddresses', None)
+        dontCollectIpAddresses = getattr(device,
+                                        'zInterfaceMapIgnoreIpAddresses', None)
         rm = self.relMap()
         if (dontCollectIpAddresses and re.search(dontCollectIpAddresses,
                                 device.manageIp)):
@@ -140,40 +196,36 @@ class CIMNetworkPortMap(SQLPlugin):
             om.setIpAddresses = [device.manageIp, ]
             rm.append(om)
             return rm
-        for instance in results.get("CIM_NetworkPort", []):
+        instances = results.get("CIM_NetworkPort")
+        if not instances: return rm
+        sysnames = self._getSysnames(device, results, "CIM_NetworkPort")
+        for inst in instances:
+            if (inst.get("_sysname") or "").lower() not in sysnames: continue
             try:
-                om = self.objectMap(instance)
-                om.type = self.linkTypes.get(getattr(om, 'type', 0), 'Unknown')
+                interfaceName = inst.get("interfaceName") or ""
+                instPath = inst.get("setPath") or ""
+                if not interfaceName or not instPath: continue
+                inst["type"] = self._getLinkType(inst)
                 if dontCollectIntNames and re.search(dontCollectIntNames,
-                                                            om.interfaceName):
+                                                    interfaceName):
                     log.debug("Interface %s matched the zInterfaceMapIgnoreNames zprop '%s'" % (
-                                om.interfaceName, getattr(device, 'zInterfaceMapIgnoreNames')))
+                                    interfaceName, dontCollectIntNames))
                     continue
                 if dontCollectIntTypes and re.search(dontCollectIntTypes,
-                                                                    om.type):
+                                                                inst["type"]):
                     log.debug( "Interface %s type %s matched the zInterfaceMapIgnoreTypes zprop '%s'" % (
-                                om.interfaceName, om.type, getattr(device, 'zInterfaceMapIgnoreTypes')))
+                        interfaceName, inst["type"], dontCollectIntTypes))
                     continue
+                self._getIpAddresses(results, inst, dontCollectIpAddresses)
+                om = self.objectMap(inst)
                 om.id = prepId(om.interfaceName)
-                om.setIpAddresses = []
-                for ep in results.get("CIM_IPProtocolEndpoint", []):
-                    if om.id not in ep.get('name', ''): continue
-                    ip = ep.get('ipAddress', '')
-                    if not ip or not ip.strip() or (dontCollectIpAddresses
-                        and re.search(dontCollectIpAddresses, ip)):
-                        continue
-                    # ignore IPv6 Addresses
-                    if ip.__contains__(':'): continue
-                    netmask = self.maskToBits(ep.get('netmask','255.255.255.0'))
-                    om.setIpAddresses.append("/".join((ip, str(netmask))))
-                om.ifindex = om.snmpindex
-                if om.operStatus in [None, 2, 9]: om.operStatus = 1
-                else: om.operStatus = 2
-                if om.adminStatus in [0, 2]: om.adminStatus = 1
-                else:om.adminStatus = 2
+                om.macaddress = self._getMacAddress(inst.get("macaddress"))
+                om.operStatus = self._getOperStatus(inst)
+                if om.operStatus == 2: continue
+                om.setController = self._getController(results, instPath)
+                om.adminStatus = self._getAdminStatus(inst)
+                om.setStatPath = self._getStatPath(results, instPath)
             except AttributeError:
                 continue
             rm.append(om)
         return rm
-
-

@@ -1,7 +1,7 @@
 ################################################################################
 #
 # This program is part of the CIMMon Zenpack for Zenoss.
-# Copyright (C) 2011 Egor Puzanov.
+# Copyright (C) 2012 Egor Puzanov.
 #
 # This program can be used under the GNU General Public License version 2
 # You can find full information here: http://www.zenoss.com/oss
@@ -12,53 +12,44 @@ __doc__="""CIMFileSystemMap
 
 CIMFileSystemMap maps the CIM_FileSystem class to filesystems objects
 
-$Id: CIMFileSystemMap.py,v 1.1 2011/06/21 21:24:14 egor Exp $"""
+$Id: CIMFileSystemMap.py,v 1.2 2012/06/13 20:44:42 egor Exp $"""
 
-__version__ = '$Revision: 1.1 $'[11:-2]
+__version__ = '$Revision: 1.2 $'[11:-2]
 
 import re
-from ZenPacks.community.SQLDataSource.SQLPlugin import SQLPlugin
+from ZenPacks.community.CIMMon.CIMPlugin import CIMPlugin
 
-class CIMFileSystemMap(SQLPlugin):
+class CIMFileSystemMap(CIMPlugin):
+    """Map CIM_FileSystem class to FileSystem class"""
 
     maptype = "FileSystemMap"
     compname = "os"
     relname = "filesystems"
-    modname = "Products.ZenModel.FileSystem"
-    deviceProperties = SQLPlugin.deviceProperties + ('zWinUser',
-                                                    'zWinPassword',
-                                                    'zCIMConnectionString',
+    modname = "ZenPacks.community.CIMMon.CIM_FileSystem"
+    deviceProperties = CIMPlugin.deviceProperties + ('zCIMConnectionString',
                                                     'zFileSystemMapIgnoreNames',
                                                     'zFileSystemMapIgnoreTypes',
                                                     )
 
-
     def queries(self, device):
-        args = [getattr(device, 'zCIMConnectionString',
-                                        "'pywbemdb',scheme='https',port=5989")]
-        kwargs = eval('(lambda *argsl,**kwargs:kwargs)(%s)'%args[0])
-        if 'host' not in kwargs:
-            args.append("host='%s'"%device.manageIp)
-        if 'user' not in kwargs:
-            args.append("user='%s'"%getattr(device, 'zWinUser', ''))
-        if 'password' not in kwargs:
-            args.append("password='%s'"%getattr(device, 'zWinPassword', ''))
-        if 'namespace' not in kwargs:
-            args.append("namespace='root/cimv2'")
-        cs = ','.join(args)
+        connectionString = getattr(device, 'zCIMConnectionString', '')
+        if not connectionString:
+            return {}
+        cs = self.prepareCS(device, connectionString)
         return {
             "CIM_FileSystem":
                 (
-                "SELECT __PATH,BlockSize,FileSystemSize,FileSystemType,MaxFileNameLenght,Root FROM CIM_FileSystem",
-                None,
-                cs,
+                    "SELECT * FROM CIM_FileSystem",
+                    None,
+                    cs,
                     {
-                    '__PATH':'snmpindex',
-                    'BlockSize':'blockSize',
-                    'FileSystemType':'type',
-                    'MaxFileNameLenght':'maxNameLen',
-                    'Root':'mount',
-                    'FileSystemSize':'totalBlocks',
+                        "setPath":"__PATH",
+                        "blockSize":"BlockSize",
+                        "type":"FileSystemType",
+                        "maxNameLen":"MaxFileNameLenght",
+                        "mount":"Root",
+                        "totalBlocks":"FileSystemSize",
+                        "_sysname":"CSName",
                     }
                 ),
             }
@@ -67,24 +58,29 @@ class CIMFileSystemMap(SQLPlugin):
         """collect CIM information from this device"""
         log.info('processing %s for device %s', self.name(), device.id)
         rm = self.relMap()
-        skipfsnames = getattr(device, 'zFileSystemMapIgnoreNames', None)
-        skipfstypes = getattr(device, 'zFileSystemMapIgnoreTypes', None)
-        for instance in results.get("CIM_FileSystem", []):
+        skipfsnames = getattr(device, "zFileSystemMapIgnoreNames", None)
+        skipfstypes = getattr(device, "zFileSystemMapIgnoreTypes", None)
+        instances = results.get("CIM_FileSystem")
+        if not instances: return rm
+        sysnames = self._getSysnames(device, results, "CIM_FileSystem")
+        for inst in instances:
+            if (inst.get("_sysname") or "").lower() not in sysnames: continue
             try:
-                if skipfsnames and re.search(skipfsnames, instance['mount']):
+                mount = inst.get("mount") or ""
+                fstype = inst.get("type") or ""
+                if skipfsnames and re.search(skipfsnames, mount):
                     log.info("Skipping %s as it matches zFileSystemMapIgnoreNames.",
-                        instance['mount'])
+                            mount)
                     continue
-                if skipfstypes and instance['type'] in skipfstypes:
+                if skipfstypes and fstype in skipfstypes:
                     log.info("Skipping %s (%s) as it matches zFileSystemMapIgnoreTypes.",
-                        instance['mount'], instance['type'])
+                            mount, fstype)
                     continue
-                om = self.objectMap(instance)
+                om = self.objectMap(inst)
                 om.id = self.prepId(om.mount)
-                if ':' in om.snmpindex:om.snmpindex=om.snmpindex.split(':',1)[1]
-                om.blockSize = getattr(om, 'blockSize', 4096) or 4096
-                if not om.totalBlocks: continue
-                om.totalBlocks = om.totalBlocks / om.blockSize
+                om.blockSize = int(getattr(om, "blockSize", None) or 4096)
+                om.totalBlocks = int(om.totalBlocks or 0) / om.blockSize
+                om.setStatPath = self._getStatPath(results, inst.get("setPath"))
             except AttributeError:
                 continue
             rm.append(om)

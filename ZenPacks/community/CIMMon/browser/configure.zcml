@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<configure xmlns:browser="http://namespaces.zope.org/browser">
+
+    <browser:resourceDirectory
+             name="cimmon"
+             directory="resources"
+             />
+
+    <browser:viewlet
+             name="js-cimmon"
+             for="Products.ZenModel.Device.Device"
+             paths="/++resource++cimmon/js/CIMMon.js"
+             weight="15"
+             manager="Products.ZenUI3.browser.interfaces.IJavaScriptSrcManager"
+             class="Products.ZenUI3.browser.javascript.JavaScriptSrcBundleViewlet"
+             permission="zope2.Public"
+             />
+
+</configure>

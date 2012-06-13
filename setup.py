@@ -3,12 +3,12 @@
 # or saved.  Do not modify them directly here.
 # NB: PACKAGES is deprecated
 NAME = "ZenPacks.community.CIMMon"
-VERSION = "0.86"
+VERSION = "0.87"
 AUTHOR = "Egor Puzanov"
 LICENSE = ""
 NAMESPACE_PACKAGES = ['ZenPacks', 'ZenPacks.community']
 PACKAGES = ['ZenPacks', 'ZenPacks.community', 'ZenPacks.community.CIMMon']
-INSTALL_REQUIRES = ['ZenPacks.community.SQLDataSource>=1.80', 'ZenPacks.community.deviceAdvDetail>=2.7']
+INSTALL_REQUIRES = ['ZenPacks.community.SQLDataSource>=2.0']
 COMPAT_ZENOSS_VERS = ">=2.5"
 PREV_ZENPACK_NAME = ""
 # STOP_REPLACEMENTS

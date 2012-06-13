@@ -1,43 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
 <configure xmlns="http://namespaces.zope.org/zope"
-           xmlns:browser="http://namespaces.zope.org/browser"
            xmlns:zcml="http://namespaces.zope.org/zcml">
 
     <configure zcml:condition="installed Products.Zuul">
 
-        <adapter factory="ZenPacks.community.deviceAdvDetail.info.MemoryModuleInfo"
-                 for=".CIM_PhysicalMemory.CIM_PhysicalMemory"
-                 provides="ZenPacks.community.deviceAdvDetail.interfaces.IMemoryModuleInfo"
+        <include package=".browser"/>
+
+        <adapter factory=".info.CIM_ChassisInfo"
+                 for=".CIM_Chassis.CIM_Chassis"
+                 provides=".interfaces.IChassisInfo"
                  />
 
-        <adapter factory="ZenPacks.community.deviceAdvDetail.info.HardDiskInfo"
+        <adapter factory=".info.CIM_ComputerSystemInfo"
+                 for=".CIM_ComputerSystem.CIM_ComputerSystem"
+                 provides=".interfaces.IComputerSystemInfo"
+                 />
+
+        <adapter factory=".info.CIM_DiskDriveInfo"
                  for=".CIM_DiskDrive.CIM_DiskDrive"
-                 provides="ZenPacks.community.deviceAdvDetail.interfaces.IHardDiskInfo"
+                 provides=".interfaces.IDiskDriveInfo"
                  />
 
-        <adapter factory="ZenPacks.community.deviceAdvDetail.info.LogicalDiskInfo"
-                 for=".CIM_StorageVolume.CIM_StorageVolume"
-                 provides="ZenPacks.community.deviceAdvDetail.interfaces.ILogicalDiskInfo"
-                 />
-
-        <adapter factory="ZenPacks.community.deviceAdvDetail.info.FanInfo"
+        <adapter factory=".info.CIM_FanInfo"
                  for=".CIM_Fan.CIM_Fan"
-                 provides="ZenPacks.community.deviceAdvDetail.interfaces.IFanInfo"
+                 provides=".interfaces.IFanInfo"
                  />
 
-        <adapter factory="ZenPacks.community.deviceAdvDetail.info.FanInfo"
-                 for=".CIM_Tachometer.CIM_Tachometer"
-                 provides="ZenPacks.community.deviceAdvDetail.interfaces.IFanInfo"
+        <adapter factory=".info.CIM_NetworkPortInfo"
+                 for=".CIM_NetworkPort.CIM_NetworkPort"
+                 provides=".interfaces.INetworkPortInfo"
                  />
 
-        <adapter factory="ZenPacks.community.deviceAdvDetail.info.TemperatureSensorInfo"
-                 for=".CIM_TemperatureSensor.CIM_TemperatureSensor"
-                 provides="ZenPacks.community.deviceAdvDetail.interfaces.ITemperatureSensorInfo"
+        <adapter factory=".info.CIM_PhysicalMemoryInfo"
+                 for=".CIM_PhysicalMemory.CIM_PhysicalMemory"
+                 provides=".interfaces.IPhysicalMemoryInfo"
                  />
 
-        <adapter factory="ZenPacks.community.deviceAdvDetail.info.PowerSupplyInfo"
+        <adapter factory=".info.CIM_PowerSupplyInfo"
                  for=".CIM_PowerSupply.CIM_PowerSupply"
-                 provides="ZenPacks.community.deviceAdvDetail.interfaces.IPowerSupplyInfo"
+                 provides=".interfaces.IPowerSupplyInfo"
+                 />
+
+        <adapter factory=".info.CIM_StoragePoolInfo"
+                 for=".CIM_StoragePool.CIM_StoragePool"
+                 provides=".interfaces.IStoragePoolInfo"
+                 />
+
+        <adapter factory=".info.CIM_StorageVolumeInfo"
+                 for=".CIM_StorageVolume.CIM_StorageVolume"
+                 provides=".interfaces.IStorageVolumeInfo"
+                 />
+
+        <adapter factory=".info.CIM_TemperatureSensorInfo"
+                 for=".CIM_TemperatureSensor.CIM_TemperatureSensor"
+                 provides=".interfaces.ITemperatureSensorInfo"
                  />
 
     </configure>

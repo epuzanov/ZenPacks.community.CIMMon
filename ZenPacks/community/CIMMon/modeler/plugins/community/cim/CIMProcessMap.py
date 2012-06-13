@@ -1,49 +1,38 @@
 ################################################################################
 #
 # This program is part of the CIMMon Zenpack for Zenoss.
-# Copyright (C) 2011 Egor Puzanov.
+# Copyright (C) 2012 Egor Puzanov.
 #
 # This program can be used under the GNU General Public License version 2
 # You can find full information here: http://www.zenoss.com/oss
 #
 ################################################################################
 
-__doc__="""ProcessMap
+__doc__="""CIMProcessMap
 
-ProcessMap finds various software packages installed on a device.
+CIMProcessMap finds various processes running on a device.
 
-$Id: ProcessMap.py,v 1.1 2011/06/21 21:26:15 egor Exp $"""
+$Id: CIMProcessMap.py,v 1.2 2012/06/13 20:47:15 egor Exp $"""
 
-__version__ = '$Revision: 1.1 $'[11:-2]
+__version__ = '$Revision: 1.2 $'[11:-2]
 
-from ZenPacks.community.SQLDataSource.SQLPlugin import SQLPlugin
+from ZenPacks.community.CIMMon.CIMPlugin import CIMPlugin
 
-class CIMProcessMap(SQLPlugin):
+class CIMProcessMap(CIMPlugin):
+    """Map CIM_Process class to OSProcess class"""
 
     maptype = "OSProcessMap"
     compname = "os"
     relname = "processes"
     modname = "Products.ZenModel.OSProcess"
-    classname = 'createFromObjectMap'
-    deviceProperties = SQLPlugin.deviceProperties + ('zWinUser',
-                                                    'zWinPassword',
-                                                    'zCIMConnectionString',
-                                                    )
-
+    classname = "createFromObjectMap"
+    deviceProperties = CIMPlugin.deviceProperties + ('zCIMConnectionString',)
 
     def queries(self, device):
-        args = [getattr(device, 'zCIMConnectionString',
-                                        "'pywbemdb',scheme='https',port=5989")]
-        kwargs = eval('(lambda *argsl,**kwargs:kwargs)(%s)'%args[0])
-        if 'host' not in kwargs:
-            args.append("host='%s'"%device.manageIp)
-        if 'user' not in kwargs:
-            args.append("user='%s'"%getattr(device, 'zWinUser', ''))
-        if 'password' not in kwargs:
-            args.append("password='%s'"%getattr(device, 'zWinPassword', ''))
-        if 'namespace' not in kwargs:
-            args.append("namespace='root/cimv2'")
-        cs = ','.join(args)
+        connectionString = getattr(device, 'zCIMConnectionString', '')
+        if not connectionString:
+            return {}
+        cs = self.prepareCS(device, connectionString)
         return {
             "CIM_Process":
                 (
@@ -51,7 +40,7 @@ class CIMProcessMap(SQLPlugin):
                     None,
                     cs,
                     {
-                        'Name':'procName',
+                        "procName":"Name",
                     }
                 ),
             }
@@ -61,13 +50,17 @@ class CIMProcessMap(SQLPlugin):
         """collect SQL information from this device"""
         log.info('processing %s for device %s', self.name(), device.id)
         rm = self.relMap()
-        for instance in results.get("CIM_Process", []):
+        instances = results.get("CIM_Process")
+        if not instances: return rm
+        for inst in instances:
             try:
-                om = self.objectMap(instance)
+                om = self.objectMap(inst)
                 if not getattr(om, 'procName', False): 
                     log.warning("Skipping process with no name")
                     continue
-                om.parameters = ''
+                om.parameters = getattr(om, 'parameters', '') or ''
+                if isinstance(om.parameters, (list, tuple)):
+                    om.parameters = ' '.join(om.parameters)
                 rm.append(om)
             except AttributeError:
                 continue

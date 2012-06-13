@@ -1,7 +1,7 @@
 ################################################################################
 #
 # This program is part of the CIMMon Zenpack for Zenoss.
-# Copyright (C) 2011 Egor Puzanov.
+# Copyright (C) 2012 Egor Puzanov.
 #
 # This program can be used under the GNU General Public License version 2
 # You can find full information here: http://www.zenoss.com/oss
@@ -10,83 +10,88 @@
 
 __doc__="""CIMStorageVolumeMap
 
-CIMStorageVolumeMap maps CIM_StorageVolume class to LogicalDisk class.
+CIMStorageVolumeMap maps CIM_StorageVolume class to CIM_StorageVolume class.
 
-$Id: CIMStorageVolumeMap.py,v 1.1 2011/06/21 21:27:05 egor Exp $"""
+$Id: CIMStorageVolumeMap.py,v 1.0 2012/01/06 17:56:15 egor Exp $"""
 
-__version__ = '$Revision: 1.1 $'[11:-2]
+__version__ = '$Revision: 1.0 $'[11:-2]
 
-from ZenPacks.community.SQLDataSource.SQLPlugin import SQLPlugin
+from ZenPacks.community.CIMMon.CIMPlugin import CIMPlugin
 
-class CIMStorageVolumeMap(SQLPlugin):
+class CIMStorageVolumeMap(CIMPlugin):
     """Map CIM_StorageVolume class to LogicalDisk"""
 
     maptype = "LogicalDiskMap"
     modname = "ZenPacks.community.CIMMon.CIM_StorageVolume"
-    relname = "logicaldisks"
-    compname = "hw"
-    deviceProperties = SQLPlugin.deviceProperties + ('zWinUser',
-                                                    'zWinPassword',
-                                                    'zCIMConnectionString',
-                                                    'zCIMHWNamespace',
-                                                    )
-
-    raidLevels = {
-        (0, 1): 'RAID0',
-        (1, 1): 'RAID5',
-        (1, 2): 'RAID1+0',
-        (2, 1): 'RAID6',
-        (2, 2): 'RAID5+1',
-    }
+    relname = "storagevolumes"
+    compname = "os"
+    deviceProperties = CIMPlugin.deviceProperties + ('zCIMHWConnectionString',)
 
     def queries(self, device):
-        args = [getattr(device, 'zCIMConnectionString',
-                                        "'pywbemdb',scheme='https',port=5989")]
-        kwargs = eval('(lambda *argsl,**kwargs:kwargs)(%s)'%args[0])
-        if 'host' not in kwargs:
-            args.append("host='%s'"%device.manageIp)
-        if 'user' not in kwargs:
-            args.append("user='%s'"%getattr(device, 'zWinUser', ''))
-        if 'password' not in kwargs:
-            args.append("password='%s'"%getattr(device, 'zWinPassword', ''))
-        if 'namespace' not in kwargs:
-            args.append("namespace='%s'"%getattr(device, 'zCIMHWNamespace',
-                                                'root/cimv2'))
-        cs = ','.join(args)
+        connectionString = getattr(device, 'zCIMHWConnectionString', '')
+        if not connectionString:
+            return {}
+        cs = self.prepareCS(device, connectionString)
         return {
             "CIM_StorageVolume":
                 (
-                    "SELECT __PATH,__NAMESPACE,BlockSize,DataRedundancy,DeviceID,ElementName,NumberOfBlocks,PackageRedundancy FROM CIM_StorageVolume",
+                    "SELECT * FROM CIM_StorageVolume",
                     None,
                     cs,
                     {
-                        '__PATH':'_path',
-                        '__NAMESPACE':'cimNamespace',
-                        'BlockSize':'_blocksize',
-                        'DataRedundancy':'_dr',
-                        'DeviceID':'id',
-                        'ElementName':'description',
-                        'NumberOfBlocks':'_blocks',
-                        'PackageRedundancy':'_pr',
+                        "setPath":"__PATH",
+                        "accessType":"Access",
+                        "blockSize":"BlockSize",
+                        "_dr":"DataRedundancy",
+                        "id":"DeviceID",
+                        "title":"ElementName",
+                        "_pr":"PackageRedundancy",
+                        "_sysname":"SystemName",
                     },
                 ),
             }
 
+    def _accessTypes(self, aType):
+        return {0: "Unknown",
+                1: "Readable",
+                2: "Writable",
+                3: "Read/Write Supported",
+                4: "Write Once",
+                }.get(aType, 'Unknown')
+
+    def _raidLevels(self, pr, dr):
+        return {(0, 1): "RAID0",
+                (1, 1): "RAID5",
+                (1, 2): "RAID1+0",
+                (2, 1): "RAID6",
+                (2, 2): "RAID5+1",
+                }.get((pr, dr), "Unknown")
+
+    def _getPool(self, results, iPath):
+        return self._findInstance(results, "CIM_AllocatedFromStoragePool",
+                                                    "dep", iPath).get("ant", "")
+
     def process(self, device, results, log):
         """collect CIM information from this device"""
-        log.info('processing %s for device %s', self.name(), device.id)
+        log.info("processing %s for device %s", self.name(), device.id)
         rm = self.relMap()
-        for instance in results.get("CIM_StorageVolume", []):
+        instances = results.get("CIM_StorageVolume")
+        if not instances: return rm
+        sysnames = self._getSysnames(device, results, "CIM_StorageVolume")
+        for inst in instances:
+            if (inst.get("_sysname") or "").lower() not in sysnames: continue
+            instPath = inst.get("setPath") or ""
             try:
-                om = self.objectMap(instance)
+                om = self.objectMap(inst)
                 om.id = self.prepId(om.id)
-                om.cimClassName, om.cimKeybindings = om._path.split('.', 1)
-                om._pr = int(getattr(om, '_pr', 0) or 0)
-                om._dr = int(getattr(om, '_dr', 0) or 0)
-                if om._dr > 2: om._dr = 2
-                om.diskType = self.raidLevels.get((om._pr, om._dr), 'unknown')
-                if om._blocksize and om._blocks:
-                    om.size = int(om._blocksize) * int(om._blocks)
+                if not hasattr(om, "diskType"):
+                    om._pr = int(inst.get("_pr") or 0)
+                    om._dr = int(inst.get("_dr") or 0)
+                    if om._dr > 2: om._dr = 2
+                    om.diskType = self._raidLevels(om._pr, om._dr)
+                om.accessType=self._accessTypes(int(inst.get("accessType") or 0))
+                om.setStoragePool = self._getPool(results, instPath)
+                om.setStatPath = self._getStatPath(results, instPath)
             except AttributeError:
                 continue
             rm.append(om)

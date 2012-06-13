@@ -1,7 +1,7 @@
 ################################################################################
 #
 # This program is part of the CIMMon Zenpack for Zenoss.
-# Copyright (C) 2011 Egor Puzanov.
+# Copyright (C) 2012 Egor Puzanov.
 #
 # This program can be used under the GNU General Public License version 2
 # You can find full information here: http://www.zenoss.com/oss
@@ -12,79 +12,162 @@ __doc__="""CIM_ManagedSystemElement
 
 CIM_ManagedSystemElement is an abstraction for CIM_ManagedSystemElement class.
 
-$Id: CIMCIM_ManagedSystemElement.py,v 1.0 2011/06/07 20:25:59 egor Exp $"""
+$Id: CIM_ManagedSystemElement.py,v 1.2 2012/06/13 20:34:29 egor Exp $"""
 
-__version__ = "$Revision: 1.0 $"[11:-2]
+__version__ = "$Revision: 1.2 $"[11:-2]
 
 from Globals import InitializeClass
-from ZenPacks.community.deviceAdvDetail.HWStatus import *
+from AccessControl import ClassSecurityInfo
 from Products.ZenModel.ZenossSecurity import *
 
-class CIM_ManagedSystemElement(object, HWStatus):
+class CIM_ManagedSystemElement:
+    """ManagedSystemElement object"""
 
-    cimNamespace = 'root/cimv2'
+    collectors = ('zenperfsql', 'zencommand', 'zenwinperf')
+    status = 2
+    title = ''
     cimClassName = ''
     cimKeybindings = ''
     cimStatClassName = ''
     cimStatKeybindings = ''
-    status = 2
 
-    statusmap ={0: (DOT_GREY, SEV_WARNING, 'Unknown'),
-                1: (DOT_GREY, SEV_WARNING, 'Other'),
-                2: (DOT_GREEN, SEV_CLEAN, 'OK'),
-                3: (DOT_ORANGE, SEV_ERROR, 'Degraded'),
-                4: (DOT_YELLOW, SEV_WARNING, 'Stressed'),
-                5: (DOT_YELLOW, SEV_WARNING, 'Predictive Failure'),
-                6: (DOT_ORANGE, SEV_ERROR, 'Error'),
-                7: (DOT_RED, SEV_CRITICAL, 'Non-Recoverable Error'),
-                8: (DOT_BLUE, SEV_INFO, 'Starting'),
-                9: (DOT_YELLOW, SEV_WARNING, 'Stopping'),
-                10: (DOT_ORANGE, SEV_ERROR, 'Stopped'),
-                11: (DOT_BLUE, SEV_INFO, 'In Service'),
-                12: (DOT_GREY, SEV_WARNING, 'No Contact'),
-                13: (DOT_ORANGE, SEV_ERROR, 'Lost Communication'),
-                14: (DOT_ORANGE, SEV_ERROR, 'Aborted'),
-                15: (DOT_GREY, SEV_WARNING, 'Dormant'),
-                16: (DOT_ORANGE, SEV_ERROR, 'Stopping Entity in Error'),
-                17: (DOT_GREEN, SEV_CLEAN, 'Completed'),
-                18: (DOT_YELLOW, SEV_WARNING, 'Power Mode'),
-                }
-
-
-    _properties = (
-                 {'id':'cimNamespace', 'type':'string', 'mode':'w'},
-                 {'id':'cimClassName', 'type':'string', 'mode':'w'},
-                 {'id':'cimKeybindings', 'type':'string', 'mode':'w'},
-                 {'id':'cimStatClassName', 'type':'string', 'mode':'w'},
-                 {'id':'cimStatKeybindings', 'type':'string', 'mode':'w'},
-                 {'id':'status', 'type':'int', 'mode':'w'},
+    _properties=(
+                {'id':'status', 'type':'int', 'mode':'w'},
+                {'id':'title', 'type':'string', 'mode':'w'},
+                {'id':'cimClassName', 'type':'string', 'mode':'w'},
+                {'id':'cimKeybindings', 'type':'string', 'mode':'w'},
+                {'id':'cimStatClassName', 'type':'string', 'mode':'w'},
+                {'id':'cimStatKeybindings', 'type':'string', 'mode':'w'},
                 )
 
+    statusmap ={0: ('grey', 3, 'Unknown'),
+                1: ('yellow', 3, 'Other'),
+                2: ('green', 0, 'OK'),
+                3: ('yellow', 3, 'Degraded'),
+                4: ('yellow', 3, 'Stressed'),
+                5: ('yellow', 3, 'Predictive Failure'),
+                6: ('orange', 4, 'Error'),
+                7: ('red', 5, 'Non-Recoverable Error'),
+                8: ('blue', 2, 'Starting'),
+                9: ('yellow', 3, 'Stopping'),
+                10: ('orange', 4, 'Stopped'),
+                11: ('blue', 2, 'In Service'),
+                12: ('grey', 3, 'No Contact'),
+                13: ('orange', 4, 'Lost Communication'),
+                14: ('orange', 4, 'Aborted'),
+                15: ('grey', 3, 'Dormant'),
+                16: ('orange', 4, 'Stopping Entity in Error'),
+                17: ('green', 0, 'Completed'),
+                18: ('yellow', 3, 'Power Mode'),
+                }
 
-    def cimInstanceName(self):
-        """
-        Return the CIM Instance Name
-        """
-        return '%s WHERE %s' % (self.cimClassName,
-                                self.cimKeybindings.replace(',',' AND '))
+    security = ClassSecurityInfo()
 
-
-    def cimStatInstanceName(self):
+    security.declareProtected(ZEN_CHANGE_DEVICE, 'setPath')
+    def setPath(self, path):
         """
-        Return the CIM_StatisticalData Instance Name
+        Set cimClassName and cimKeybindings string
         """
-        return '%s WHERE %s' % (self.cimStatClassName,
-                                self.cimStatKeybindings.replace(',',' AND '))
+        self.cimClassName, self.cimKeybindings = path.split('.', 1)
 
+    security.declareProtected(ZEN_VIEW, 'getPath')
+    def getPath(self):
+        """
+        Return instance path string of CIM class
+        """
+        if not self.cimKeybindings: return self.cimClassName
+        return '%s.%s'%(self.cimClassName, self.cimKeybindings)
+
+    security.declareProtected(ZEN_CHANGE_DEVICE, 'setStatPath')
+    def setStatPath(self, path):
+        """
+        Set cimStatClassName and cimStatKeybindings string
+        """
+        if not path: path = '.'
+        self.cimStatClassName, self.cimStatKeybindings = path.split('.', 1)
+
+    security.declareProtected(ZEN_VIEW, 'getStatPath')
+    def getStatPath(self):
+        """
+        Return instance path string of statistical data CIM class
+        """
+        if not self.cimStatKeybindings: return self.cimStatClassName
+        return '%s.%s'%(self.cimStatClassName, self.cimStatKeybindings)
+
+    def whereString(self):
+        """
+        Return the WHERE string for use in WQL query.
+        """
+        return self.cimKeybindings.replace(',', ' AND ')
+
+    def statWhereString(self):
+        """
+        Return the WHERE string for use in WQL query.
+        """
+        return self.cimStatKeybindings.replace(',', ' AND ')
+
+    security.declareProtected(ZEN_CHANGE_DEVICE, 'convertStatus')
+    def convertStatus(self, status):
+        """
+        Convert status to the status string
+        """
+        return self.statusmap.get(status, ('grey', 3, 'Other'))[2]
+
+    security.declareProtected(ZEN_CHANGE_DEVICE, 'getStatus')
+    def getStatus(self, statClass=None):
+        """
+        Return the status number for this component of class statClass.
+        """
+        if not self.monitored() \
+            or not self.device() \
+            or not self.device().monitorDevice(): return 0
+        return self.status
+
+    def getStatusImgSrc(self, status=None):
+        """
+        Return the img source for a status number
+        """
+        if status is None: status = self.getStatus()
+        src = self.statusmap.get(status, ('grey', 3, 'Other'))[0]
+        return '/zport/dmd/img/%s_dot.png' % src
+
+    def statusDot(self, status=None):
+        """
+        Return the img source for a status number
+        Return the Dot Color based on maximal severity
+        """
+        if status is None: status = self.getStatus()
+        return self.statusmap.get(status, ('grey', 3, 'Other'))[0]
+
+    def statusString(self, status=None):
+        """
+        Return the status string
+        """
+        if status is None: status = self.getStatus()
+        return self.getStatusString(status)
+
+    def getRRDStatTemplates(self):
+        """
+        Return the RRD StatisticalData Templates list
+        """
+        templates = []
+        if self.cimStatClassName:
+            templ = self.getRRDTemplateByName(self.cimStatClassName)
+            if templ:
+                templates.append(templ)
+        return templates
 
     def getRRDTemplates(self):
         """
         Return the RRD Templates list
         """
-        templates = [self.__class__.__name__]
-        if self.cimClassName and self.cimClassName != self.__class__.__name__:
-            templates.append(self.cimClassName)
-        for i in range(len(templates)):
-            templ = self.getRRDTemplateByName(templates.pop(0))
-            if templ: templates.append(templ)
+        templates = self.getRRDStatTemplates()
+        if self.cimStatClassName == self.cimClassName: return templates
+        tnames = (self.cimClassName, self.__class__.__name__, self.meta_type,
+                                                    'CIM_ManagedSystemElement')
+        for tname in tnames:
+            templ = self.getRRDTemplateByName(tname)
+            if not templ: continue
+            templates.append(templ)
+            break
         return templates
