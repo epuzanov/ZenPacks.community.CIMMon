@@ -12,9 +12,9 @@ __doc__="""CIMPowerSupplyMap
 
 CIMPowerSupplyMap maps CIM_PowerSupply CIM class to CIMPowerSupply class.
 
-$Id: CIMPowerSupplyMap.py,v 1.3 2012/06/13 20:46:57 egor Exp $"""
+$Id: CIMPowerSupplyMap.py,v 1.4 2012/06/14 21:22:50 egor Exp $"""
 
-__version__ = '$Revision: 1.3 $'[11:-2]
+__version__ = '$Revision: 1.4 $'[11:-2]
 
 
 from ZenPacks.community.CIMMon.CIMPlugin import CIMPlugin
@@ -77,11 +77,11 @@ class CIMPowerSupplyMap(CIMPlugin):
     def _getType(self, psType):
         return psType
 
-    def _getStatPath(self, results, iPath):
+    def _getStatPath(self, results, inst):
         comp =  self._findInstance(results, "CIM_VoltageSensor", "setStatPath",
                 self._findInstance(results, "CIM_AssociatedSensor", "dep",
-                iPath).get("ant", ""))
-        if not comp: return {} 
+                inst.get("setPath")).get("ant"))
+        if not comp: return {}
         return dict(((pn, comp[pn]) for pn in ('setStatPath',
                 'lowerThresholdNonCritical', 'upperThresholdNoneCritical',
                 'lowerThresholdCritical', 'upperThresholdCritical',
@@ -98,7 +98,7 @@ class CIMPowerSupplyMap(CIMPlugin):
         for inst in instances:
             if (inst.get("_sysname") or "").lower() not in sysnames: continue
             if "setStatPath" not in inst:
-                inst.update(self._getStatPath(results, inst.get("setPath")))
+                inst.update(self._getStatPath(results, inst))
             if "type" in inst:
                 inst["type"] = self._getType(inst["type"])
                 if not inst["type"]: del inst["type"]

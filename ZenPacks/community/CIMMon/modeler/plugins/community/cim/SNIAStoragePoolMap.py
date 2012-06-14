@@ -1,6 +1,6 @@
 ################################################################################
 #
-# This program is part of the SMISMon Zenpack for Zenoss.
+# This program is part of the CIMMon Zenpack for Zenoss.
 # Copyright (C) 2012 Egor Puzanov.
 #
 # This program can be used under the GNU General Public License version 2
@@ -12,7 +12,7 @@ __doc__="""SNIAStoragePoolMap
 
 SNIAStoragePoolMap maps SNIA_StoragePool class to CIM_StoragePool class.
 
-$Id: SNAIStoragePoolMap.py,v 1.0 2012/01/23 23:51:14 egor Exp $"""
+$Id: SNIAStoragePoolMap.py,v 1.0 2012/01/23 23:51:14 egor Exp $"""
 
 from ZenPacks.community.CIMMon.modeler.plugins.community.cim.CIMStoragePoolMap \
     import CIMStoragePoolMap

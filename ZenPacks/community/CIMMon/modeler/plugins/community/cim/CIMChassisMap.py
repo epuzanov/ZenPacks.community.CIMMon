@@ -12,9 +12,9 @@ __doc__="""CIMChassisMap
 
 CIMChassisMap maps CIM_Chassis class to CIM_Chassis class.
 
-$Id: CIMChassisMap.py,v 1.0 2012/01/04 21:32:34 egor Exp $"""
+$Id: CIMChassisMap.py,v 1.1 2012/06/14 22:49:52 egor Exp $"""
 
-__version__ = '$Revision: 1.0 $'[11:-2]
+__version__ = '$Revision: 1.1 $'[11:-2]
 
 
 from ZenPacks.community.CIMMon.CIMPlugin import CIMPlugin
@@ -73,7 +73,7 @@ class CIMChassisMap(CIMPlugin):
             iPath = sp.get("dep") or ""
         return CIMPlugin._getComputerSystemPath(self, results, iPath)
 
-    def _getLayout(self, results, iPath):
+    def _getLayout(self, results, inst):
         return None
 
     def process(self, device, results, log):
@@ -87,6 +87,7 @@ class CIMChassisMap(CIMPlugin):
         sysname = sysnames[0]
         for inst in instances:
             if (inst.get("_sysname") or "").lower() not in sysnames: continue
+            layout = self._getLayout(results, inst)
             manuf = inst.get("_manuf") or "Unknown"
             productKey = inst.get("setProductKey") or ""
             try:
@@ -107,10 +108,8 @@ class CIMChassisMap(CIMPlugin):
                     continue
                 om = self.objectMap(inst)
                 om.id = self.prepId(om.id)
-                manuf = inst.get("_manuf") or "Unknown"
                 if productKey:
                     om.setProductKey = MultiArgs(productKey, manuf)
-                layout = self._getLayout(results, inst.get("setPath") or "")
                 if layout:
                     om.layout = layout
             except AttributeError:

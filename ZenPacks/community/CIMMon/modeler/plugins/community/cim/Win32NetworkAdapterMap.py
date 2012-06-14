@@ -12,9 +12,9 @@ __doc__="""Win32NetworkAdapterMap
 
 Win32NetworkAdapterMap maps the Win32_NetworkAdapter class to filesystems objects
 
-$Id: Win32NetworkAdapterMap.py,v 1.0 2012/06/13 20:53:17 egor Exp $"""
+$Id: Win32NetworkAdapterMap.py,v 1.1 2012/06/14 21:32:55 egor Exp $"""
 
-__version__ = '$Revision: 1.0 $'[11:-2]
+__version__ = '$Revision: 1.1 $'[11:-2]
 
 from ZenPacks.community.CIMMon.modeler.plugins.community.cim.CIMNetworkAdapterMap \
     import CIMNetworkAdapterMap
@@ -78,14 +78,14 @@ class Win32NetworkAdapterMap(CIMNetworkAdapterMap):
 
     def _getOperStatus(self, inst):
         return {0:2,1:3,2:1,3:2,4:6,5:6,6:5,7:7,8:3,9:1,10:2,11:5,12:5}.get(
-	    int(inst.get("operStatus", 2))) or 1
+            int(inst.get("operStatus", 2))) or 1
 
     def _getAdapterConfig(self, results, inst, dontCollectIpAddresses):
         intIdx = str(inst.get("snmpindex") or "")
         if not intIdx: return
         if "setIpAddresses" not in inst:
             inst["setIpAddresses"] = []
-        for conf in results.get("Win32_NetworkAdapterConfiguration", ()):
+        for conf in results.get("Win32_NetworkAdapterConfiguration") or ():
             if str(conf.get("_ipEnabled")).lower() != "true": continue
             if str(int(conf.get("snmpindex") or 0)) == intIdx: break
         else: return
@@ -118,8 +118,10 @@ class Win32NetworkAdapterMap(CIMNetworkAdapterMap):
     def _getLinkType(self, inst):
         return inst.get('type') or "Ethernet 802.3"
 
-    def _getStatPath(self, results, iPath):
-        for perf in results.get("CIM_NetworkAdapter", ()):
+    def _getStatPath(self, results, inst):
+        iPath = inst.get("setPath")
+        if not iPath: return ""
+        for perf in results.get("CIM_NetworkAdapter") or ():
             if perf.get("setPath") == iPath: break
         else: return ""
         return str(perf.get("setStatPath") or "")

@@ -12,9 +12,9 @@ __doc__="""ComputerSystemMap
 
 ComputerSystemMap maps CIM_ComputerSystem class to hw product.
 
-$Id: ComputerSystemMap.py,v 1.0 2012/01/23 18:50:39 egor Exp $"""
+$Id: ComputerSystemMap.py,v 1.1 2012/06/14 20:56:07 egor Exp $"""
 
-__version__ = '$Revision: 1.0 $'[11:-2]
+__version__ = '$Revision: 1.1 $'[11:-2]
 
 
 from ZenPacks.community.CIMMon.CIMPlugin import CIMPlugin
@@ -52,10 +52,10 @@ class CIMComputerSystemMap(CIMPlugin):
                 ),
             }
 
-    def _getPackage(self, results, iPath):
+    def _getPackage(self, results, inst):
         return  self._findInstance(results, "CIM_PhysicalPackage", "_path",
                 self._findInstance(results, "CIM_ComputerSystemPackage", "dep",
-                iPath).get("ant", ""))
+                inst.get("setPath")).get("ant"))
 
     def process(self, device, results, log):
         """collect CIM information from this device"""
@@ -69,8 +69,7 @@ class CIMComputerSystemMap(CIMPlugin):
         for inst in instances:
             subsysname = (inst.get("_sysname") or "").lower()
             if subsysname not in sysnames: continue
-            instPath = inst.get("setPath") or ""
-            inst.update(self._getPackage(results, instPath))
+            inst.update(self._getPackage(results, inst))
             productKey = inst.get("setProductKey")
             try:
                 if (len(instances)==1) or (not maps and (sysname in subsysname)):
@@ -96,7 +95,7 @@ class CIMComputerSystemMap(CIMPlugin):
                 if productKey:
                     om.setProductKey = MultiArgs(productKey,
                                         inst.get("_manuf") or "Unknown")
-                om.setStatPath = self._getStatPath(results, instPath)
+                om.setStatPath = self._getStatPath(results, inst)
                 om.monitor = True
                 rm.append(om)
             except:

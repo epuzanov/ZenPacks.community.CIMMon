@@ -12,9 +12,9 @@ __doc__="""CIMDiskDriveMap
 
 CIMDiskDriveMap maps CIM_DiskDrive class to CIM_DiskDrive class.
 
-$Id: SNAIDiskDriveMap.py,v 1.1 2012/02/02 21:32:03 egor Exp $"""
+$Id: SNIADiskDriveMap.py,v 1.2 2012/06/14 21:17:51 egor Exp $"""
 
-__version__ = '$Revision: 1.1 $'[11:-2]
+__version__ = '$Revision: 1.2 $'[11:-2]
 
 from ZenPacks.community.CIMMon.CIMPlugin import CIMPlugin
 from Products.DataCollector.plugins.DataMaps import ObjectMap, MultiArgs
@@ -69,19 +69,21 @@ class CIMDiskDriveMap(CIMPlugin):
                 "6":"sff",
                 }.get(str(formFactor), "")
 
-    def _getPackage(self, results, iPath):
+    def _getPackage(self, results, inst):
         return  self._findInstance(results, "CIM_PhysicalPackage", "_path",
                 self._findInstance(results, "CIM_Realizes", "dep",
-                iPath).get("ant", ""))
+                inst.get("setPath")).get("ant")) or ""
 
-    def _getChassis(self, results, iPath):
+    def _getChassis(self, results, inst):
+        iPath = inst.get("_pPath") or inst.get("gc")
         if not iPath: return ""
         comp = self._findInstance(results, "CIM_Container", "pc", iPath)
-        return self._getChassis(results, comp.get("gc")) or comp.get("pc") or ""
+        if not comp: return ""
+        return self._getChassis(results, comp) or comp.get("pc") or ""
 
-    def _getPool(self, results, iPath):
+    def _getPool(self, results, inst):
         mpPath = self._findInstance(results, "CIM_MediaPresent", "ant",
-                iPath).get("dep", "")
+                inst.get("setPath")).get("dep")
         if not mpPath: return ""
         for sp in results.get("CIM_StoragePool", ()):
             if str(sp.get("_primordial")).lower() == "true": continue
@@ -92,12 +94,13 @@ class CIMDiskDriveMap(CIMPlugin):
                 if str(inst.get("gc") or "").endswith(spPath): return spPath
         return ""
 
-    def _getFirmware(self, results, iPath):
+    def _getFirmware(self, results, inst):
         return  self._findInstance(results, "CIM_SoftwareIdentity", "_path",
                 self._findInstance(results, "CIM_ElementSoftwareIdentity","dep",
-                iPath).get("ant", "")).get("FWRev", "")
+                inst.get("setPath")).get("ant")).get("FWRev") or ""
 
-    def _getBay(self, results, iPath):
+    def _getBay(self, results, inst):
+        iPath = inst.get("_pPath")
         if not iPath: return -1
         for pel in results.get("CIM_PhysicalElementLocation") or ():
             if not (pel.get("element") or "").endswith(iPath): continue
@@ -106,6 +109,9 @@ class CIMDiskDriveMap(CIMPlugin):
             loc = loc.split("PhysicalPosition=")[-1].strip('"').split()[-1]
             return not loc.isdigit() and -1 or int(loc)
         else: return -1
+
+    def _isHardDisk(self, inst):
+        return True
 
     def process(self, device, results, log):
         """collect Disk Drive information from this device"""
@@ -116,10 +122,9 @@ class CIMDiskDriveMap(CIMPlugin):
         sysnames = self._getSysnames(device, results, "CIM_DiskDrive")
         for inst in instances:
             if (inst.get("_sysname") or "").lower() not in sysnames: continue
-            instPath = inst.get("setPath") or ""
+            if not self._isHardDisk(inst): continue
             try:
-                inst.update(self._getPackage(results, instPath))
-                packPath = inst.get("_path") or ""
+                inst.update(self._getPackage(results, inst))
                 if "diskType" in inst:
                     inst["diskType"] = self._diskTypes(inst["diskType"])
                     if not inst["diskType"]: del inst["diskType"]
@@ -133,13 +138,13 @@ class CIMDiskDriveMap(CIMPlugin):
                 om.setProductKey = MultiArgs(
                     getattr(om, "setProductKey", "") or "Unknown", om._manuf)
                 if not getattr(om, "FWRev", ""):
-                    om.FWRev = self._getFirmware(results, instPath)
+                    om.FWRev = self._getFirmware(results, inst)
                 if not str(getattr(om, "bay", "")):
-                    bay = self._getBay(results, packPath)
+                    bay = self._getBay(results, inst)
                     if bay > -1: om.bay = bay
-                om.setChassis = self._getChassis(results, packPath)
-                om.setStoragePool = self._getPool(results, instPath)
-                om.setStatPath = self._getStatPath(results, instPath)
+                om.setChassis = self._getChassis(results, inst)
+                om.setStoragePool = self._getPool(results, inst)
+                om.setStatPath = self._getStatPath(results, inst)
             except AttributeError:
                 continue
             rm.append(om)

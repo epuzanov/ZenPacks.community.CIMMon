@@ -78,7 +78,7 @@ class ZenPack(ZenPackBase):
                 'community.cim.CIMOperatingSystemMap',
                 'community.cim.CIMChassisMap',
                 'community.cim.CIMPhysicalMemoryMap',
-                'community.cim.CIMDiskDriveMap',
+                'community.cim.Win32DiskDriveMap',
                 'community.cim.Win32ProcessorMap',
                 'community.cim.Win32NetworkAdapterMap',
                 'community.cim.Win32VolumeMap',

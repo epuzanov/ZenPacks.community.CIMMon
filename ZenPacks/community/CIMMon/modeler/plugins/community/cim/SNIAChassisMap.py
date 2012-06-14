@@ -1,6 +1,6 @@
 ################################################################################
 #
-# This program is part of the SMISMon Zenpack for Zenoss.
+# This program is part of the CIMMon Zenpack for Zenoss.
 # Copyright (C) 2012 Egor Puzanov.
 #
 # This program can be used under the GNU General Public License version 2
@@ -12,7 +12,7 @@ __doc__="""SNIAChassisMap
 
 SNIAChassisMap maps SNIA_Chassis class to CIM_Chassis class.
 
-$Id: SNAIChassisMap.py,v 1.0 2012/01/23 23:46:12 egor Exp $"""
+$Id: SNIAChassisMap.py,v 1.0 2012/01/23 23:46:12 egor Exp $"""
 
 from ZenPacks.community.CIMMon.modeler.plugins.community.cim.CIMChassisMap \
     import CIMChassisMap

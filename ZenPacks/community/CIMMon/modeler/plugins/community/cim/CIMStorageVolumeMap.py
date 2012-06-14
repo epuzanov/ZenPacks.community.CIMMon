@@ -67,9 +67,9 @@ class CIMStorageVolumeMap(CIMPlugin):
                 (2, 2): "RAID5+1",
                 }.get((pr, dr), "Unknown")
 
-    def _getPool(self, results, iPath):
+    def _getPool(self, results, inst):
         return self._findInstance(results, "CIM_AllocatedFromStoragePool",
-                                                    "dep", iPath).get("ant", "")
+                                    "dep", inst.get("setPath")).get("ant") or ""
 
     def process(self, device, results, log):
         """collect CIM information from this device"""
@@ -80,7 +80,6 @@ class CIMStorageVolumeMap(CIMPlugin):
         sysnames = self._getSysnames(device, results, "CIM_StorageVolume")
         for inst in instances:
             if (inst.get("_sysname") or "").lower() not in sysnames: continue
-            instPath = inst.get("setPath") or ""
             try:
                 om = self.objectMap(inst)
                 om.id = self.prepId(om.id)
@@ -90,8 +89,8 @@ class CIMStorageVolumeMap(CIMPlugin):
                     if om._dr > 2: om._dr = 2
                     om.diskType = self._raidLevels(om._pr, om._dr)
                 om.accessType=self._accessTypes(int(inst.get("accessType") or 0))
-                om.setStoragePool = self._getPool(results, instPath)
-                om.setStatPath = self._getStatPath(results, instPath)
+                om.setStoragePool = self._getPool(results, inst)
+                om.setStatPath = self._getStatPath(results, inst)
             except AttributeError:
                 continue
             rm.append(om)

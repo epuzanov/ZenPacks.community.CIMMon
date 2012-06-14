@@ -12,9 +12,9 @@ __doc__="""CIMStoragePoolMap
 
 CIMStoragePoolMap maps CIM_StoragePool class to CIM_StoragePool class.
 
-$Id: CIMStoragePoolMap.py,v 1.0 2012/01/04 21:35:06 egor Exp $"""
+$Id: CIMStoragePoolMap.py,v 1.1 2012/06/14 21:26:25 egor Exp $"""
 
-__version__ = '$Revision: 1.0 $'[11:-2]
+__version__ = '$Revision: 1.1 $'[11:-2]
 
 
 from ZenPacks.community.CIMMon.CIMPlugin import CIMPlugin
@@ -60,7 +60,6 @@ class CIMStoragePoolMap(CIMPlugin):
         sysnames = self._getSysnames(device, results, "CIM_StoragePool")
         for inst in instances:
             if (inst.get("_sysname") or "").lower() not in sysnames: continue
-            instPath = inst.get("setPath", "")
             if (str(inst.get("_primordial")).lower() == "true" or (
                         'rimordial' in (inst.get("setPath") or ""))): continue
             try:

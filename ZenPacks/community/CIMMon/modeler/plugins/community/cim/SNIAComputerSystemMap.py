@@ -1,6 +1,6 @@
 ################################################################################
 #
-# This program is part of the SMISMon Zenpack for Zenoss.
+# This program is part of the CIMMon Zenpack for Zenoss.
 # Copyright (C) 2012 Egor Puzanov.
 #
 # This program can be used under the GNU General Public License version 2
@@ -12,7 +12,7 @@ __doc__="""SNIAComputerSystemMap
 
 SNIAComputerSystemMap maps SNIA_ComputerSystem class to CIM_ComputerSystem class.
 
-$Id: SNAIComputerSystemMap.py,v 1.0 2012/01/23 23:47:24 egor Exp $"""
+$Id: SNIAComputerSystemMap.py,v 1.0 2012/01/23 23:47:24 egor Exp $"""
 
 from ZenPacks.community.CIMMon.modeler.plugins.community.cim.CIMComputerSystemMap \
     import CIMComputerSystemMap

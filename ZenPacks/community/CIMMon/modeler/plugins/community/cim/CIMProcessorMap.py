@@ -12,9 +12,9 @@ __doc__="""CIMProcessorMap
 
 CIMProcessorMap maps the CIM_Processor class to cpus objects
 
-$Id: CIMProcessorMap.py,v 1.3 2012/06/13 20:47:41 egor Exp $"""
+$Id: CIMProcessorMap.py,v 1.4 2012/06/14 21:25:12 egor Exp $"""
 
-__version__ = '$Revision: 1.3 $'[11:-2]
+__version__ = '$Revision: 1.4 $'[11:-2]
 
 from ZenPacks.community.CIMMon.CIMPlugin import CIMPlugin
 from Products.DataCollector.plugins.DataMaps import MultiArgs
@@ -199,19 +199,19 @@ class CIMProcessorMap(CIMPlugin):
 
     def _getSocketNumber(self, instance):
         """return cpu socket number"""
-        return str(instance.get('id', "")).split()[-1] or 0
+        return str(instance.get("id") or "").split()[-1] or 0
 
     def _getExtspeed(self, instance):
         """return external bus clock speed"""
-        return int(instance.get("extspeed", None) or 0)
+        return int(instance.get("extspeed") or 0)
 
     def _getVoltage(self, instance):
         """return cpu voltage"""
-        return int(instance.get("voltage", None) or 0) * 100
+        return int(instance.get("voltage") or 0) * 100
 
     def _getCoresNumber(self, results, instance):
         """return number of cpu cores"""
-        core = instance.get("core", None)
+        core = instance.get("core")
         if core: return core
         instances = results.get("CIM_Processor")
         core = len(instances)/(len([i for i in instances if i.get("_status",

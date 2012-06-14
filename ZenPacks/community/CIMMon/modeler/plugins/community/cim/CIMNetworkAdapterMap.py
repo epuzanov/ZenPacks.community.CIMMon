@@ -13,9 +13,9 @@ __doc__ = """CIMNetworkAdapterMap
 Gather IP network interface information from CIMMOM, and 
 create DMD interface objects
 
-$Id: CIMNetworkAdapterMap.py,v 1.1 2012/06/13 20:44:12 egor Exp $"""
+$Id: CIMNetworkAdapterMap.py,v 1.2 2012/06/14 21:19:14 egor Exp $"""
 
-__version__ = '$Revision: 1.1 $'[11:-2]
+__version__ = '$Revision: 1.2 $'[11:-2]
 
 import re
 import types
@@ -127,8 +127,7 @@ class CIMNetworkAdapterMap(CIMPlugin):
             if (inst.get("_sysname") or "").lower() not in sysnames: continue
             try:
                 interfaceName = inst.get("interfaceName")
-                instPath = inst.get("setPath")
-                if not interfaceName or not instPath: continue
+                if not interfaceName or not inst.get("setPath"): continue
                 inst["type"] = self._getLinkType(inst)
                 if dontCollectIntNames and re.search(dontCollectIntNames,
                                                     interfaceName):
@@ -146,7 +145,7 @@ class CIMNetworkAdapterMap(CIMPlugin):
                 om.operStatus = self._getOperStatus(inst)
                 if om.operStatus == 2: continue
                 om.adminStatus = self._getAdminStatus(inst)
-                om.setStatPath = self._getStatPath(results, instPath)
+                om.setStatPath = self._getStatPath(results, inst)
             except AttributeError:
                 continue
             rm.append(om)

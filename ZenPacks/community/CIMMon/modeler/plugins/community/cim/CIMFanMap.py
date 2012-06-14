@@ -12,9 +12,9 @@ __doc__="""CIMFanMap
 
 CIMFanMap maps CIM_Fan class to Fan class.
 
-$Id: CIMFanMap.py,v 1.2 2012/06/13 20:44:08 egor Exp $"""
+$Id: CIMFanMap.py,v 1.3 2012/06/14 21:17:25 egor Exp $"""
 
-__version__ = '$Revision: 1.2 $'[11:-2]
+__version__ = '$Revision: 1.3 $'[11:-2]
 
 
 from ZenPacks.community.CIMMon.CIMPlugin import CIMPlugin
@@ -80,15 +80,15 @@ class CIMFanMap(CIMPlugin):
             return fanType
         return "%s Cooling"%(fanTypeStr == "true" and "Active" or "Passive")
 
-    def _getStatPath(self, results, iPath):
+    def _getStatPath(self, results, inst):
         comp =  self._findInstance(results, "CIM_Tachometer", "setStatPath",
                 self._findInstance(results, "CIM_AssociatedSensor", "dep",
-                iPath).get("ant", ""))
-        if not comp: return {} 
+                inst.get("setPath")).get("ant"))
+        if not comp: return {}
         return dict(((pn, comp[pn]) for pn in ('setStatPath',
                     'lowerThresholdCritical', 'lowerThresholdFatal',
                     'lowerThresholdNonCritical', 'unitModifier') \
-                    if comp.get(pn, None) is not None))
+                    if comp.get(pn) is not None))
 
     def process(self, device, results, log):
         """collect CIM information from this device"""
@@ -100,7 +100,7 @@ class CIMFanMap(CIMPlugin):
         for inst in instances:
             if (inst.get("_sysname") or "").lower() not in sysnames: continue
             if int(inst.get("_sensorType") or 2) == 2:
-                inst.update(self._getStatPath(results, inst.get("setPath")))
+                inst.update(self._getStatPath(results, inst))
             else: continue
             if "type" in inst:
                 inst["type"] = self._getType(inst["type"])

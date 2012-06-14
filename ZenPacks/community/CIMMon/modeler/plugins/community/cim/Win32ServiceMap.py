@@ -12,9 +12,9 @@ __doc__ = """Win32ServiceMap
 
 Win32ServiceMap gathers status of Windows services
 
-$Id: Win32ServiceMap.py,v 1.0 2012/06/13 20:54:40 egor Exp $"""
+$Id: Win32ServiceMap.py,v 1.1 2012/06/14 21:33:46 egor Exp $"""
 
-__version__ = '$Revision: 1.0 $'[11:-2]
+__version__ = '$Revision: 1.1 $'[11:-2]
 
 from ZenPacks.community.CIMMon.CIMPlugin import CIMPlugin
 
@@ -26,10 +26,10 @@ class Win32ServiceMap(CIMPlugin):
     relname = "winservices"
     modname = "Products.ZenModel.WinService"
 
-    deviceProperties = CIMPlugin.deviceProperties + ('zCIMHWConnectionString',)
+    deviceProperties = CIMPlugin.deviceProperties + ('zCIMConnectionString',)
 
     def queries(self, device):
-        connectionString = getattr(device, 'zCIMHWConnectionString', '')
+        connectionString = getattr(device, 'zCIMConnectionString', '')
         if not connectionString:
             return {}
         cs = self.prepareCS(device, connectionString)

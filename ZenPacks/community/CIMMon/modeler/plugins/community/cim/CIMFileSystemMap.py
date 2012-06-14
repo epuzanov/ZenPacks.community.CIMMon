@@ -12,9 +12,9 @@ __doc__="""CIMFileSystemMap
 
 CIMFileSystemMap maps the CIM_FileSystem class to filesystems objects
 
-$Id: CIMFileSystemMap.py,v 1.2 2012/06/13 20:44:42 egor Exp $"""
+$Id: CIMFileSystemMap.py,v 1.3 2012/06/14 21:17:06 egor Exp $"""
 
-__version__ = '$Revision: 1.2 $'[11:-2]
+__version__ = '$Revision: 1.3 $'[11:-2]
 
 import re
 from ZenPacks.community.CIMMon.CIMPlugin import CIMPlugin
@@ -80,7 +80,7 @@ class CIMFileSystemMap(CIMPlugin):
                 om.id = self.prepId(om.mount)
                 om.blockSize = int(getattr(om, "blockSize", None) or 4096)
                 om.totalBlocks = int(om.totalBlocks or 0) / om.blockSize
-                om.setStatPath = self._getStatPath(results, inst.get("setPath"))
+                om.setStatPath = self._getStatPath(results, inst)
             except AttributeError:
                 continue
             rm.append(om)

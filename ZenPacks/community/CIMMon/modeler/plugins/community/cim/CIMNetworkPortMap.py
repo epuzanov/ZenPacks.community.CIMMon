@@ -13,9 +13,9 @@ __doc__ = """CIMNetworkPortMap
 Gather IP network interface information from CIMMOM, and 
 create DMD interface objects
 
-$Id: CIMNetworkPortMap.py,v 1.3 2012/06/13 20:46:01 egor Exp $"""
+$Id: CIMNetworkPortMap.py,v 1.4 2012/06/14 21:20:53 egor Exp $"""
 
-__version__ = '$Revision: 1.3 $'[11:-2]
+__version__ = '$Revision: 1.4 $'[11:-2]
 
 import re
 import types
@@ -167,10 +167,9 @@ class CIMNetworkPortMap(CIMPlugin):
     def _getAdminStatus(self, inst):
         return int(inst.get("adminStatus") or 0) in (0, 2) and 1 or 2
 
-    def _getController(self, results, iPath):
-        if not iPath: return ""
+    def _getController(self, results, inst):
         return self._findInstance(results, "CIM_SystemComponent", "pc",
-                                                        iPath).get("gc") or ""
+                                            inst.get("setPath")).get("gc") or ""
 
     def process(self, device, results, log):
         """collect CIM information from this device"""
@@ -203,8 +202,7 @@ class CIMNetworkPortMap(CIMPlugin):
             if (inst.get("_sysname") or "").lower() not in sysnames: continue
             try:
                 interfaceName = inst.get("interfaceName") or ""
-                instPath = inst.get("setPath") or ""
-                if not interfaceName or not instPath: continue
+                if not interfaceName or not inst.get("setPath"): continue
                 inst["type"] = self._getLinkType(inst)
                 if dontCollectIntNames and re.search(dontCollectIntNames,
                                                     interfaceName):
@@ -222,9 +220,9 @@ class CIMNetworkPortMap(CIMPlugin):
                 om.macaddress = self._getMacAddress(inst.get("macaddress"))
                 om.operStatus = self._getOperStatus(inst)
                 if om.operStatus == 2: continue
-                om.setController = self._getController(results, instPath)
+                om.setController = self._getController(results, inst)
                 om.adminStatus = self._getAdminStatus(inst)
-                om.setStatPath = self._getStatPath(results, instPath)
+                om.setStatPath = self._getStatPath(results, inst)
             except AttributeError:
                 continue
             rm.append(om)
