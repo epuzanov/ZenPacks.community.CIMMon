@@ -12,9 +12,9 @@ __doc__="""CIMDiskDriveMap
 
 CIMDiskDriveMap maps CIM_DiskDrive class to CIM_DiskDrive class.
 
-$Id: SNIADiskDriveMap.py,v 1.2 2012/06/14 21:17:51 egor Exp $"""
+$Id: SNIADiskDriveMap.py,v 1.3 2012/06/15 20:43:21 egor Exp $"""
 
-__version__ = '$Revision: 1.2 $'[11:-2]
+__version__ = '$Revision: 1.3 $'[11:-2]
 
 from ZenPacks.community.CIMMon.CIMPlugin import CIMPlugin
 from Products.DataCollector.plugins.DataMaps import ObjectMap, MultiArgs
@@ -72,7 +72,7 @@ class CIMDiskDriveMap(CIMPlugin):
     def _getPackage(self, results, inst):
         return  self._findInstance(results, "CIM_PhysicalPackage", "_path",
                 self._findInstance(results, "CIM_Realizes", "dep",
-                inst.get("setPath")).get("ant")) or ""
+                inst.get("setPath")).get("ant"))
 
     def _getChassis(self, results, inst):
         iPath = inst.get("_pPath") or inst.get("gc")
