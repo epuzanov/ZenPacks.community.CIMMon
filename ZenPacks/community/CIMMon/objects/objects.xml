@@ -897,6 +897,82 @@ AVERAGE
 </object>
 </tomanycont>
 </object>
+<!-- ('', 'zport', 'dmd', 'Devices', 'Server', 'Windows', 'CIM', 'rrdTemplates', 'Win32_DiskDrive') -->
+<object id='/zport/dmd/Devices/Server/Windows/CIM/rrdTemplates/Win32_DiskDrive' module='Products.ZenModel.RRDTemplate' class='RRDTemplate'>
+<property type="text" id="description" mode="w" >
+Win32_DiskDrive status monitoring template
+</property>
+<property type="string" id="targetPythonClass" mode="w" >
+ZenPacks.community.CIMMon.CIM_DiskDrive
+</property>
+<tomanycont id='datasources'>
+<object id='ManagedSystemElement' module='ZenPacks.community.SQLDataSource.datasources.SQLDataSource' class='SQLDataSource'>
+<property select_variable="sourcetypes" type="selection" id="sourcetype" mode="w" >
+SQL
+</property>
+<property type="boolean" id="enabled" mode="w" >
+True
+</property>
+<property type="string" id="eventClass" mode="w" >
+/Cmd/Fail
+</property>
+<property type="int" id="severity" mode="w" >
+3
+</property>
+<property type="int" id="cycletime" mode="w" >
+300
+</property>
+<property type="string" id="cs" mode="w" >
+${here/zCIMConnectionString}
+</property>
+<property type="string" id="sql" mode="w" >
+SELECT Status FROM ${here/cimClassName} WHERE ${here/whereString}
+</property>
+<tomanycont id='datapoints'>
+<object id='OperationalStatus' module='Products.ZenModel.RRDDataPoint' class='RRDDataPoint'>
+<property select_variable="rrdtypes" type="selection" id="rrdtype" mode="w" >
+GAUGE
+</property>
+<property type="boolean" id="isrow" mode="w" >
+True
+</property>
+<tomanycont id='aliases'>
+<object id='Status' module='Products.ZenModel.RRDDataPointAlias' class='RRDDataPointAlias'>
+<property type="string" id="formula" mode="w" >
+"OK":2,"Error":6,"Degraded":3,"Unknown":2,"Pred Fail":5,"Starting":8,"Stopping":9,"Service":11,"Stressed":4,"NonRecover":7,"No Contact":12,"Lost Comm":13,"good":2
+</property>
+</object>
+</tomanycont>
+</object>
+</tomanycont>
+</object>
+</tomanycont>
+<tomanycont id='thresholds'>
+<object id='OperationalStatus' module='Products.ZenModel.MinMaxThreshold' class='MinMaxThreshold'>
+<property type="lines" id="dsnames" mode="w" >
+['ManagedSystemElement_OperationalStatus']
+</property>
+<property type="boolean" id="enabled" mode="w" >
+True
+</property>
+<property type="string" id="minval" mode="w" >
+2
+</property>
+<property type="string" id="maxval" mode="w" >
+2
+</property>
+<property type="string" id="eventClass" mode="w" >
+/Status/CIM_ManagedSystemElement
+</property>
+<property type="int" id="severity" mode="w" >
+3
+</property>
+<property type="int" id="escalateCount" mode="w" >
+0
+</property>
+</object>
+</tomanycont>
+</object>
 <!-- ('', 'zport', 'dmd', 'Devices', 'Server', 'Windows', 'CIM', 'rrdTemplates', 'Win32_LogicalDisk') -->
 <object id='/zport/dmd/Devices/Server/Windows/CIM/rrdTemplates/Win32_LogicalDisk' module='Products.ZenModel.RRDTemplate' class='RRDTemplate'>
 <property type="text" id="description" mode="w" >

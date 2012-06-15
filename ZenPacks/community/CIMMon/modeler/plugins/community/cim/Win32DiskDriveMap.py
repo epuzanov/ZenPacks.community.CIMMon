@@ -12,15 +12,18 @@ __doc__="""Win32DiskDriveMap
 
 Win32DiskDriveMap maps Win32_DiskDrive class to CIM_DiskDrive class.
 
-$Id: Win32DiskDriveMap.py,v 1.0 2012/06/14 23:04:48 egor Exp $"""
+$Id: Win32DiskDriveMap.py,v 1.1 2012/06/15 18:03:30 egor Exp $"""
 
+__version__ = '$Revision: 1.1 $'[11:-2]
+
+from ZenPacks.community.CIMMon.CIMPlugin import CIMPlugin
 from ZenPacks.community.CIMMon.modeler.plugins.community.cim.CIMDiskDriveMap \
     import CIMDiskDriveMap
 
 class Win32DiskDriveMap(CIMDiskDriveMap):
     """Map Win32_DiskDrive CIM class to HardDisk class"""
 
-    deviceProperties = CIMPlugin.deviceProperties + ("zCIMHWConnectionString",)
+    deviceProperties = CIMPlugin.deviceProperties+("zCIMConnectionString",)
 
     def queries(self, device):
         connectionString = getattr(device, 'zCIMConnectionString', '')
@@ -36,10 +39,11 @@ class Win32DiskDriveMap(CIMDiskDriveMap):
                     {
                         "setPath":"__PATH",
                         "id":"DeviceID",
-                        "diskType":"DiskInterface",
+                        "_index":"Index",
+                        "diskType":"InterfaceType",
                         "size":"Size",
                         "description":"Caption",
-                        "title":"Name",
+                        "title":"Caption",
                         "FWRev":"FirmwareRevision",
                         "_mediatype":"MediaType",
                         "bay":"SCSILogicalUnit",
@@ -48,15 +52,27 @@ class Win32DiskDriveMap(CIMDiskDriveMap):
                 ),
             "CIM_ElementStatisticalData":
                 (
-                    "SELECT ManagedElement,Stats FROM CIM_ElementStatisticalData",
+                    "SELECT Name FROM Win32_PerfRawData_PerfDisk_PhysicalDisk",
                     None,
                     cs,
                     {
-                        "me":"ManagedElement",
-                        "stats":"Stats",
+                        "name":"Name",
                     },
                 ),
             }
 
+    def _diskTypes(self, diskType):
+        return str(diskType).lower()
+
     def _isHardDisk(self, inst):
         return str(inst.get("_mediatype")).startswith('Fixed')
+
+    def _getStatPath(self, results, inst):
+        idx = str(int(inst.get("_index") or -1))
+        if idx is "-1": return ""
+        for stat in results.get("CIM_ElementStatisticalData") or ():
+            name = str(stat.get("name") or "")
+            print name.split()[0], idx
+            if name.split()[0] == idx: break
+        else: return ""
+        return 'Win32_PerfRawData_PerfDisk_PhysicalDisk.Name="%s"'%name

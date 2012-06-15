@@ -14,6 +14,8 @@ SNIAComputerSystemMap maps SNIA_ComputerSystem class to CIM_ComputerSystem class
 
 $Id: SNIAComputerSystemMap.py,v 1.0 2012/01/23 23:47:24 egor Exp $"""
 
+__version__ = '$Revision: 1.0 $'[11:-2]
+
 from ZenPacks.community.CIMMon.modeler.plugins.community.cim.CIMComputerSystemMap \
     import CIMComputerSystemMap
 

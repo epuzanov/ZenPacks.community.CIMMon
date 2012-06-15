@@ -14,6 +14,8 @@ SNIANetworkPortMap maps SNIA_NetworkPort class to CIM_NetworkPort class.
 
 $Id: SNIANetworkPortMap.py,v 1.0 2012/01/23 23:50:55 egor Exp $"""
 
+__version__ = '$Revision: 1.0 $'[11:-2]
+
 from ZenPacks.community.CIMMon.modeler.plugins.community.cim.CIMNetworkPortMap \
     import CIMNetworkPortMap
 

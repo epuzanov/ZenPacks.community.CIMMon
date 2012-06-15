@@ -14,6 +14,8 @@ SNIADiskDriveMap maps SNIA_DiskDrive class to CIM_DiskDrive class.
 
 $Id: SNIADiskDriveMap.py,v 1.1 2012/06/14 23:03:00 egor Exp $"""
 
+__version__ = '$Revision: 1.1 $'[11:-2]
+
 from ZenPacks.community.CIMMon.modeler.plugins.community.cim.CIMDiskDriveMap \
     import CIMDiskDriveMap
 
