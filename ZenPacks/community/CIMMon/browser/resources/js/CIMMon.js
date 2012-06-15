@@ -399,4 +399,53 @@ ZC.CIM_StorageVolumePanel = Ext.extend(ZC.ComponentGridPanel, {
 Ext.reg('CIM_StorageVolumePanel', ZC.CIM_StorageVolumePanel);
 ZC.registerName('CIM_StorageVolume', _t('Logical Disk'), _t('Logical Disks'));
 
+ZC.CIM_CollectionPanel = Ext.extend(ZC.ComponentGridPanel, {
+    constructor: function(config) {
+        config = Ext.applyIf(config||{}, {
+            componentType: 'CIM_Collection',
+            fields: [
+                {name: 'uid'},
+                {name: 'severity'},
+                {name: 'status'},
+                {name: 'name'},
+                {name: 'locking'},
+                {name: 'usesMonitorAttribute'},
+                {name: 'monitored'},
+                {name: 'monitor'}
+            ],
+            columns: [{
+                id: 'severity',
+                dataIndex: 'severity',
+                header: _t('Events'),
+                renderer: Zenoss.render.severity,
+                width: 60
+            },{
+                id: 'name',
+                dataIndex: 'name',
+                header: _t('Name'),
+                sortable: true
+            },{
+                id: 'monitored',
+                dataIndex: 'monitored',
+                header: _t('Monitored'),
+                width: 60
+            },{
+                id: 'status',
+                dataIndex: 'status',
+                header: _t('Status'),
+                width: 60
+            },{
+                id: 'locking',
+                dataIndex: 'locking',
+                header: _t('Locking'),
+                renderer: Zenoss.render.locking_icons
+            }]
+        });
+        ZC.CIM_CollectionPanel.superclass.constructor.call(this, config);
+    }
+});
+
+Ext.reg('CIM_CollectionPanel', ZC.CIM_CollectionPanel);
+ZC.registerName('CIM_Collection', _t('Collection'), _t('Collections'));
+
 })();

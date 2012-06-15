@@ -70,7 +70,7 @@ class CIM_StorageVolume(OSComponent, CIM_ManagedSystemElement):
             'meta_type'      : 'StorageVolume',
             'description'    : """Arbitrary device grouping class""",
             'icon'           : 'StorageVolume_icon.gif',
-            'product'        : 'ZenModel',
+            'product'        : 'CIMMon',
             'factory'        : 'manage_addStorageVolume',
             'immediate_view' : 'viewCIMStorageVolume',
             'actions'        :

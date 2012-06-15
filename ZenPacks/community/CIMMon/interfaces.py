@@ -12,9 +12,9 @@ __doc__="""interfaces
 
 describes the form field to the user interface.
 
-$Id: interfaces.py,v 1.1 2012/06/13 20:39:49 egor Exp $"""
+$Id: interfaces.py,v 1.2 2012/06/15 23:17:38 egor Exp $"""
 
-__version__ = "$Revision: 1.1 $"[11:-2]
+__version__ = "$Revision: 1.2 $"[11:-2]
 
 from Products.Zuul.interfaces import IComponentInfo,\
                                     IIpInterfaceInfo,\
@@ -118,3 +118,9 @@ class INetworkPortInfo(IIpInterfaceInfo):
     Info adapter for Controller components.
     """
     controller =schema.Entity(title=u"Controller",readonly=True,group='Details')
+
+class ICollectionInfo(IComponentInfo):
+    """
+    Info adapter for Collection components.
+    """
+    pass

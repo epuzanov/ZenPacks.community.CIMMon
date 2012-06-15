@@ -11,6 +11,11 @@
                  provides=".interfaces.IChassisInfo"
                  />
 
+        <adapter factory=".info.CIM_CollectionInfo"
+                 for=".CIM_Collection.CIM_Collection"
+                 provides=".interfaces.ICollectionInfo"
+                 />
+
         <adapter factory=".info.CIM_ComputerSystemInfo"
                  for=".CIM_ComputerSystem.CIM_ComputerSystem"
                  provides=".interfaces.IComputerSystemInfo"

@@ -60,7 +60,7 @@ class CIM_StoragePool(OSComponent, CIM_ManagedSystemElement):
             'meta_type'      : 'CIM_StoragePool',
             'description'    : """Arbitrary device grouping class""",
             'icon'           : 'StoragePool_icon.gif',
-            'product'        : 'ZenModel',
+            'product'        : 'CIMMon',
             'factory'        : 'manage_addStoragePool',
             'immediate_view' : 'viewCIMStoragePool',
             'actions'        :

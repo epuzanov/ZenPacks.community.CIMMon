@@ -8,55 +8,53 @@
 #
 ################################################################################
 
-__doc__="""CIM_PhysicalMemory
+__doc__="""CIM_Collection
 
-CIM_PhysicalMemory is an abstraction of a Memory module.
+CIM_Collection is an abstraction of a CIM_Collection
 
-$Id: CIM_PhysicalMemory.py,v 1.1 2012/06/13 20:35:20 egor Exp $"""
+$Id: CIM_Collection.py,v 1.0 2012/06/15 23:07:16 egor Exp $"""
 
-__version__ = "$Revision: 1.1 $"[11:-2]
+__version__ = "$Revision: 1.0 $"[11:-2]
 
-from Globals import DTMLFile
-
-from Products.ZenRelations.RelSchema import *
-from Products.ZenModel.HWComponent import HWComponent
-from Products.ZenUtils.Utils import convToUnits
+from Products.ZenModel.OSComponent import OSComponent
+from Products.ZenRelations.RelSchema import ToOne, ToManyCont
 from ZenPacks.community.CIMMon.CIM_ManagedSystemElement import *
 
-class CIM_PhysicalMemory(HWComponent, CIM_ManagedSystemElement):
-    """PhysicalMemory object"""
+class CIM_Collection(OSComponent, CIM_ManagedSystemElement):
+    """Collection object"""
 
     collectors = ('zenperfsql', 'zencommand', 'zenwinperf')
-    portal_type = meta_type = 'CIM_PhysicalMemory'
+    portal_type = meta_type = 'CIM_Collection'
 
-    slot = 0
-    size = 0
+    _properties = OSComponent._properties+CIM_ManagedSystemElement._properties
 
-    _properties = HWComponent._properties + (
-        {'id':'slot', 'type':'int', 'mode':'w'},
-        {'id':'size', 'type':'int', 'mode':'w'},
-    ) + CIM_ManagedSystemElement._properties
-
-    _relations = HWComponent._relations + (
-        ("hw", ToOne(ToManyCont, "Products.ZenModel.DeviceHW",
-                                                    "physicalmemorymodules")),
+    _relations = OSComponent._relations + (
+        ("os", ToOne(
+            ToManyCont,
+            "Products.ZenModel.OperatingSystem",
+            "collections")),
         )
 
-    factory_type_information = (
+    factory_type_information = ( 
         {
-            'id'             : 'MemoryModule',
-            'meta_type'      : 'MemoryModule',
+            'id'             : 'CIM_Collection',
+            'meta_type'      : 'CIM_Collection',
             'description'    : """Arbitrary device grouping class""",
-            'icon'           : 'MemoryModule_icon.gif',
+            'icon'           : 'Collection_icon.gif',
             'product'        : 'CIMMon',
-            'factory'        : 'manage_addMemoryModule',
-            'immediate_view' : 'viewMemoryModule',
+            'factory'        : 'manage_addCollection',
+            'immediate_view' : 'viewCIMCollection',
             'actions'        :
             (
                 { 'id'            : 'status'
                 , 'name'          : 'Status'
-                , 'action'        : 'viewMemoryModule'
+                , 'action'        : 'viewCIMCollection'
                 , 'permissions'   : (ZEN_VIEW,)
+                },
+                { 'id'            : 'events'
+                , 'name'          : 'Events'
+                , 'action'        : 'viewEvents'
+                , 'permissions'   : (ZEN_VIEW, )
                 },
                 { 'id'            : 'perfConf'
                 , 'name'          : 'Template'
@@ -77,10 +75,4 @@ class CIM_PhysicalMemory(HWComponent, CIM_ManagedSystemElement):
     getStatusImgSrc = CIM_ManagedSystemElement.getStatusImgSrc
     convertStatus = CIM_ManagedSystemElement.convertStatus
 
-    def sizeString(self):
-        """
-        Return the number of total bytes in human readable form ie 10MB
-        """
-        return self.size > 0 and convToUnits(self.size) or ''
-
-InitializeClass(CIM_PhysicalMemory)
+InitializeClass(CIM_Collection)

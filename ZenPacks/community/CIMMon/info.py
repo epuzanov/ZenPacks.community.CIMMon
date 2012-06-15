@@ -12,9 +12,9 @@ __doc__="""info.py
 
 Representation of CIM components.
 
-$Id: info.py,v 1.1 2012/06/13 20:38:42 egor Exp $"""
+$Id: info.py,v 1.2 2012/06/15 23:13:34 egor Exp $"""
 
-__version__ = "$Revision: 1.1 $"[11:-2]
+__version__ = "$Revision: 1.2 $"[11:-2]
 
 from zope.interface import implements
 from ZenPacks.community.CIMMon import interfaces
@@ -49,3 +49,7 @@ class CIM_ComputerSystemInfo(ComputerSystemInfo):
 
 class CIM_NetworkPortInfo(NetworkPortInfo):
     implements(interfaces.INetworkPortInfo)
+
+class CIM_CollectionInfo(CollectionInfo):
+    implements(interfaces.ICollectionInfo)
+

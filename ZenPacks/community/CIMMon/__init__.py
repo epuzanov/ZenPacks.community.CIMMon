@@ -23,6 +23,8 @@ OperatingSystem._relations += (("storagepools", ToManyCont(ToOne,
                         "ZenPacks.community.CIMMon.CIM_StoragePool", "os")),
                         ("storagevolumes", ToManyCont(ToOne,
                         "ZenPacks.community.CIMMon.CIM_StorageVolume", "os")),
+                        ("collections", ToManyCont(ToOne,
+                        "ZenPacks.community.CIMMon.CIM_Collection", "os")),
                         )
 
 def logicalProcessors(self):
@@ -150,9 +152,9 @@ class ZenPack(ZenPackBase):
             except: continue
         ZenPackBase.remove(self, app, leaveObjects)
         DeviceHW._relations = tuple([x for x in DeviceHW._relations \
-                    if x[0] not in ['chassis', 'physicalmemorymodules']])
-        OperatingSystem._relations = tuple([x for x in OperatingSystem._relations \
-                    if x[0] not in ['storagepools', 'storagevolumes']])
+                if x[0] not in ['chassis', 'physicalmemorymodules']])
+        OperatingSystem._relations=tuple([x for x in OperatingSystem._relations \
+                if x[0] not in ['storagepools','storagevolumes','collections']])
         for d in self.dmd.Devices.getSubDevices():
             d.hw.buildRelations()
             d.os.buildRelations()
