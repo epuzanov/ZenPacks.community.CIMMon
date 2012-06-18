@@ -12,9 +12,9 @@ __doc__="""CIMPlugin
 
 CIMPlugin extends SQLPlugin with CIM specific attributes and methods.
 
-$Id: CIMPlugin.py,v 1.1 2012/06/14 20:52:19 egor Exp $"""
+$Id: CIMPlugin.py,v 1.2 2012/06/18 23:12:33 egor Exp $"""
 
-__version__ = '$Revision: 1.1 $'[11:-2]
+__version__ = '$Revision: 1.2 $'[11:-2]
 
 from ZenPacks.community.SQLDataSource.SQLPlugin import SQLPlugin
 
@@ -26,7 +26,7 @@ class CIMPlugin(SQLPlugin):
     def _getSysnames(self, device, results={}, tableName=""):
         systems = {}
         findCSName = "CIM_SystemComponent" in results
-        snmpSysName = (getattr(device, "snmpSysName1", ""
+        snmpSysName = (getattr(device, "snmpSysName", ""
                         ) or device.id).strip().lower()
         for comp in (results.get(tableName) or ()):
             compSysName = comp.get("_sysname", "")
@@ -65,6 +65,10 @@ class CIMPlugin(SQLPlugin):
            if cs: return iPath
         return self._getComputerSystemPath(results,
                                         cs.get("gc", "")) or cs.get("gc", "")
+
+    def _getCollection(self, results, inst):
+        return self._findInstance(results, "CIM_MemberOfCollection", "member",
+            inst.get("setPath")).get("collection") or ""
 
     def _getStatPath(self, results, inst):
         return self._findInstance(results, "CIM_ElementStatisticalData", "me",

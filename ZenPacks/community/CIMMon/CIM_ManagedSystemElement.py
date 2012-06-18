@@ -12,13 +12,14 @@ __doc__="""CIM_ManagedSystemElement
 
 CIM_ManagedSystemElement is an abstraction for CIM_ManagedSystemElement class.
 
-$Id: CIM_ManagedSystemElement.py,v 1.2 2012/06/13 20:34:29 egor Exp $"""
+$Id: CIM_ManagedSystemElement.py,v 1.3 2012/06/18 23:16:42 egor Exp $"""
 
-__version__ = "$Revision: 1.2 $"[11:-2]
+__version__ = "$Revision: 1.3 $"[11:-2]
 
 from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
 from Products.ZenModel.ZenossSecurity import *
+from Products.ZenRelations.RelSchema import ToOne, ToMany
 
 class CIM_ManagedSystemElement:
     """ManagedSystemElement object"""
@@ -39,6 +40,12 @@ class CIM_ManagedSystemElement:
                 {'id':'cimStatClassName', 'type':'string', 'mode':'w'},
                 {'id':'cimStatKeybindings', 'type':'string', 'mode':'w'},
                 )
+
+    _relations = (
+        ("collection", ToOne(ToMany,
+            "ZenPacks.community.CIMMon.CIM_Collection",
+            "members")),
+        )
 
     statusmap ={0: ('grey', 3, 'Unknown'),
                 1: ('yellow', 3, 'Other'),
@@ -105,6 +112,25 @@ class CIM_ManagedSystemElement:
         Return the WHERE string for use in WQL query.
         """
         return self.cimStatKeybindings.replace(',', ' AND ')
+
+    security.declareProtected(ZEN_CHANGE_DEVICE, 'setCollection')
+    def setCollection(self, colid):
+        """
+        Set the collection relationship to the collection specified by the
+        given id.
+        """
+        if not colid: return
+        for col in getattr(self.device().os, 'collections', (lambda:[]))():
+            if col.getPath() != colid: continue
+            self.collection.addRelation(col)
+            break
+
+    security.declareProtected(ZEN_VIEW, 'getCollection')
+    def getCollection(self):
+        """
+        Return Collection object
+        """
+        return getattr(self, 'collection', lambda:None)()
 
     security.declareProtected(ZEN_CHANGE_DEVICE, 'convertStatus')
     def convertStatus(self, status):

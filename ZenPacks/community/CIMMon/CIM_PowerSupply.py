@@ -12,9 +12,9 @@ __doc__="""CIM_PowerSupply
 
 CIM_PowerSupply is an abstraction of a Power Supply.
 
-$Id: CIM_PowerSupply.py,v 1.1 2012/06/13 20:35:43 egor Exp $"""
+$Id: CIM_PowerSupply.py,v 1.2 2012/06/18 23:19:53 egor Exp $"""
 
-__version__ = "$Revision: 1.1 $"[11:-2]
+__version__ = "$Revision: 1.2 $"[11:-2]
 
 from Products.ZenModel.PowerSupply import PowerSupply
 from Products.ZenModel.HWComponent import HWComponent
@@ -28,6 +28,8 @@ class CIM_PowerSupply(PowerSupply, CIM_NumericSensor):
     _properties = HWComponent._properties + (
                  {'id':'watts', 'type':'string', 'mode':'w'},
     ) + CIM_NumericSensor._properties
+
+    _relations=PowerSupply._relations + CIM_NumericSensor._relations
 
     getRRDTemplates = CIM_NumericSensor.getRRDTemplates
     getStatus = CIM_NumericSensor.getStatus

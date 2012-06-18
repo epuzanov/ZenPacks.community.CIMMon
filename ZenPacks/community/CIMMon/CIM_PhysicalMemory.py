@@ -12,9 +12,9 @@ __doc__="""CIM_PhysicalMemory
 
 CIM_PhysicalMemory is an abstraction of a Memory module.
 
-$Id: CIM_PhysicalMemory.py,v 1.1 2012/06/13 20:35:20 egor Exp $"""
+$Id: CIM_PhysicalMemory.py,v 1.2 2012/06/18 23:19:32 egor Exp $"""
 
-__version__ = "$Revision: 1.1 $"[11:-2]
+__version__ = "$Revision: 1.2 $"[11:-2]
 
 from Globals import DTMLFile
 
@@ -40,7 +40,7 @@ class CIM_PhysicalMemory(HWComponent, CIM_ManagedSystemElement):
     _relations = HWComponent._relations + (
         ("hw", ToOne(ToManyCont, "Products.ZenModel.DeviceHW",
                                                     "physicalmemorymodules")),
-        )
+        ) + CIM_ManagedSystemElement._relations
 
     factory_type_information = (
         {

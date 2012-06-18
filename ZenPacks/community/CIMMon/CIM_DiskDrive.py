@@ -12,9 +12,9 @@ __doc__="""CIM_DiskDrive
 
 CIM_DiskDrive is an abstraction of a Hard Disk.
 
-$Id: CIM_DiskDrive.py,v 1.1 2012/06/13 20:31:32 egor Exp $"""
+$Id: CIM_DiskDrive.py,v 1.2 2012/06/18 23:15:40 egor Exp $"""
 
-__version__ = "$Revision: 1.1 $"[11:-2]
+__version__ = "$Revision: 1.2 $"[11:-2]
 
 from Products.ZenModel.HardDisk import HardDisk
 from Products.ZenRelations.RelSchema import ToOne, ToMany
@@ -53,7 +53,7 @@ class CIM_DiskDrive(HardDisk, CIM_ManagedSystemElement):
         ("storagepool", ToOne(ToMany,
                             "ZenPacks.community.CIMMon.CIM_StoragePool",
                             "harddisks")),
-        )
+        ) + CIM_ManagedSystemElement._relations
 
     factory_type_information = ( 
         { 
@@ -102,6 +102,7 @@ class CIM_DiskDrive(HardDisk, CIM_ManagedSystemElement):
         """
         Set the chassis relationship to the chassis specified by the given id.
         """
+        if not chid: return
         for chassis in self.hw().chassis() or []:
             if chassis.getPath() != chid: continue
             self.chassis.addRelation(chassis)
@@ -120,6 +121,7 @@ class CIM_DiskDrive(HardDisk, CIM_ManagedSystemElement):
         Set the storagepool relationship to the storage pool specified by the
         given caption.
         """
+        if not spid: return
         for sp in getattr(self.device().os, 'storagepools', (lambda:[]))():
             if sp.getPath() != spid: continue
             self.storagepool.addRelation(sp)

@@ -12,9 +12,9 @@ __doc__="""CIM_Fan
 
 CIM_Fan is an abstraction of a Fan.
 
-$Id: CIM_Fan.py,v 1.1 2012/06/13 20:32:54 egor Exp $"""
+$Id: CIM_Fan.py,v 1.2 2012/06/18 23:16:14 egor Exp $"""
 
-__version__ = "$Revision: 1.1 $"[11:-2]
+__version__ = "$Revision: 1.2 $"[11:-2]
 
 from Products.ZenModel.Fan import Fan
 from Products.ZenModel.HWComponent import HWComponent
@@ -25,6 +25,8 @@ class CIM_Fan(Fan, CIM_NumericSensor):
 
     collectors = ('zenperfsql', 'zencommand', 'zenwinperf')
     _properties = HWComponent._properties + CIM_NumericSensor._properties
+
+    _relations=Fan._relations + CIM_NumericSensor._relations
 
     getRRDTemplates = CIM_NumericSensor.getRRDTemplates
     getStatus = CIM_NumericSensor.getStatus

@@ -12,9 +12,9 @@ __doc__="""Win32DiskDriveMap
 
 Win32DiskDriveMap maps Win32_DiskDrive class to CIM_DiskDrive class.
 
-$Id: Win32DiskDriveMap.py,v 1.1 2012/06/15 18:03:30 egor Exp $"""
+$Id: Win32DiskDriveMap.py,v 1.2 2012/06/18 23:29:23 egor Exp $"""
 
-__version__ = '$Revision: 1.1 $'[11:-2]
+__version__ = '$Revision: 1.2 $'[11:-2]
 
 from ZenPacks.community.CIMMon.CIMPlugin import CIMPlugin
 from ZenPacks.community.CIMMon.modeler.plugins.community.cim.CIMDiskDriveMap \
@@ -72,7 +72,6 @@ class Win32DiskDriveMap(CIMDiskDriveMap):
         if idx is "-1": return ""
         for stat in results.get("CIM_ElementStatisticalData") or ():
             name = str(stat.get("name") or "")
-            print name.split()[0], idx
             if name.split()[0] == idx: break
         else: return ""
         return 'Win32_PerfRawData_PerfDisk_PhysicalDisk.Name="%s"'%name

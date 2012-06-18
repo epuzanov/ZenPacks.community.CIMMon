@@ -1,7 +1,7 @@
 ################################################################################
 #
 # This program is part of the CIMMon Zenpack for Zenoss.
-# Copyright (C) 2011 Egor Puzanov.
+# Copyright (C) 2012 Egor Puzanov.
 #
 # This program can be used under the GNU General Public License version 2
 # You can find full information here: http://www.zenoss.com/oss
@@ -12,9 +12,9 @@ __doc__="""CIM_Chassis
 
 CIM_Chassis is an abstraction of a CIM_Chassis
 
-$Id: CIM_Chassis.py,v 1.0 2011/12/30 23:42:30 egor Exp $"""
+$Id: CIM_Chassis.py,v 1.1 2012/06/18 23:13:26 egor Exp $"""
 
-__version__ = "$Revision: 1.0 $"[11:-2]
+__version__ = "$Revision: 1.1 $"[11:-2]
 
 from Products.ZenModel.HWComponent import HWComponent
 from Products.ZenRelations.RelSchema import ToOne, ToMany, ToManyCont
@@ -46,7 +46,7 @@ class CIM_Chassis(HWComponent, CIM_ManagedSystemElement):
         ("harddisks", ToMany(ToOne,
                     "ZenPacks.community.CIMMon.CIM_DiskDrive",
                     "chassis")),
-        )
+        ) + CIM_ManagedSystemElement._relations
 
     factory_type_information = (
         {

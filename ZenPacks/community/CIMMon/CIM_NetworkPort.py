@@ -12,9 +12,9 @@ __doc__="""CIM_NetworkPort
 
 CIM_NetworkPort is an abstraction of a Network Port.
 
-$Id: CIM_NetworkPort.py,v 1.0 2012/02/20 22:07:37 egor Exp $"""
+$Id: CIM_NetworkPort.py,v 1.1 2012/06/18 23:17:25 egor Exp $"""
 
-__version__ = "$Revision: 1.0 $"[11:-2]
+__version__ = "$Revision: 1.1 $"[11:-2]
 
 from Products.ZenModel.IpInterface import IpInterface
 from Products.ZenRelations.RelSchema import ToOne, ToMany
@@ -31,7 +31,7 @@ class CIM_NetworkPort(IpInterface, CIM_ManagedSystemElement):
         ("controller", ToOne(ToMany,
                             "ZenPacks.community.CIMMon.CIM_ComputerSystem",
                             "interfaces")),
-        )
+        ) + CIM_ManagedSystemElement._relations
 
     security = ClassSecurityInfo()
 

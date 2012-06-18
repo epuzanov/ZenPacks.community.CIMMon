@@ -64,6 +64,16 @@ class SNIAStorageVolumeMap(CIMStorageVolumeMap):
                         "dep":"Dependent",
                     },
                 ),
+            "CIM_MemberOfCollection":
+                (
+                    "SELECT Member,Collection FROM CIM_MemberOfCollection",
+                    None,
+                    cs,
+                    {
+                        "member":"Member",
+                        "collection":"Collection",
+                    },
+                ),
             "CIM_ElementStatisticalData":
                 (
                     "SELECT ManagedElement,Stats FROM CIM_ElementStatisticalData",

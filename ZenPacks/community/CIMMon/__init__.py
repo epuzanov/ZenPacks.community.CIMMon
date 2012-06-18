@@ -95,7 +95,7 @@ class ZenPack(ZenPackBase):
             'zCIMHWConnectionString': ("'pywmidb',host='${here/manageIp}',user='${here/zWinUser}',password='${here/zWinPassword}',namespace='root/cimv2'", 'string'),
             'zWmiMonitorIgnore': (False, 'boolean'),
         },
-        '/Storage/CIM': {
+        '/Storage/SMI-S': {
             'description': ('', 'string'),
             'zCollectorPlugins': (
                 (
@@ -109,6 +109,7 @@ class ZenPack(ZenPackBase):
                 'lines',
             ),
             'zWmiMonitorIgnore': (False, 'boolean'),
+            'zSnmpMonitorIgnore': (True, 'boolean'),
         },
     }
 

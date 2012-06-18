@@ -12,13 +12,25 @@ __doc__="""CIM_Collection
 
 CIM_Collection is an abstraction of a CIM_Collection
 
-$Id: CIM_Collection.py,v 1.0 2012/06/15 23:07:16 egor Exp $"""
+$Id: CIM_Collection.py,v 1.1 2012/06/18 23:13:46 egor Exp $"""
 
-__version__ = "$Revision: 1.0 $"[11:-2]
+__version__ = "$Revision: 1.1 $"[11:-2]
 
 from Products.ZenModel.OSComponent import OSComponent
-from Products.ZenRelations.RelSchema import ToOne, ToManyCont
+from Products.ZenRelations.RelSchema import ToOne, ToMany, ToManyCont
 from ZenPacks.community.CIMMon.CIM_ManagedSystemElement import *
+from Products.ZenUtils.Utils import prepId
+
+def manage_addCollection(context, id, userCreated, REQUEST=None):
+    """make ConsistencySet"""
+    colid = prepId(id)
+    col = CIM_Collection(colid)
+    context._setObject(colid, col)
+    col = context._getOb(colid)
+    if userCreated: col.setUserCreatedFlag()
+    if REQUEST is not None:
+        REQUEST['RESPONSE'].redirect(context.absolute_url()+'/manage_main')
+    return col
 
 class CIM_Collection(OSComponent, CIM_ManagedSystemElement):
     """Collection object"""
@@ -33,6 +45,10 @@ class CIM_Collection(OSComponent, CIM_ManagedSystemElement):
             ToManyCont,
             "Products.ZenModel.OperatingSystem",
             "collections")),
+        ("members", ToMany(
+            ToOne,
+            "ZenPacks.community.CIMMon.CIM_ManagedSystemElement",
+            "collection")),
         )
 
     factory_type_information = ( 
@@ -50,6 +66,11 @@ class CIM_Collection(OSComponent, CIM_ManagedSystemElement):
                 , 'name'          : 'Status'
                 , 'action'        : 'viewCIMCollection'
                 , 'permissions'   : (ZEN_VIEW,)
+                },
+                { 'id'            : 'members'
+                , 'name'          : 'Members'
+                , 'action'        : 'viewCIMCollectionMembers'
+                , 'permissions'   : (ZEN_VIEW, )
                 },
                 { 'id'            : 'events'
                 , 'name'          : 'Events'

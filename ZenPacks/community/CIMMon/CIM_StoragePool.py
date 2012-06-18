@@ -12,9 +12,9 @@ __doc__="""CIM_StoragePool
 
 CIM_StoragePool is an abstraction of a CIM_StoragePool
 
-$Id: CIM_StoragePool.py,v 1.1 2012/06/13 20:36:34 egor Exp $"""
+$Id: CIM_StoragePool.py,v 1.2 2012/06/18 23:20:29 egor Exp $"""
 
-__version__ = "$Revision: 1.1 $"[11:-2]
+__version__ = "$Revision: 1.2 $"[11:-2]
 
 from Products.ZenModel.OSComponent import OSComponent
 from Products.ZenRelations.RelSchema import ToOne, ToMany, ToManyCont
@@ -38,7 +38,6 @@ class CIM_StoragePool(OSComponent, CIM_ManagedSystemElement):
                  {'id':'usage', 'type':'int', 'mode':'w'},
                 ) + CIM_ManagedSystemElement._properties
 
-
     _relations = OSComponent._relations + (
         ("os", ToOne(
             ToManyCont,
@@ -52,7 +51,7 @@ class CIM_StoragePool(OSComponent, CIM_ManagedSystemElement):
             ToOne,
             "ZenPacks.community.CIMMon.CIM_StorageVolume",
             "storagepool")),
-        )
+        ) + CIM_ManagedSystemElement._relations
 
     factory_type_information = ( 
         {

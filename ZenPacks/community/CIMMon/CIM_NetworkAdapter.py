@@ -12,9 +12,9 @@ __doc__="""CIM_NetworkAdapter
 
 CIM_NetworkAdapter is an abstraction of a Network Adapter.
 
-$Id: CIM_NetworkAdapter.py,v 1.0 2012/02/20 22:07:37 egor Exp $"""
+$Id: CIM_NetworkAdapter.py,v 1.1 2012/06/18 23:18:09 egor Exp $"""
 
-__version__ = "$Revision: 1.0 $"[11:-2]
+__version__ = "$Revision: 1.1 $"[11:-2]
 
 from Products.ZenModel.IpInterface import IpInterface
 from ZenPacks.community.CIMMon.CIM_ManagedSystemElement import *
@@ -25,6 +25,8 @@ class CIM_NetworkAdapter(IpInterface, CIM_ManagedSystemElement):
     collectors = ('zenperfsql', 'zencommand', 'zenwinperf')
 
     _properties=IpInterface._properties + CIM_ManagedSystemElement._properties
+
+    _relations = IpInterface._relations + CIM_ManagedSystemElement._relations
 
     getRRDTemplates = CIM_ManagedSystemElement.getRRDTemplates
     getStatus = CIM_ManagedSystemElement.getStatus

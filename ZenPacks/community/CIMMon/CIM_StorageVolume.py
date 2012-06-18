@@ -12,9 +12,9 @@ __doc__="""CIM_StorageVolume
 
 CIM_StorageVolume is an abstraction of a CIM_StorageVolume
 
-$Id: CIM_StorageVolume.py,v 1.5 2012/06/13 20:37:47 egor Exp $"""
+$Id: CIM_StorageVolume.py,v 1.6 2012/06/18 23:20:54 egor Exp $"""
 
-__version__ = "$Revision: 1.5 $"[11:-2]
+__version__ = "$Revision: 1.6 $"[11:-2]
 
 from Products.ZenModel.OSComponent import OSComponent
 from Products.ZenRelations.RelSchema import ToOne, ToMany, ToManyCont
@@ -62,7 +62,7 @@ class CIM_StorageVolume(OSComponent, CIM_ManagedSystemElement):
         ("storagepool", ToOne(ToMany,
             "ZenPacks.community.CIMMon.CIM_StoragePool",
             "storagevolumes")),
-        )
+        ) + CIM_ManagedSystemElement._relations
 
     factory_type_information = (
         {
@@ -112,6 +112,7 @@ class CIM_StorageVolume(OSComponent, CIM_ManagedSystemElement):
         Set the storagepool relationship to the storage pool specified by the given
         id.
         """
+        if not spid: return
         for sp in self.os().storagepools() or []:
             if sp.getPath() != spid: continue
             self.storagepool.addRelation(sp)
