@@ -2997,6 +2997,15 @@ AVERAGE
 </object>
 </tomanycont>
 </object>
+<!-- ('', 'zport', 'dmd', 'Devices', 'rrdTemplates', 'CIM_Collection') -->
+<object id='/zport/dmd/Devices/rrdTemplates/CIM_Collection' module='Products.ZenModel.RRDTemplate' class='RRDTemplate'>
+<property type="text" id="description" mode="w" >
+Place holder for future use.
+</property>
+<property type="string" id="targetPythonClass" mode="w" >
+ZenPacks.community.CIM_Collection
+</property>
+</object>
 <!-- ('', 'zport', 'dmd', 'Devices', 'rrdTemplates', 'CIM_Device') -->
 <object id='/zport/dmd/Devices/rrdTemplates/CIM_Device' module='Products.ZenModel.RRDTemplate' class='RRDTemplate'>
 <property type="text" id="description" mode="w" >
