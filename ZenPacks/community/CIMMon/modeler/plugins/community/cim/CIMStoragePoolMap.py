@@ -12,9 +12,9 @@ __doc__="""CIMStoragePoolMap
 
 CIMStoragePoolMap maps CIM_StoragePool class to CIM_StoragePool class.
 
-$Id: CIMStoragePoolMap.py,v 1.1 2012/06/14 21:26:25 egor Exp $"""
+$Id: CIMStoragePoolMap.py,v 1.2 2012/06/20 20:40:55 egor Exp $"""
 
-__version__ = '$Revision: 1.1 $'[11:-2]
+__version__ = '$Revision: 1.2 $'[11:-2]
 
 
 from ZenPacks.community.CIMMon.CIMPlugin import CIMPlugin
@@ -51,6 +51,21 @@ class CIMStoragePoolMap(CIMPlugin):
                 ),
             }
 
+    def _getUsage(self, usage):
+        try:
+            return {
+                1:"Other",
+                2:"Unrestricted",
+                3:"Block Server",
+                4:"Delta Replica Container",
+                5:"Migration Services",
+                6:"Local Replication Services",
+                7:"Remote Replication Services",
+                8:"Sparing",
+                }.get(int(usage or 2)) or "Unrestricted"
+        except:
+            return usage
+
     def process(self, device, results, log):
         """collect CIM information from this device"""
         log.info("processing %s for device %s", self.name(), device.id)
@@ -67,6 +82,8 @@ class CIMStoragePoolMap(CIMPlugin):
                 om.id = self.prepId(om.id)
                 if not hasattr(om, "title"):
                     om.title = om.poolId
+                if hasattr(om, "usage"):
+                    om.usage = self._getUsage(om.usage)
             except AttributeError:
                 continue
             rm.append(om)

@@ -12,15 +12,27 @@ __doc__="""CIM_StoragePool
 
 CIM_StoragePool is an abstraction of a CIM_StoragePool
 
-$Id: CIM_StoragePool.py,v 1.2 2012/06/18 23:20:29 egor Exp $"""
+$Id: CIM_StoragePool.py,v 1.3 2012/06/20 20:37:48 egor Exp $"""
 
-__version__ = "$Revision: 1.2 $"[11:-2]
+__version__ = "$Revision: 1.3 $"[11:-2]
 
 from Products.ZenModel.OSComponent import OSComponent
 from Products.ZenRelations.RelSchema import ToOne, ToMany, ToManyCont
 from ZenPacks.community.CIMMon.CIM_ManagedSystemElement import *
 
+from Products.ZenUtils.Utils import prepId
 from Products.ZenUtils.Utils import convToUnits
+
+def manage_addStoragePool(context, id, userCreated, REQUEST=None):
+    """make StoragePool"""
+    spid = prepId(id)
+    sp = CIM_StoragePool(spid)
+    context._setObject(spid, sp)
+    sp = context._getOb(spid)
+    if userCreated: sp.setUserCreatedFlag()
+    if REQUEST is not None:
+        REQUEST['RESPONSE'].redirect(context.absolute_url()+'/manage_main')
+    return sp
 
 class CIM_StoragePool(OSComponent, CIM_ManagedSystemElement):
     """StoragePool object"""
@@ -29,13 +41,13 @@ class CIM_StoragePool(OSComponent, CIM_ManagedSystemElement):
     portal_type = meta_type = 'CIM_StoragePool'
 
     totalManagedSpace = 0
-    poolId = ""
-    usage = 0
+    poolId = "0"
+    usage = "Unrestricted"
 
     _properties = OSComponent._properties + (
                  {'id':'totalManagedSpace', 'type':'int', 'mode':'w'},
                  {'id':'poolId', 'type':'string', 'mode':'w'},
-                 {'id':'usage', 'type':'int', 'mode':'w'},
+                 {'id':'usage', 'type':'string', 'mode':'w'},
                 ) + CIM_ManagedSystemElement._properties
 
     _relations = OSComponent._relations + (
@@ -137,7 +149,6 @@ class CIM_StoragePool(OSComponent, CIM_ManagedSystemElement):
         """
         Return the datapoint name of this StoragePool
         """
-        return ['StoragePool_RemainingManagedSpace',
-                'StoragePool_TotalManagedSpace']
+        return ['StoragePool_RemainingManagedSpace']
 
 InitializeClass(CIM_StoragePool)

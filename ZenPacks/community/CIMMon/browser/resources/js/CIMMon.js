@@ -263,6 +263,7 @@ ZC.CIM_StoragePoolPanel = Ext.extend(ZC.ComponentGridPanel, {
                 {name: 'severity'},
                 {name: 'status'},
                 {name: 'name'},
+                {name: 'usage'},
                 {name: 'totalDisks'},
                 {name: 'totalBytesString'},
                 {name: 'usedBytesString'},
@@ -284,6 +285,11 @@ ZC.CIM_StoragePoolPanel = Ext.extend(ZC.ComponentGridPanel, {
                 dataIndex: 'name',
                 header: _t('Name'),
                 sortable: true
+            },{
+                id: 'usage',
+                dataIndex: 'usage',
+                header: _t('Usage'),
+                width: 120
             },{
                 id: 'totalDisks',
                 dataIndex: 'totalDisks',

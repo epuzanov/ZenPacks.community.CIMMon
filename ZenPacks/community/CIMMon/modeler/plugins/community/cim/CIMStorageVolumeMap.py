@@ -12,9 +12,9 @@ __doc__="""CIMStorageVolumeMap
 
 CIMStorageVolumeMap maps CIM_StorageVolume class to CIM_StorageVolume class.
 
-$Id: CIMStorageVolumeMap.py,v 1.1 2012/06/18 23:26:24 egor Exp $"""
+$Id: CIMStorageVolumeMap.py,v 1.2 2012/06/20 20:42:07 egor Exp $"""
 
-__version__ = '$Revision: 1.1 $'[11:-2]
+__version__ = '$Revision: 1.2 $'[11:-2]
 
 from ZenPacks.community.CIMMon.CIMPlugin import CIMPlugin
 
@@ -59,7 +59,12 @@ class CIMStorageVolumeMap(CIMPlugin):
                 4: "Write Once",
                 }.get(aType, 'Unknown')
 
-    def _raidLevels(self, pr, dr):
+    def _getDiskType(self, inst):
+        if "diskType" in inst:
+            return inst["diskType"]
+        _pr = int(inst.get("_pr") or 0)
+        _dr = int(inst.get("_dr") or 0)
+        if _dr > 2: _dr = 2
         return {(0, 1): "RAID0",
                 (1, 1): "RAID5",
                 (1, 2): "RAID1+0",
@@ -68,6 +73,8 @@ class CIMStorageVolumeMap(CIMPlugin):
                 }.get((pr, dr), "Unknown")
 
     def _getPool(self, results, inst):
+        if "setStoragePool" in inst:
+            return inst["setStoragePool"]
         return self._findInstance(results, "CIM_AllocatedFromStoragePool",
                                     "dep", inst.get("setPath")).get("ant") or ""
 
@@ -83,11 +90,7 @@ class CIMStorageVolumeMap(CIMPlugin):
             try:
                 om = self.objectMap(inst)
                 om.id = self.prepId(om.id)
-                if not hasattr(om, "diskType"):
-                    om._pr = int(inst.get("_pr") or 0)
-                    om._dr = int(inst.get("_dr") or 0)
-                    if om._dr > 2: om._dr = 2
-                    om.diskType = self._raidLevels(om._pr, om._dr)
+                om.diskType = self._getDiskType(inst)
                 om.accessType=self._accessTypes(int(inst.get("accessType") or 0))
                 om.setStoragePool = self._getPool(results, inst)
                 om.setCollection = self._getCollection(results, inst)

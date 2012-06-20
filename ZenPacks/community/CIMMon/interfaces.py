@@ -12,9 +12,9 @@ __doc__="""interfaces
 
 describes the form field to the user interface.
 
-$Id: interfaces.py,v 1.2 2012/06/15 23:17:38 egor Exp $"""
+$Id: interfaces.py,v 1.3 2012/06/20 20:40:18 egor Exp $"""
 
-__version__ = "$Revision: 1.2 $"[11:-2]
+__version__ = "$Revision: 1.3 $"[11:-2]
 
 from Products.Zuul.interfaces import IComponentInfo,\
                                     IIpInterfaceInfo,\
@@ -63,6 +63,7 @@ class IStoragePoolInfo(IComponentInfo):
     """
     Info adapter for Storage Pool components.
     """
+    usage = schema.Text(title=u"Usage", readonly=True, group="Details")
     totalDisks = schema.Int(title=u"Total Disk", readonly=True, group="Details")
     totalBytesString = schema.Text(title=u"Total Bytes", readonly=True,
                                                                 group="Details")

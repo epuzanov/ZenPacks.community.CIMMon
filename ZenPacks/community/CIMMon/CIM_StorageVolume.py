@@ -12,9 +12,9 @@ __doc__="""CIM_StorageVolume
 
 CIM_StorageVolume is an abstraction of a CIM_StorageVolume
 
-$Id: CIM_StorageVolume.py,v 1.6 2012/06/18 23:20:54 egor Exp $"""
+$Id: CIM_StorageVolume.py,v 1.7 2012/06/20 20:38:12 egor Exp $"""
 
-__version__ = "$Revision: 1.6 $"[11:-2]
+__version__ = "$Revision: 1.7 $"[11:-2]
 
 from Products.ZenModel.OSComponent import OSComponent
 from Products.ZenRelations.RelSchema import ToOne, ToMany, ToManyCont
@@ -44,13 +44,11 @@ class CIM_StorageVolume(OSComponent, CIM_ManagedSystemElement):
     portal_type = meta_type = 'CIM_StorageVolume'
 
     accessType = ""
-    caption = ""
     blockSize = 0
     diskType = ""
 
     _properties = OSComponent._properties + (
                  {'id':'accessType', 'type':'string', 'mode':'w'},
-                 {'id':'caption', 'type':'string', 'mode':'w'},
                  {'id':'blockSize', 'type':'int', 'mode':'w'},
                  {'id':'diskType', 'type':'string', 'mode':'w'},
                 ) + CIM_ManagedSystemElement._properties
@@ -124,7 +122,7 @@ class CIM_StorageVolume(OSComponent, CIM_ManagedSystemElement):
 
     security.declareProtected(ZEN_VIEW, 'getStoragePoolName')
     def getStoragePoolName(self):
-        return getattr(self.getStoragePool(), 'poolId', 'Unknown')
+        return getattr(self.getStoragePool(), 'name', lambda:'Unknown')()
 
     def totalBytes(self):
         """

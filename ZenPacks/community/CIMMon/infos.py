@@ -12,9 +12,9 @@ __doc__="""infos.py
 
 Representation of CIM components.
 
-$Id: infos.py,v 1.2 2012/06/15 23:47:35 egor Exp $"""
+$Id: infos.py,v 1.3 2012/06/20 20:39:56 egor Exp $"""
 
-__version__ = "$Revision: 1.2 $"[11:-2]
+__version__ = "$Revision: 1.3 $"[11:-2]
 
 from Products.Zuul.infos import ProxyProperty
 from Products.Zuul.infos.component import ComponentInfo
@@ -93,6 +93,8 @@ class ChassisInfo(ComponentInfo):
         return self._object.productClass()
 
 class StoragePoolInfo(ComponentInfo):
+
+    usage = ProxyProperty("usage")
 
     @property
     def totalDisks(self):

@@ -37,6 +37,9 @@
                             tableName,'totalDisks','Total Disks')">Total Disks
         </th>
         <th tal:replace="structure python:here.ZenTableManager.getTableHeader(
+                            tableName,'usage','Usage')">Usage
+        </th>
+        <th tal:replace="structure python:here.ZenTableManager.getTableHeader(
                             tableName,'totalBytes','Total bytes')">Total Bytes
         </th>
         <th tal:replace="structure python:here.ZenTableManager.getTableHeader(
@@ -65,6 +68,9 @@
             attrs={'class':'tablevalues'})"/>
       </td>
       <td class="tablevalues"
+        tal:content="stpool/usage">1
+      </td>
+      <td class="tablevalues"
         tal:content="stpool/totalDisks">1
       </td>
       <td class="tablevalues"
@@ -86,7 +92,7 @@
     </tr>
     </tal:block>
     <tr>
-        <td colspan="7" class="tableheader" align='center'>
+        <td colspan="8" class="tableheader" align='center'>
         <form metal:use-macro="here/zenTableNavigation/macros/navtool"></form>
         </td>
     </tr>
