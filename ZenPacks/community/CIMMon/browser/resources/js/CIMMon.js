@@ -96,7 +96,7 @@ ZC.CIM_DiskDrivePanel = Ext.extend(ZC.ComponentGridPanel, {
     constructor: function(config) {
         config = Ext.applyIf(config||{}, {
             componentType: 'CIM_DiskDrive',
-            autoExpandColumn: 'product',
+            autoExpandColumn: 'name',
             fields: [
                 {name: 'uid'},
                 {name: 'severity'},
@@ -195,7 +195,7 @@ ZC.CIM_ChassisPanel = Ext.extend(ZC.ComponentGridPanel, {
     constructor: function(config) {
         config = Ext.applyIf(config||{}, {
             componentType: 'CIM_Chassis',
-            autoExpandColumn: 'product',
+            autoExpandColumn: 'name',
             fields: [
                 {name: 'uid'},
                 {name: 'severity'},
@@ -217,7 +217,7 @@ ZC.CIM_ChassisPanel = Ext.extend(ZC.ComponentGridPanel, {
             },{
                 id: 'name',
                 dataIndex: 'name',
-                header: _t('ID'),
+                header: _t('Name'),
                 width: 80,
                 sortable: true
             },{
@@ -289,7 +289,7 @@ ZC.CIM_StoragePoolPanel = Ext.extend(ZC.ComponentGridPanel, {
                 id: 'usage',
                 dataIndex: 'usage',
                 header: _t('Usage'),
-                width: 120
+                width: 150
             },{
                 id: 'totalDisks',
                 dataIndex: 'totalDisks',
@@ -376,7 +376,8 @@ ZC.CIM_StorageVolumePanel = Ext.extend(ZC.ComponentGridPanel, {
             },{
                 id: 'accessType',
                 dataIndex: 'accessType',
-                header: _t('Access')
+                header: _t('Access'),
+                width: 120
             },{
                 id: 'totalBytesString',
                 dataIndex: 'totalBytesString',
@@ -453,5 +454,77 @@ ZC.CIM_CollectionPanel = Ext.extend(ZC.ComponentGridPanel, {
 
 Ext.reg('CIM_CollectionPanel', ZC.CIM_CollectionPanel);
 ZC.registerName('CIM_Collection', _t('Collection'), _t('Collections'));
+
+ZC.CIM_ComputerSystemPanel = Ext.extend(ZC.ComponentGridPanel, {
+    constructor: function(config) {
+        config = Ext.applyIf(config||{}, {
+            componentType: 'CIM_ComputerSystem',
+            fields: [
+                {name: 'uid'},
+                {name: 'severity'},
+                {name: 'status'},
+                {name: 'name'},
+                {name: 'slot'},
+                {name: 'manufacturer'},
+                {name: 'product'},
+                {name: 'serialNumber'},
+                {name: 'uptime'},
+                {name: 'usesMonitorAttribute'},
+                {name: 'monitored'},
+                {name: 'monitor'}
+            ],
+            columns: [{
+                id: 'severity',
+                dataIndex: 'severity',
+                header: _t('Events'),
+                renderer: Zenoss.render.severity,
+                width: 60
+            },{
+                id: 'slot',
+                dataIndex: 'slot',
+                header: _t('Slot'),
+                sortable: true
+            },{
+                id: 'name',
+                dataIndex: 'name',
+                header: _t('Name'),
+                sortable: true
+            },{
+                id: 'manufacturer',
+                dataIndex: 'manufacturer',
+                header: _t('Manufacturer'),
+                renderer: render_link
+            },{
+                id: 'product',
+                dataIndex: 'product',
+                header: _t('Model'),
+                renderer: render_link
+            },{
+                id: 'serialNumber',
+                dataIndex: 'serialNumber',
+                header: _t('Serial #'),
+                width: 120
+            },{
+                id: 'uptime',
+                dataIndex: 'uptime',
+                header: _t('Uptime')
+            },{
+                id: 'monitored',
+                dataIndex: 'monitored',
+                header: _t('Monitored'),
+                width: 60
+            },{
+                id: 'status',
+                dataIndex: 'status',
+                header: _t('Status'),
+                width: 60
+            }]
+        });
+        ZC.CIM_ComputerSystemPanel.superclass.constructor.call(this, config);
+    }
+});
+
+Ext.reg('CIM_ComputerSystemPanel', ZC.CIM_ComputerSystemPanel);
+ZC.registerName('CIM_ComputerSystem', _t('Controller'), _t('Controllers'));
 
 })();

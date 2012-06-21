@@ -12,9 +12,9 @@ __doc__="""CIM_DiskDrive
 
 CIM_DiskDrive is an abstraction of a Hard Disk.
 
-$Id: CIM_DiskDrive.py,v 1.2 2012/06/18 23:15:40 egor Exp $"""
+$Id: CIM_DiskDrive.py,v 1.3 2012/06/21 19:31:47 egor Exp $"""
 
-__version__ = "$Revision: 1.2 $"[11:-2]
+__version__ = "$Revision: 1.3 $"[11:-2]
 
 from Products.ZenModel.HardDisk import HardDisk
 from Products.ZenRelations.RelSchema import ToOne, ToMany
@@ -28,17 +28,19 @@ class CIM_DiskDrive(HardDisk, CIM_ManagedSystemElement):
     collectors = ('zenperfsql', 'zencommand', 'zenwinperf')
     portal_type = meta_type = 'CIM_DiskDrive'
 
-    diskTypes={"scsi":"scsi","sas":"scsi","ata":"ata","sata":"ata","ssd":"ssd"}
+    diskTypes = ("scsi", "ata", "ssd")
     formFactors = {"lff":"lff", "sff":"sff"}
     size = 0
-    diskType = "unknown"
-    formFactor = "unknown"
+    diskType = ""
+    diskTypeImg = ""
+    formFactor = ""
     replaceable = True
     bay = -1
     FWRev = ""
 
     _properties = HardDisk._properties + (
                  {'id':'diskType', 'type':'string', 'mode':'w'},
+                 {'id':'diskTypeImg', 'type':'string', 'mode':'w'},
                  {'id':'formFactor', 'type':'string', 'mode':'w'},
                  {'id':'replaceable', 'type':'boolean', 'mode':'w'},
                  {'id':'size', 'type':'int', 'mode':'w'},
@@ -178,7 +180,8 @@ class CIM_DiskDrive(HardDisk, CIM_ManagedSystemElement):
         """
         return '/zport/dmd/disk_%s_%s_%s_%s.png' % (orientation or 'h',
             self.formFactors.get(self.formFactor, 'lff'),
-            self.diskTypes.get(self.diskType, 'scsi'), self.statusDot())
+            self.diskTypeImg in self.diskTypes and self.diskTypeImg or 'scsi',
+            self.statusDot())
 
     def bayString(self):
         """

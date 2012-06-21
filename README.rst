@@ -212,4 +212,4 @@ Reports
 -------
 
 - Reports/Device Reports/SMI-S Reports/Hard Disks
-- Reports/Device Reports/SMI-S Reports/Storage Controllers
+- Reports/Device Reports/SMI-S Reports/Controllers

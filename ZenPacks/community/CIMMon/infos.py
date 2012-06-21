@@ -12,9 +12,9 @@ __doc__="""infos.py
 
 Representation of CIM components.
 
-$Id: infos.py,v 1.3 2012/06/20 20:39:56 egor Exp $"""
+$Id: infos.py,v 1.4 2012/06/21 19:36:59 egor Exp $"""
 
-__version__ = "$Revision: 1.3 $"[11:-2]
+__version__ = "$Revision: 1.4 $"[11:-2]
 
 from Products.Zuul.infos import ProxyProperty
 from Products.Zuul.infos.component import ComponentInfo
@@ -189,10 +189,6 @@ class ComputerSystemInfo(ComponentInfo):
     @property
     def uptime(self):
         return self._object.uptimeString()
-
-    @property
-    def monitored(self):
-        return ""
 
     @property
     def state(self):

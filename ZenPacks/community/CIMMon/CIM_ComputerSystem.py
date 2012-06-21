@@ -12,9 +12,9 @@ __doc__="""CIM_ComputerSystem
 
 CIM_ComputerSystem is an abstraction of a Expansion Card.
 
-$Id: CIM_ComputerSystem.py,v 1.2 2012/06/19 22:44:50 egor Exp $"""
+$Id: CIM_ComputerSystem.py,v 1.3 2012/06/21 19:34:10 egor Exp $"""
 
-__version__ = "$Revision: 1.2 $"[11:-2]
+__version__ = "$Revision: 1.3 $"[11:-2]
 
 from Products.ZenModel.ExpansionCard import ExpansionCard
 from Products.ZenRelations.RelSchema import ToOne, ToMany
@@ -24,6 +24,7 @@ class CIM_ComputerSystem(ExpansionCard, CIM_ManagedSystemElement):
     """Expansion Card object"""
 
     collectors = ('zenperfsql', 'zencommand', 'zenwinperf')
+    portal_type = meta_type = 'CIM_ComputerSystem'
 
     FWRev = ''
     monitor = True

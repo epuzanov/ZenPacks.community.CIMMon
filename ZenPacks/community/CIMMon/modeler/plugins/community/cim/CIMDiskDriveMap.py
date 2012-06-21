@@ -12,9 +12,9 @@ __doc__="""CIMDiskDriveMap
 
 CIMDiskDriveMap maps CIM_DiskDrive class to CIM_DiskDrive class.
 
-$Id: SNIADiskDriveMap.py,v 1.4 2012/06/18 23:25:45 egor Exp $"""
+$Id: SNIADiskDriveMap.py,v 1.5 2012/06/21 19:33:14 egor Exp $"""
 
-__version__ = '$Revision: 1.4 $'[11:-2]
+__version__ = '$Revision: 1.5 $'[11:-2]
 
 from ZenPacks.community.CIMMon.CIMPlugin import CIMPlugin
 from Products.DataCollector.plugins.DataMaps import ObjectMap, MultiArgs
@@ -57,7 +57,10 @@ class CIMDiskDriveMap(CIMPlugin):
                 "1":"sas",
                 "2":"sas",
                 "3":"ssd",
-                }.get(str(diskType), "")
+                }.get(str(diskType)) or "scsi"
+
+    def _diskTypeImg(self, diskType):
+        return diskType
 
     def _formFactors(self, formFactor):
         return {"0":"lff",
@@ -67,7 +70,7 @@ class CIMDiskDriveMap(CIMPlugin):
                 "4":"lff",
                 "5":"sff",
                 "6":"sff",
-                }.get(str(formFactor), "")
+                }.get(str(formFactor)) or "lff"
 
     def _getPackage(self, results, inst):
         return  self._findInstance(results, "CIM_PhysicalPackage", "_pPath",
@@ -78,7 +81,7 @@ class CIMDiskDriveMap(CIMPlugin):
         iPath = inst.get("_pPath") or inst.get("gc")
         if not iPath: return ""
         comp = self._findInstance(results, "CIM_Container", "pc", iPath)
-        if not comp: return ""
+        if not comp: return "gc" in inst and iPath or ""
         return self._getChassis(results, comp) or comp.get("pc") or ""
 
     def _getPool(self, results, inst):
@@ -127,13 +130,14 @@ class CIMDiskDriveMap(CIMPlugin):
                 inst.update(self._getPackage(results, inst))
                 if "diskType" in inst:
                     inst["diskType"] = self._diskTypes(inst["diskType"])
+                    inst["diskTypeImg"] = self._diskTypeImg(inst["diskType"])
                     if not inst["diskType"]: del inst["diskType"]
                 if "formFactor" in inst:
                     inst["formFactor"] = self._formFactors(inst["formFactor"])
                     if not inst["formFactor"]: del inst["formFactor"]
                 om = self.objectMap(inst)
                 om.id = self.prepId(om.id)
-                om.size = int(getattr(om, "size", 0)) * 1024
+                om.size = int(getattr(om, "size", 0)) * 1000
                 om._manuf = getattr(om, "_manuf", "") or "Unknown"
                 om.setProductKey = MultiArgs(
                     getattr(om, "setProductKey", "") or "Unknown", om._manuf)
