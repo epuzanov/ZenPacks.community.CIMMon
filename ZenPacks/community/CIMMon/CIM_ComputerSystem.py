@@ -12,9 +12,9 @@ __doc__="""CIM_ComputerSystem
 
 CIM_ComputerSystem is an abstraction of a Expansion Card.
 
-$Id: CIM_ComputerSystem.py,v 1.3 2012/06/21 19:34:10 egor Exp $"""
+$Id: CIM_ComputerSystem.py,v 1.4 2012/06/21 22:19:02 egor Exp $"""
 
-__version__ = "$Revision: 1.3 $"[11:-2]
+__version__ = "$Revision: 1.4 $"[11:-2]
 
 from Products.ZenModel.ExpansionCard import ExpansionCard
 from Products.ZenRelations.RelSchema import ToOne, ToMany
@@ -89,8 +89,9 @@ class CIM_ComputerSystem(ExpansionCard, CIM_ManagedSystemElement):
         Return the controllers UpTime
         """
         cpuUpTime = round(self.cacheRRDValue('sysUpTime', -1))
-        if cpuUpTime == -1: return -1
-        return cpuUpTime / 10
+        if cpuUpTime > 0:
+            cpuUpTime = cpuUpTime / 10
+        return cpuUpTime
 
     def uptimeString(self):
         """
@@ -114,7 +115,7 @@ class CIM_ComputerSystem(ExpansionCard, CIM_ManagedSystemElement):
 
     def getRRDNames(self):
         """
-        Return the datapoint name of this StorageProcessorCard
+        Return the datapoint name of this ComputerSystem
         """
         return ['sysUpTime']
 
