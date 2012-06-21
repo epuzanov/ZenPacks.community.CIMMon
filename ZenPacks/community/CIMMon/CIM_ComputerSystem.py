@@ -12,9 +12,9 @@ __doc__="""CIM_ComputerSystem
 
 CIM_ComputerSystem is an abstraction of a Expansion Card.
 
-$Id: CIM_ComputerSystem.py,v 1.4 2012/06/21 22:19:02 egor Exp $"""
+$Id: CIM_ComputerSystem.py,v 1.5 2012/06/21 22:37:20 egor Exp $"""
 
-__version__ = "$Revision: 1.4 $"[11:-2]
+__version__ = "$Revision: 1.5 $"[11:-2]
 
 from Products.ZenModel.ExpansionCard import ExpansionCard
 from Products.ZenRelations.RelSchema import ToOne, ToMany
@@ -88,10 +88,10 @@ class CIM_ComputerSystem(ExpansionCard, CIM_ManagedSystemElement):
         """
         Return the controllers UpTime
         """
-        cpuUpTime = round(self.cacheRRDValue('sysUpTime', -1))
-        if cpuUpTime > 0:
-            cpuUpTime = cpuUpTime / 10
-        return cpuUpTime
+        try:
+            return self.cacheRRDValue('sysUpTime', -1)
+        except Exception:
+            return -1
 
     def uptimeString(self):
         """
