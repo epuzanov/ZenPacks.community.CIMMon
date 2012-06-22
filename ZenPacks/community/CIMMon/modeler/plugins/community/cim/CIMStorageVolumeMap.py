@@ -12,9 +12,9 @@ __doc__="""CIMStorageVolumeMap
 
 CIMStorageVolumeMap maps CIM_StorageVolume class to CIM_StorageVolume class.
 
-$Id: CIMStorageVolumeMap.py,v 1.2 2012/06/20 20:42:07 egor Exp $"""
+$Id: CIMStorageVolumeMap.py,v 1.3 2012/06/22 18:32:54 egor Exp $"""
 
-__version__ = '$Revision: 1.2 $'[11:-2]
+__version__ = '$Revision: 1.3 $'[11:-2]
 
 from ZenPacks.community.CIMMon.CIMPlugin import CIMPlugin
 
@@ -62,15 +62,14 @@ class CIMStorageVolumeMap(CIMPlugin):
     def _getDiskType(self, inst):
         if "diskType" in inst:
             return inst["diskType"]
-        _pr = int(inst.get("_pr") or 0)
-        _dr = int(inst.get("_dr") or 0)
-        if _dr > 2: _dr = 2
+        dr = int(inst.get("_dr") or 0)
+        if dr > 2: dr = 2
         return {(0, 1): "RAID0",
                 (1, 1): "RAID5",
                 (1, 2): "RAID1+0",
                 (2, 1): "RAID6",
                 (2, 2): "RAID5+1",
-                }.get((pr, dr), "Unknown")
+                }.get((int(inst.get("_pr") or 0), dr), "Unknown")
 
     def _getPool(self, results, inst):
         if "setStoragePool" in inst:
