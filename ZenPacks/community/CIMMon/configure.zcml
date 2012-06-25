@@ -11,11 +11,6 @@
                  provides=".interfaces.IChassisInfo"
                  />
 
-        <adapter factory=".info.CIM_CollectionInfo"
-                 for=".CIM_Collection.CIM_Collection"
-                 provides=".interfaces.ICollectionInfo"
-                 />
-
         <adapter factory=".info.CIM_ComputerSystemInfo"
                  for=".CIM_ComputerSystem.CIM_ComputerSystem"
                  provides=".interfaces.IComputerSystemInfo"
@@ -44,6 +39,16 @@
         <adapter factory=".info.CIM_PowerSupplyInfo"
                  for=".CIM_PowerSupply.CIM_PowerSupply"
                  provides=".interfaces.IPowerSupplyInfo"
+                 />
+
+        <adapter factory=".info.CIM_RedundancySetInfo"
+                 for=".CIM_RedundancySet.CIM_RedundancySet"
+                 provides=".interfaces.IRedundancySetInfo"
+                 />
+
+        <adapter factory=".info.CIM_ReplicationGroupInfo"
+                 for=".CIM_ReplicationGroup.CIM_ReplicationGroup"
+                 provides=".interfaces.IReplicationGroupInfo"
                  />
 
         <adapter factory=".info.CIM_StoragePoolInfo"

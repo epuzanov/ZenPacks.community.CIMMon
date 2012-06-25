@@ -12,9 +12,9 @@ __doc__="""interfaces
 
 describes the form field to the user interface.
 
-$Id: interfaces.py,v 1.3 2012/06/20 20:40:18 egor Exp $"""
+$Id: interfaces.py,v 1.4 2012/06/25 21:11:42 egor Exp $"""
 
-__version__ = "$Revision: 1.3 $"[11:-2]
+__version__ = "$Revision: 1.4 $"[11:-2]
 
 from Products.Zuul.interfaces import IComponentInfo,\
                                     IIpInterfaceInfo,\
@@ -120,8 +120,18 @@ class INetworkPortInfo(IIpInterfaceInfo):
     """
     controller =schema.Entity(title=u"Controller",readonly=True,group='Details')
 
-class ICollectionInfo(IComponentInfo):
+class IRedundancySetInfo(IComponentInfo):
     """
-    Info adapter for Collection components.
+    Info adapter for RedundancySet components.
+    """
+    typeOfSet = schema.Text(title=u"Type", readonly=True, group='Details')
+    loadBalanceAlgorithm = schema.Text(title=u"Load Balance Algorithm",
+                                                readonly=True, group='Details')
+    minNumberNeeded = schema.Int(title=u"Min Number Needed", readonly=True,
+                                                                group='Details')
+
+class IReplicationGroupInfo(IComponentInfo):
+    """
+    Info adapter for ReplicationGroup components.
     """
     pass

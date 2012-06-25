@@ -7,7 +7,7 @@
 <input type="hidden" name="zenScreenName" tal:attributes="value template/id" />
 
 <tal:block metal:define-macro="objectperf" tal:define="
-                tabletitle string:Collection;
+                tabletitle string:Redundancy Set;
                 menu_id string:Lockable">
 <tal:block metal:use-macro="here/zenuimacros/macros/zentable">
 
@@ -22,6 +22,18 @@
           tal:attributes="value e; selected python:e==here.monitored()"/>
         </select>
       </td>
+    </tr>
+    <tr>
+      <td class="tableheader" align=left>Type</td>
+      <td class="tablevalues" tal:content="here/typeOfSet">1</td>
+      <td class="tableheader" align=left>Load Balance Algorithm</td>
+      <td class="tablevalues" tal:content="here/loadBalanceAlgorithm">1</td>
+    </tr>
+    <tr>
+      <td class="tableheader" align=left>Min Number Meeded</td>
+      <td class="tablevalues" tal:content="here/minNumberNeeded">1</td>
+      <td class="tableheader" align=left>Status</td>
+      <td class="tablevalues" tal:content="here/statusString">1</td>
     </tr>
     <tr tal:condition="manager">
         <td align="left" class="tableheader" colspan="4">

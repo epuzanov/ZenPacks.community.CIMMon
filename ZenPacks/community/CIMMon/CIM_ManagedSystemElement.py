@@ -12,9 +12,9 @@ __doc__="""CIM_ManagedSystemElement
 
 CIM_ManagedSystemElement is an abstraction for CIM_ManagedSystemElement class.
 
-$Id: CIM_ManagedSystemElement.py,v 1.3 2012/06/18 23:16:42 egor Exp $"""
+$Id: CIM_ManagedSystemElement.py,v 1.4 2012/06/25 21:06:02 egor Exp $"""
 
-__version__ = "$Revision: 1.3 $"[11:-2]
+__version__ = "$Revision: 1.4 $"[11:-2]
 
 from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
@@ -42,8 +42,8 @@ class CIM_ManagedSystemElement:
                 )
 
     _relations = (
-        ("collection", ToOne(ToMany,
-            "ZenPacks.community.CIMMon.CIM_Collection",
+        ("redundancyset", ToOne(ToMany,
+            "ZenPacks.community.CIMMon.CIM_RedundancySet",
             "members")),
         )
 
@@ -116,13 +116,13 @@ class CIM_ManagedSystemElement:
     security.declareProtected(ZEN_CHANGE_DEVICE, 'setCollection')
     def setCollection(self, colid):
         """
-        Set the collection relationship to the collection specified by the
+        Set the collection relationship to the collection set specified by the
         given id.
         """
         if not colid: return
-        for col in getattr(self.device().os, 'collections', (lambda:[]))():
+        for col in getattr(self.device().os, 'redundanysets', (lambda:[]))():
             if col.getPath() != colid: continue
-            self.collection.addRelation(col)
+            self.redundanyset.addRelation(col)
             break
 
     security.declareProtected(ZEN_VIEW, 'getCollection')
@@ -130,7 +130,7 @@ class CIM_ManagedSystemElement:
         """
         Return Collection object
         """
-        return getattr(self, 'collection', lambda:None)()
+        return getattr(self, 'redundancyset', lambda:None)()
 
     security.declareProtected(ZEN_CHANGE_DEVICE, 'convertStatus')
     def convertStatus(self, status):

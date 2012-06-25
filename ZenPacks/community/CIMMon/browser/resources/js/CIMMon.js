@@ -406,10 +406,10 @@ ZC.CIM_StorageVolumePanel = Ext.extend(ZC.ComponentGridPanel, {
 Ext.reg('CIM_StorageVolumePanel', ZC.CIM_StorageVolumePanel);
 ZC.registerName('CIM_StorageVolume', _t('Logical Disk'), _t('Logical Disks'));
 
-ZC.CIM_CollectionPanel = Ext.extend(ZC.ComponentGridPanel, {
+ZC.CIM_RedundancySetPanel = Ext.extend(ZC.ComponentGridPanel, {
     constructor: function(config) {
         config = Ext.applyIf(config||{}, {
-            componentType: 'CIM_Collection',
+            componentType: 'CIM_RedundancySet',
             fields: [
                 {name: 'uid'},
                 {name: 'severity'},
@@ -448,12 +448,61 @@ ZC.CIM_CollectionPanel = Ext.extend(ZC.ComponentGridPanel, {
                 renderer: Zenoss.render.locking_icons
             }]
         });
-        ZC.CIM_CollectionPanel.superclass.constructor.call(this, config);
+        ZC.CIM_RedundancySetPanel.superclass.constructor.call(this, config);
     }
 });
 
-Ext.reg('CIM_CollectionPanel', ZC.CIM_CollectionPanel);
-ZC.registerName('CIM_Collection', _t('Collection'), _t('Collections'));
+Ext.reg('CIM_RedundancySetPanel', ZC.CIM_RedundancySetPanel);
+ZC.registerName('CIM_RedundancySet', _t('Redundancy Set'), _t('Redundancy Sets'));
+
+ZC.CIM_ReplicationGroupPanel = Ext.extend(ZC.ComponentGridPanel, {
+    constructor: function(config) {
+        config = Ext.applyIf(config||{}, {
+            componentType: 'CIM_ReplicationGroup',
+            fields: [
+                {name: 'uid'},
+                {name: 'severity'},
+                {name: 'status'},
+                {name: 'name'},
+                {name: 'locking'},
+                {name: 'usesMonitorAttribute'},
+                {name: 'monitored'},
+                {name: 'monitor'}
+            ],
+            columns: [{
+                id: 'severity',
+                dataIndex: 'severity',
+                header: _t('Events'),
+                renderer: Zenoss.render.severity,
+                width: 60
+            },{
+                id: 'name',
+                dataIndex: 'name',
+                header: _t('Name'),
+                sortable: true
+            },{
+                id: 'monitored',
+                dataIndex: 'monitored',
+                header: _t('Monitored'),
+                width: 60
+            },{
+                id: 'status',
+                dataIndex: 'status',
+                header: _t('Status'),
+                width: 60
+            },{
+                id: 'locking',
+                dataIndex: 'locking',
+                header: _t('Locking'),
+                renderer: Zenoss.render.locking_icons
+            }]
+        });
+        ZC.CIM_ReplicationGroupPanel.superclass.constructor.call(this, config);
+    }
+});
+
+Ext.reg('CIM_ReplicationGroupPanel', ZC.CIM_ReplicationGroupPanel);
+ZC.registerName('CIM_ReplicationGroup', _t('Replication Group'), _t('Replication Groups'));
 
 ZC.CIM_ComputerSystemPanel = Ext.extend(ZC.ComponentGridPanel, {
     constructor: function(config) {

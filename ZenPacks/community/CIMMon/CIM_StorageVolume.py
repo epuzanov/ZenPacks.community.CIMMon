@@ -12,9 +12,9 @@ __doc__="""CIM_StorageVolume
 
 CIM_StorageVolume is an abstraction of a CIM_StorageVolume
 
-$Id: CIM_StorageVolume.py,v 1.7 2012/06/20 20:38:12 egor Exp $"""
+$Id: CIM_StorageVolume.py,v 1.8 2012/06/25 21:08:12 egor Exp $"""
 
-__version__ = "$Revision: 1.7 $"[11:-2]
+__version__ = "$Revision: 1.8 $"[11:-2]
 
 from Products.ZenModel.OSComponent import OSComponent
 from Products.ZenRelations.RelSchema import ToOne, ToMany, ToManyCont
@@ -60,7 +60,10 @@ class CIM_StorageVolume(OSComponent, CIM_ManagedSystemElement):
         ("storagepool", ToOne(ToMany,
             "ZenPacks.community.CIMMon.CIM_StoragePool",
             "storagevolumes")),
-        ) + CIM_ManagedSystemElement._relations
+        ("replicationgroup", ToOne(ToMany,
+            "ZenPacks.community.CIMMon.CIM_ReplicationGroup",
+            "members")),
+        )
 
     factory_type_information = (
         {
@@ -123,6 +126,25 @@ class CIM_StorageVolume(OSComponent, CIM_ManagedSystemElement):
     security.declareProtected(ZEN_VIEW, 'getStoragePoolName')
     def getStoragePoolName(self):
         return getattr(self.getStoragePool(), 'name', lambda:'Unknown')()
+
+    security.declareProtected(ZEN_CHANGE_DEVICE, 'setCollection')
+    def setCollection(self, colid):
+        """
+        Set the collection relationship to the collection set specified by the
+        given id.
+        """
+        if not colid: return
+        for col in getattr(self.device().os,'replicationgroups',(lambda:[]))():
+            if col.getPath() != colid: continue
+            self.replicationgroup.addRelation(col)
+            break
+
+    security.declareProtected(ZEN_VIEW, 'getCollection')
+    def getCollection(self):
+        """
+        Return Collection object
+        """
+        return getattr(self, 'replicationgroup', lambda:None)()
 
     def totalBytes(self):
         """

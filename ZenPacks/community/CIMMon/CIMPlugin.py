@@ -12,9 +12,9 @@ __doc__="""CIMPlugin
 
 CIMPlugin extends SQLPlugin with CIM specific attributes and methods.
 
-$Id: CIMPlugin.py,v 1.2 2012/06/18 23:12:33 egor Exp $"""
+$Id: CIMPlugin.py,v 1.3 2012/06/25 21:05:22 egor Exp $"""
 
-__version__ = '$Revision: 1.2 $'[11:-2]
+__version__ = '$Revision: 1.3 $'[11:-2]
 
 from ZenPacks.community.SQLDataSource.SQLPlugin import SQLPlugin
 
@@ -29,19 +29,22 @@ class CIMPlugin(SQLPlugin):
         snmpSysName = (getattr(device, "snmpSysName", ""
                         ) or device.id).strip().lower()
         for comp in (results.get(tableName) or ()):
-            compSysName = comp.get("_sysname", "")
+            compSysName = comp.get("_sysname", "").lower()
             csSysName = snmpSysName
             if findCSName:
                 path = (self._getComputerSystemPath(results,
-                    comp.get("setPath","")) or comp.get("setPath") or "").lower()
+                    comp.get("setPath")) or comp.get("setPath") or "").lower()
                 kwargs = {}
                 if '.' in path:
-                    try: kwargs = eval("(lambda **kwargs:kwargs)(%s)"%path.split(".",1)[1])
+                    try:kwargs = eval("(lambda **kwargs:kwargs)(%s)"%path.split(
+                                                                    ".", 1)[1])
                     except: pass
                 csSysName = kwargs.get("name") or ""
+            else:
+                csSysName = snmpSysName in compSysName and snmpSysName or ""
             csName = systems.setdefault(csSysName, set())
             if compSysName:
-                csName.add(compSysName.lower())
+                csName.add(compSysName)
         result = [snmpSysName, ""]
         for sysname, subsystems in systems.iteritems():
             if snmpSysName not in sysname: continue
@@ -49,6 +52,9 @@ class CIMPlugin(SQLPlugin):
             if snmpSysName in systems: continue
             if sysname.startswith(result[0]) and sysname > result[0]:
                 result[0] = sysname
+        if len(result) == 2:
+            for sysname, subsystems in systems.iteritems():
+                result.extend(subsystems)
         return result
 
     def _findInstance(self, results, tableName, sProp, sValue):

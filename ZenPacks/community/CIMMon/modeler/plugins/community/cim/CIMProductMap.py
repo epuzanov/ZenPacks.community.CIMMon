@@ -8,11 +8,11 @@
 #
 ################################################################################
 
-__doc__="""CIMCollectionMap
+__doc__="""CIMProductMap
 
-CIMCollectionMap maps CIM_Collection class to Collection class.
+CIMProductMap maps CIM_Product class to Product class.
 
-$Id: CIMCollectionMap.py,v 1.0 2012/06/13 20:43:13 egor Exp $"""
+$Id: CIMProductMap.py,v 1.0 2012/06/13 20:43:13 egor Exp $"""
 
 __version__ = '$Revision: 1.0 $'[11:-2]
 
@@ -20,11 +20,11 @@ __version__ = '$Revision: 1.0 $'[11:-2]
 from ZenPacks.community.CIMMon.CIMPlugin import CIMPlugin
 from Products.DataCollector.plugins.DataMaps import MultiArgs
 
-class CIMCollectionMap(CIMPlugin):
-    """Map CIM_Collection class to Collection class"""
+class CIMProductMap(CIMPlugin):
+    """Map CIM_Product class to Product class"""
 
-    maptype = "CollectionMap"
-    modname = "ZenPacks.community.CIMMon.CIM_Collection"
+    maptype = "ProductMap"
+    modname = "ZenPacks.community.CIMMon.CIM_Product"
     relname = "collections"
     compname = "os"
     deviceProperties = CIMPlugin.deviceProperties + ('zCIMConnectionString',)
@@ -35,43 +35,35 @@ class CIMCollectionMap(CIMPlugin):
             return {}
         cs = self.prepareCS(device, connectionString)
         return {
-            "CIM_Collection":
+            "CIM_Product":
                 (
-                    "SELECT * FROM CIM_Collection",
+                    "SELECT * FROM CIM_Product",
                     None,
                     cs,
                     {
-                        "setPath":"__PATH",
-                        "id":"InstanceID",
-                        "title":"ElementName",
-                        "_sysname":"InstanceID",
+                        "setProductKey":"Name",
+                        "_manuf":"Vendor",
+                        "id":"Name",
                     },
                 ),
             }
 
-    def _getSysnames(self, device, results={}, tableName=""):
-        sysnames = []
-        snmpSysName = (getattr(device, "snmpSysName", ""
-                        ) or device.id).strip().lower()
-        for inst in results.get("CIM_Collection") or ():
-            instid = str(inst.get("id") or "").lower()
-            if snmpSysName not in instid: continue
-            sysnames.append(instid)
-        return sysnames
+    def _getInstallDate(self, inst):
+        return = "1968/01/08 00:00:00"
 
     def process(self, device, results, log):
         """collect CIM information from this device"""
         log.info('processing %s for device %s', self.name(), device.id)
         rm = self.relMap()
-        instances = results.get("CIM_Collection")
-        if not instances: return rm
-        sysnames = self._getSysnames(device, results, "CIM_Collection")
-        for inst in instances:
-            if (inst.get("_sysname") or "").lower() not in sysnames: continue
+        for inst in results.get("CIM_Product") or ():
             try:
                 om = self.objectMap(inst)
+                if not om.setProductKey: continue
                 om.id = self.prepId(om.id)
+                om._manuf = str(om._manuf).split()[0] or "Unknown"
+                om.setProductKey = MultiArgs(om.setProductKey, om._manuf)
+                if "setInstallDate" in inst:
+                    om.setInstallDate = self._getInstallDate(inst)
+                rm.append(om)
             except AttributeError:
                 continue
-            rm.append(om)
-        return rm

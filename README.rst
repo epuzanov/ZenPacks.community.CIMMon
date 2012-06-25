@@ -112,8 +112,6 @@ Modeler Plugins
 
 - **community.cim.CIMChassisMap** - Chassis modeler plugin, tried to identify
   Model, Vendor and Serial Number information for Device, and Disk Enclosures
-- **community.cim.CIMCollectionMap** - Collection modeler plugin, tried to
-  identify Redundancy and Replication sets
 - **community.cim.CIMComputerSystemMap** - ComputerSystem modeler plugin, tried
   to identify snmpSysName, snmpDescr, snmpContact, Model, Vendor and Serial
   Number information for Device, and also collect subsystems (RAID Controllers,
@@ -135,6 +133,11 @@ Modeler Plugins
 - **community.cim.CIMPowerSupplyMap** - Power Supply modeler plugin
 - **community.cim.CIMProcessMap** - OS Process modeler plugin
 - **community.cim.CIMProcessorMap** - CPU modeler plugin
+- **community.cim.CIMProductMap** - Product modeler plugin
+- **community.cim.CIMRedundancySetMap** - Redundancy Set modeler plugin, tried
+  identify Redundancy sets
+- **community.cim.CIMReplicationGroupMap** - Redundancy Set modeler plugin, tried
+  identify Replication groups
 - **community.cim.CIMStoragePoolMap** - Storage Pool (Disk Group) modeler
   plugin, tried to identify storage pools configured on RAID controller
 - **community.cim.CIMStorageVolumeMap** - Storage Volume modeler plugin, tried
@@ -168,6 +171,8 @@ Modeler Plugins
 - **community.cim.Win32ProcessMap** - OS Process modeler plugin for Windows
   Server
 - **community.cim.Win32ProcessorMap** - CPU modeler plugin for Windows Server
+- **community.cim.Win32ProductMap** - Product modeler plugin, **WMI Windows
+  Installer Provider** must be installed on monitored server
 - **community.cim.Win32ServiceMap** - Windows Services modeler plugin
 - **community.cim.Win32VolumeMap** - File System modeler plugin for Windows
   Server (Win32_Volume based)
@@ -196,7 +201,6 @@ Monitoring Templates
 - Devices/Server/Windows/CIM/Win32_Volume
 - Devices/Server/Windows/CIM/WinService
 - Devices/CIM_BlockStorageStatisticalData
-- Devices/CIM_Collection
 - Devices/CIM_Device
 - Devices/CIM_FileSystem
 - Devices/CIM_ManagedSystemElement
@@ -204,6 +208,8 @@ Monitoring Templates
 - Devices/CIM_NetworkAdapter
 - Devices/CIM_NetworkPort
 - Devices/CIM_Processor
+- Devices/CIM_RedundancySet
+- Devices/CIM_ReplicationGroup
 - Devices/CIM_StorageVolume
 - Devices/CIM_Tachometer
 - Devices/CIM_TemperatureSensor
