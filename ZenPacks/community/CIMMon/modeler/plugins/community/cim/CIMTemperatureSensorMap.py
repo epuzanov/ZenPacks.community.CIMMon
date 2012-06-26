@@ -13,9 +13,9 @@ __doc__="""CIMTemperatureSensorMap
 CIMTemperatureSensorMap maps CIM_TemperatureSensor class to TemperatureSensor
 class.
 
-$Id: CIMTemperatureSensorMap.py,v 1.3 2012/06/13 20:49:01 egor Exp $"""
+$Id: CIMTemperatureSensorMap.py,v 1.4 2012/06/26 23:19:16 egor Exp $"""
 
-__version__ = '$Revision: 1.3 $'[11:-2]
+__version__ = '$Revision: 1.4 $'[11:-2]
 
 
 from ZenPacks.community.CIMMon.CIMPlugin import CIMPlugin
@@ -65,12 +65,15 @@ class CIMTemperatureSensorMap(CIMPlugin):
         if not instances: return rm
         sysnames = self._getSysnames(device, results, "CIM_TemperatureSensor")
         for inst in instances:
-            if int(inst.get("_sensorType") or 0) != 2: continue
             if (inst.get("_sysname") or "").lower() not in sysnames: continue
-            if "type" in inst:
-                inst["type"] = self._getType(inst["type"])
-                if not inst["type"]: del inst["type"]
-            om = self.objectMap(inst)
-            om.id = self.prepId(om.id)
-            rm.append(om)
+            try:
+                if int(inst.get("_sensorType") or 0) != 2: continue
+                if "type" in inst:
+                    inst["type"] = self._getType(inst["type"])
+                    if not inst["type"]: del inst["type"]
+                om = self.objectMap(inst)
+                om.id = self.prepId(om.id)
+                rm.append(om)
+            except AttributeError:
+                continue
         return rm

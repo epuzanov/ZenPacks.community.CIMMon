@@ -13,9 +13,9 @@ __doc__ = """CIMNetworkPortMap
 Gather IP network interface information from CIMMOM, and 
 create DMD interface objects
 
-$Id: CIMNetworkPortMap.py,v 1.4 2012/06/14 21:20:53 egor Exp $"""
+$Id: CIMNetworkPortMap.py,v 1.5 2012/06/26 23:11:29 egor Exp $"""
 
-__version__ = '$Revision: 1.4 $'[11:-2]
+__version__ = '$Revision: 1.5 $'[11:-2]
 
 import re
 import types
@@ -220,9 +220,13 @@ class CIMNetworkPortMap(CIMPlugin):
                 om.macaddress = self._getMacAddress(inst.get("macaddress"))
                 om.operStatus = self._getOperStatus(inst)
                 if om.operStatus == 2: continue
-                om.setController = self._getController(results, inst)
                 om.adminStatus = self._getAdminStatus(inst)
-                om.setStatPath = self._getStatPath(results, inst)
+                controller = self._getController(results, inst)
+                if controller:
+                    om.setController = controller
+                statPath = self._getStatPath(results, inst)
+                if statPath:
+                    om.setStatPath = statPath
             except AttributeError:
                 continue
             rm.append(om)

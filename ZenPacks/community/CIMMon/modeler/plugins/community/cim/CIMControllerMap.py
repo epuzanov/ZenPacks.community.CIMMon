@@ -12,9 +12,9 @@ __doc__="""CIMControllerMap
 
 CIMControllerMap maps CIM_Controller class to Controller class.
 
-$Id: CIMControllerMap.py,v 1.4 2012/06/26 19:47:23 egor Exp $"""
+$Id: CIMControllerMap.py,v 1.5 2012/06/26 23:09:11 egor Exp $"""
 
-__version__ = '$Revision: 1.4 $'[11:-2]
+__version__ = '$Revision: 1.5 $'[11:-2]
 
 
 from ZenPacks.community.CIMMon.CIMPlugin import CIMPlugin
@@ -57,7 +57,7 @@ class CIMControllerMap(CIMPlugin):
         return {}
 
     def _getSlot(self, results, inst):
-        try: return int(inst["slot"])
+        try: return int(inst.get("slot") or 0)
         except: return 0
 
     def _monitor(self, inst):
@@ -73,8 +73,8 @@ class CIMControllerMap(CIMPlugin):
         for inst in instances:
             if (inst.get("_sysname") or "").lower() not in sysnames: continue
             if self._ignoreController(inst): continue
-            inst.update(self._getPackage(results, inst))
             try:
+                inst.update(self._getPackage(results, inst))
                 om = self.objectMap(inst)
                 om.id = self.prepId(om.id)
                 manuf = getattr(om, "_manuf", "") or "Unknown"
@@ -83,10 +83,13 @@ class CIMControllerMap(CIMPlugin):
                 om.setProductKey = MultiArgs(
                     getattr(om, "setProductKey", "") or "Unknown",
                     getattr(om, "_manuf", "") or "Unknown")
-                if hasattr(om, "slot"):
-                    om.slot = self._getSlot(results, inst)
-                om.setCollections = self._getCollections(results, inst)
-                om.setStatPath = self._getStatPath(results, inst)
+                om.slot = self._getSlot(results, inst)
+                collections = self._getCollections(results, inst)
+                if collections:
+                    om.setCollections = collections
+                statPath = self._getStatPath(results, inst)
+                if statPath:
+                    om.setStatPath = statPath
                 om.monitor = self._monitor(inst)
             except AttributeError:
                 continue

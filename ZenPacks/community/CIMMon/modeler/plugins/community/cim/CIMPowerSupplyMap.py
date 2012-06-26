@@ -12,9 +12,9 @@ __doc__="""CIMPowerSupplyMap
 
 CIMPowerSupplyMap maps CIM_PowerSupply CIM class to CIMPowerSupply class.
 
-$Id: CIMPowerSupplyMap.py,v 1.4 2012/06/14 21:22:50 egor Exp $"""
+$Id: CIMPowerSupplyMap.py,v 1.5 2012/06/26 21:20:28 egor Exp $"""
 
-__version__ = '$Revision: 1.4 $'[11:-2]
+__version__ = '$Revision: 1.5 $'[11:-2]
 
 
 from ZenPacks.community.CIMMon.CIMPlugin import CIMPlugin
@@ -78,6 +78,7 @@ class CIMPowerSupplyMap(CIMPlugin):
         return psType
 
     def _getStatPath(self, results, inst):
+        if "CIM_VoltageSensor" not in results: return {}
         comp =  self._findInstance(results, "CIM_VoltageSensor", "setStatPath",
                 self._findInstance(results, "CIM_AssociatedSensor", "dep",
                 inst.get("setPath")).get("ant"))
@@ -97,15 +98,20 @@ class CIMPowerSupplyMap(CIMPlugin):
         sysnames = self._getSysnames(device, results, "CIM_PowerSupply")
         for inst in instances:
             if (inst.get("_sysname") or "").lower() not in sysnames: continue
-            if "setStatPath" not in inst:
+            try:
                 inst.update(self._getStatPath(results, inst))
-            if "type" in inst:
-                inst["type"] = self._getType(inst["type"])
-                if not inst["type"]: del inst["type"]
-            om = self.objectMap(inst)
-            om.id = self.prepId(om.id)
-            if om.watts: om.watts = int(om.watts) / 1000
-            rm.append(om)
+                if "type" in inst:
+                    inst["type"] = self._getType(inst["type"])
+                    if not inst["type"]: del inst["type"]
+                om = self.objectMap(inst)
+                om.id = self.prepId(om.id)
+                om.watts = int(inst.get("watts") or 0) / 1000
+                collections = self._getCollections(results, inst)
+                if collections:
+                    om.setCollections = collections
+                rm.append(om)
+            except AttributeError:
+                continue
         return rm
 
 

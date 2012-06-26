@@ -8,13 +8,13 @@
 #
 ################################################################################
 
-__doc__="""ComputerSystemMap
+__doc__="""CIMComputerSystemMap
 
-ComputerSystemMap maps CIM_ComputerSystem class to hw product.
+CIMComputerSystemMap maps CIM_ComputerSystem class to hw product.
 
-$Id: ComputerSystemMap.py,v 1.3 2012/06/26 19:47:05 egor Exp $"""
+$Id: CIMComputerSystemMap.py,v 1.4 2012/06/26 23:08:48 egor Exp $"""
 
-__version__ = '$Revision: 1.3 $'[11:-2]
+__version__ = '$Revision: 1.4 $'[11:-2]
 
 
 from ZenPacks.community.CIMMon.CIMPlugin import CIMPlugin
@@ -53,13 +53,18 @@ class CIMComputerSystemMap(CIMPlugin):
             }
 
     def _getPackage(self, results, inst):
+        if "CIM_PhysicalPackage" not in results: return {}
         return  self._findInstance(results, "CIM_PhysicalPackage", "_path",
                 self._findInstance(results, "CIM_ComputerSystemPackage", "dep",
                 inst.get("setPath")).get("ant"))
 
+    def _getSlot(self, results, inst):
+        try: return int(inst.get("slot") or 0)
+        except: return 0
+
     def _monitor(self, inst):
         return True
-    
+
     def process(self, device, results, log):
         """collect CIM information from this device"""
         log.info('processing %s for device %s', self.name(), device.id)
@@ -72,9 +77,9 @@ class CIMComputerSystemMap(CIMPlugin):
         for inst in instances:
             subsysname = (inst.get("_sysname") or "").lower()
             if subsysname not in sysnames: continue
-            inst.update(self._getPackage(results, inst))
-            productKey = inst.get("setProductKey")
             try:
+                inst.update(self._getPackage(results, inst))
+                productKey = inst.get("setProductKey")
                 if (len(instances)==1) or (not maps and (sysname in subsysname)):
                     om = ObjectMap()
                     om.snmpindex = inst.get("setPath") or ""
@@ -98,8 +103,13 @@ class CIMComputerSystemMap(CIMPlugin):
                 if productKey:
                     om.setProductKey = MultiArgs(productKey,
                                         inst.get("_manuf") or "Unknown")
-                om.setCollections = self._getCollections(results, inst)
-                om.setStatPath = self._getStatPath(results, inst)
+                om.slot = self._getSlot(results, inst)
+                collections = self._getCollections(results, inst)
+                if collections:
+                    om.setCollections = collections
+                statPath = self._getStatPath(results, inst)
+                if statPath:
+                    om.setStatPath = statPath
                 om.monitor = self._monitor(inst)
                 rm.append(om)
             except:

@@ -12,9 +12,9 @@ __doc__="""CIMProductMap
 
 CIMProductMap maps CIM_Product class to Product class.
 
-$Id: CIMProductMap.py,v 1.1 2012/06/26 19:48:47 egor Exp $"""
+$Id: CIMProductMap.py,v 1.2 2012/06/26 23:17:59 egor Exp $"""
 
-__version__ = '$Revision: 1.1 $'[11:-2]
+__version__ = '$Revision: 1.2 $'[11:-2]
 
 
 from ZenPacks.community.CIMMon.CIMPlugin import CIMPlugin
@@ -67,3 +67,4 @@ class CIMProductMap(CIMPlugin):
                 rm.append(om)
             except AttributeError:
                 continue
+        return rm

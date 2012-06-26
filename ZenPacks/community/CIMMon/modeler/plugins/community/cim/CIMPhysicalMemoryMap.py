@@ -12,9 +12,9 @@ __doc__="""CIMPhysicalMemoryMap
 
 CIMPhysicalMemoryMap maps the CIM_PhysicalMemory to CIMPhysicalMemory objects
 
-$Id: CIMPhysicalMemoryMap.py,v 1.2 2012/06/13 20:46:32 egor Exp $"""
+$Id: CIMPhysicalMemoryMap.py,v 1.3 2012/06/26 23:11:57 egor Exp $"""
 
-__version__ = '$Revision: 1.2 $'[11:-2]
+__version__ = '$Revision: 1.3 $'[11:-2]
 
 from Products.ZenUtils.Utils import convToUnits
 from ZenPacks.community.CIMMon.CIMPlugin import CIMPlugin
@@ -139,8 +139,8 @@ class CIMPhysicalMemoryMap(CIMPlugin):
         sysnames = self._getSysnames(device, results, "CIM_PhysicalMemory")
         for inst in instances:
             if (inst.get("_sysname") or "").lower() not in sysnames: continue
-            om = self.objectMap(inst)
             try:
+                om = self.objectMap(inst)
                 om.id = self.prepId(om.id)
                 board, om.slot = self._getBoardSlot(results, inst)
                 om.title = "Board%s %s%s"%(board, self.slottypes.get(

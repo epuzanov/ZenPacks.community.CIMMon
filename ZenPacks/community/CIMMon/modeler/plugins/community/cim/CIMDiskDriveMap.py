@@ -12,9 +12,9 @@ __doc__="""CIMDiskDriveMap
 
 CIMDiskDriveMap maps CIM_DiskDrive class to CIM_DiskDrive class.
 
-$Id: SNIADiskDriveMap.py,v 1.5 2012/06/21 19:33:14 egor Exp $"""
+$Id: CIMDiskDriveMap.py,v 1.6 2012/06/23 19:09:40 egor Exp $"""
 
-__version__ = '$Revision: 1.5 $'[11:-2]
+__version__ = '$Revision: 1.6 $'[11:-2]
 
 from ZenPacks.community.CIMMon.CIMPlugin import CIMPlugin
 from Products.DataCollector.plugins.DataMaps import ObjectMap, MultiArgs
@@ -73,6 +73,7 @@ class CIMDiskDriveMap(CIMPlugin):
                 }.get(str(formFactor)) or "lff"
 
     def _getPackage(self, results, inst):
+        if "CIM_PhysicalPackage" not in results: return {}
         return  self._findInstance(results, "CIM_PhysicalPackage", "_pPath",
                 self._findInstance(results, "CIM_Realizes", "dep",
                 inst.get("setPath")).get("ant"))
@@ -98,6 +99,7 @@ class CIMDiskDriveMap(CIMPlugin):
         return ""
 
     def _getFirmware(self, results, inst):
+        if "CIM_SoftwareIdentity" not in results: return ""
         return  self._findInstance(results, "CIM_SoftwareIdentity", "_path",
                 self._findInstance(results, "CIM_ElementSoftwareIdentity","dep",
                 inst.get("setPath")).get("ant")).get("FWRev") or ""
@@ -141,14 +143,19 @@ class CIMDiskDriveMap(CIMPlugin):
                 om._manuf = getattr(om, "_manuf", "") or "Unknown"
                 om.setProductKey = MultiArgs(
                     getattr(om, "setProductKey", "") or "Unknown", om._manuf)
-                if not getattr(om, "FWRev", ""):
-                    om.FWRev = self._getFirmware(results, inst)
-                if not str(getattr(om, "bay", "")):
-                    bay = self._getBay(results, inst)
-                    if bay > -1: om.bay = bay
-                om.setChassis = self._getChassis(results, inst)
-                om.setStoragePool = self._getPool(results, inst)
-                om.setStatPath = self._getStatPath(results, inst)
+                om.FWRev = self._getFirmware(results, inst)
+                bay = self._getBay(results, inst)
+                if bay > -1:
+                    om.bay = bay
+                chassis = self._getChassis(results, inst)
+                if chassis:
+                    om.setChassis = chassis
+                storagePool = self._getPool(results, inst)
+                if storagePool:
+                    om.setStoragePool = storagePool
+                statPath = self._getStatPath(results, inst)
+                if statPath:
+                    om.setStatPath = statPath
             except AttributeError:
                 continue
             rm.append(om)

@@ -12,9 +12,9 @@ __doc__="""CIMFanMap
 
 CIMFanMap maps CIM_Fan class to Fan class.
 
-$Id: CIMFanMap.py,v 1.3 2012/06/14 21:17:25 egor Exp $"""
+$Id: CIMFanMap.py,v 1.4 2012/06/26 21:16:51 egor Exp $"""
 
-__version__ = '$Revision: 1.3 $'[11:-2]
+__version__ = '$Revision: 1.4 $'[11:-2]
 
 
 from ZenPacks.community.CIMMon.CIMPlugin import CIMPlugin
@@ -81,6 +81,7 @@ class CIMFanMap(CIMPlugin):
         return "%s Cooling"%(fanTypeStr == "true" and "Active" or "Passive")
 
     def _getStatPath(self, results, inst):
+        if "CIM_Tachometer" not in results: return {}
         comp =  self._findInstance(results, "CIM_Tachometer", "setStatPath",
                 self._findInstance(results, "CIM_AssociatedSensor", "dep",
                 inst.get("setPath")).get("ant"))
@@ -99,16 +100,20 @@ class CIMFanMap(CIMPlugin):
         sysnames = self._getSysnames(device, results, "CIM_Fan")
         for inst in instances:
             if (inst.get("_sysname") or "").lower() not in sysnames: continue
-            if int(inst.get("_sensorType") or 2) == 2:
+            try:
                 inst.update(self._getStatPath(results, inst))
-            else: continue
-            if "type" in inst:
-                inst["type"] = self._getType(inst["type"])
-                if not inst['type']: del inst["type"]
-            elif "setStatPath" in inst:
-                inst["type"] = "Active Cooling"
-            om = self.objectMap(inst)
-            om.id = self.prepId(om.id)
-            rm.append(om)
+                if "type" in inst:
+                    inst["type"] = self._getType(inst["type"])
+                    if not inst['type']: del inst["type"]
+                elif "setStatPath" in inst:
+                    inst["type"] = "Active Cooling"
+                om = self.objectMap(inst)
+                om.id = self.prepId(om.id)
+                collections = self._getCollections(results, inst)
+                if collections:
+                    om.setCollections = collections
+                rm.append(om)
+            except AttributeError:
+                continue
         if len(rm.maps) == 0: return
         return rm
