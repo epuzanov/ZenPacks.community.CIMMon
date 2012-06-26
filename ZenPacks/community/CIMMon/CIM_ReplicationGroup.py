@@ -12,9 +12,9 @@ __doc__="""CIM_ReplicationGroup
 
 CIM_ReplicationGroup is an abstraction of a CIM_ReplicationGroup
 
-$Id: CIM_ReplicationGroup.py,v 1.0 2012/06/24 16:13:48 egor Exp $"""
+$Id: CIM_ReplicationGroup.py,v 1.1 2012/06/26 19:43:31 egor Exp $"""
 
-__version__ = "$Revision: 1. $"[11:-2]
+__version__ = "$Revision: 1.1 $"[11:-2]
 
 from Products.ZenModel.OSComponent import OSComponent
 from Products.ZenRelations.RelSchema import ToOne, ToMany, ToManyCont
@@ -46,9 +46,9 @@ class CIM_ReplicationGroup(OSComponent, CIM_ManagedSystemElement):
             "Products.ZenModel.OperatingSystem",
             "replicationgroups")),
         ("members", ToMany(
-            ToOne,
+            ToMany,
             "ZenPacks.community.CIMMon.CIM_StorageVolume",
-            "replicationgroup")),
+            "replicationgroups")),
         )
 
     factory_type_information = ( 

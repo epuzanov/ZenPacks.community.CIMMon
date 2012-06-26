@@ -12,14 +12,14 @@ __doc__="""CIM_ManagedSystemElement
 
 CIM_ManagedSystemElement is an abstraction for CIM_ManagedSystemElement class.
 
-$Id: CIM_ManagedSystemElement.py,v 1.4 2012/06/25 21:06:02 egor Exp $"""
+$Id: CIM_ManagedSystemElement.py,v 1.5 2012/06/26 19:42:36 egor Exp $"""
 
-__version__ = "$Revision: 1.4 $"[11:-2]
+__version__ = "$Revision: 1.5 $"[11:-2]
 
 from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
 from Products.ZenModel.ZenossSecurity import *
-from Products.ZenRelations.RelSchema import ToOne, ToMany
+from Products.ZenRelations.RelSchema import ToMany
 
 class CIM_ManagedSystemElement:
     """ManagedSystemElement object"""
@@ -42,7 +42,7 @@ class CIM_ManagedSystemElement:
                 )
 
     _relations = (
-        ("redundancyset", ToOne(ToMany,
+        ("redundancysets", ToMany(ToMany,
             "ZenPacks.community.CIMMon.CIM_RedundancySet",
             "members")),
         )
@@ -113,24 +113,25 @@ class CIM_ManagedSystemElement:
         """
         return self.cimStatKeybindings.replace(',', ' AND ')
 
-    security.declareProtected(ZEN_CHANGE_DEVICE, 'setCollection')
-    def setCollection(self, colid):
+    security.declareProtected(ZEN_CHANGE_DEVICE, 'setCollections')
+    def setCollections(self, colids):
         """
         Set the collection relationship to the collection set specified by the
         given id.
         """
-        if not colid: return
-        for col in getattr(self.device().os, 'redundanysets', (lambda:[]))():
-            if col.getPath() != colid: continue
-            self.redundanyset.addRelation(col)
-            break
+        for colid in colids or ():
+            if not colid: continue
+            for col in getattr(self.device().os,'redundancysets',(lambda:[]))():
+                if col.getPath() != colid: continue
+                self.redundancysets.addRelation(col)
+                break
 
-    security.declareProtected(ZEN_VIEW, 'getCollection')
-    def getCollection(self):
+    security.declareProtected(ZEN_VIEW, 'getCollections')
+    def getCollections(self):
         """
         Return Collection object
         """
-        return getattr(self, 'redundancyset', lambda:None)()
+        return getattr(self, 'redundancysets', lambda:None)()
 
     security.declareProtected(ZEN_CHANGE_DEVICE, 'convertStatus')
     def convertStatus(self, status):

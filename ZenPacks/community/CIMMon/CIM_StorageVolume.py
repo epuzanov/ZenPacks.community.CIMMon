@@ -12,9 +12,9 @@ __doc__="""CIM_StorageVolume
 
 CIM_StorageVolume is an abstraction of a CIM_StorageVolume
 
-$Id: CIM_StorageVolume.py,v 1.8 2012/06/25 21:08:12 egor Exp $"""
+$Id: CIM_StorageVolume.py,v 1.9 2012/06/26 19:43:56 egor Exp $"""
 
-__version__ = "$Revision: 1.8 $"[11:-2]
+__version__ = "$Revision: 1.9 $"[11:-2]
 
 from Products.ZenModel.OSComponent import OSComponent
 from Products.ZenRelations.RelSchema import ToOne, ToMany, ToManyCont
@@ -60,7 +60,7 @@ class CIM_StorageVolume(OSComponent, CIM_ManagedSystemElement):
         ("storagepool", ToOne(ToMany,
             "ZenPacks.community.CIMMon.CIM_StoragePool",
             "storagevolumes")),
-        ("replicationgroup", ToOne(ToMany,
+        ("replicationgroups", ToMany(ToMany,
             "ZenPacks.community.CIMMon.CIM_ReplicationGroup",
             "members")),
         )
@@ -127,20 +127,21 @@ class CIM_StorageVolume(OSComponent, CIM_ManagedSystemElement):
     def getStoragePoolName(self):
         return getattr(self.getStoragePool(), 'name', lambda:'Unknown')()
 
-    security.declareProtected(ZEN_CHANGE_DEVICE, 'setCollection')
-    def setCollection(self, colid):
+    security.declareProtected(ZEN_CHANGE_DEVICE, 'setCollections')
+    def setCollections(self, colids):
         """
         Set the collection relationship to the collection set specified by the
         given id.
         """
-        if not colid: return
-        for col in getattr(self.device().os,'replicationgroups',(lambda:[]))():
-            if col.getPath() != colid: continue
-            self.replicationgroup.addRelation(col)
-            break
+        for colid in colids or ():
+            if not colid: continue
+            for col in getattr(self.device().os,'replicationgroups',(lambda:[]))():
+                if col.getPath() != colid: continue
+                self.replicationgroups.addRelation(col)
+                break
 
-    security.declareProtected(ZEN_VIEW, 'getCollection')
-    def getCollection(self):
+    security.declareProtected(ZEN_VIEW, 'getCollections')
+    def getCollections(self):
         """
         Return Collection object
         """

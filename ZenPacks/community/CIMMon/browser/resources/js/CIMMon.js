@@ -415,6 +415,9 @@ ZC.CIM_RedundancySetPanel = Ext.extend(ZC.ComponentGridPanel, {
                 {name: 'severity'},
                 {name: 'status'},
                 {name: 'name'},
+                {name: 'typeOfSet'},
+                {name: 'minNumberNeeded'},
+                {name: 'membersCount'},
                 {name: 'locking'},
                 {name: 'usesMonitorAttribute'},
                 {name: 'monitored'},
@@ -432,6 +435,21 @@ ZC.CIM_RedundancySetPanel = Ext.extend(ZC.ComponentGridPanel, {
                 header: _t('Name'),
                 sortable: true
             },{
+                id: 'typeOfSet',
+                dataIndex: 'typeOfSet',
+                header: _t('Type'),
+                sortable: true
+            },{
+                id: 'minNumberNeeded',
+                dataIndex: 'minNumberNeeded',
+                header: _t('Members Minimum'),
+                sortable: true
+            },{
+                id: 'membersCount',
+                dataIndex: 'membersCount',
+                header: _t('Members Count'),
+                sortable: true
+            },{
                 id: 'monitored',
                 dataIndex: 'monitored',
                 header: _t('Monitored'),
@@ -440,7 +458,7 @@ ZC.CIM_RedundancySetPanel = Ext.extend(ZC.ComponentGridPanel, {
                 id: 'status',
                 dataIndex: 'status',
                 header: _t('Status'),
-                width: 60
+                width: 100
             },{
                 id: 'locking',
                 dataIndex: 'locking',

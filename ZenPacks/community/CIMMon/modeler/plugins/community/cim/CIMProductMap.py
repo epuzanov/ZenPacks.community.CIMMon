@@ -12,9 +12,9 @@ __doc__="""CIMProductMap
 
 CIMProductMap maps CIM_Product class to Product class.
 
-$Id: CIMProductMap.py,v 1.0 2012/06/13 20:43:13 egor Exp $"""
+$Id: CIMProductMap.py,v 1.1 2012/06/26 19:48:47 egor Exp $"""
 
-__version__ = '$Revision: 1.0 $'[11:-2]
+__version__ = '$Revision: 1.1 $'[11:-2]
 
 
 from ZenPacks.community.CIMMon.CIMPlugin import CIMPlugin
@@ -49,7 +49,7 @@ class CIMProductMap(CIMPlugin):
             }
 
     def _getInstallDate(self, inst):
-        return = "1968/01/08 00:00:00"
+        return "1968/01/08 00:00:00"
 
     def process(self, device, results, log):
         """collect CIM information from this device"""

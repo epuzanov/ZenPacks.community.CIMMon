@@ -36,9 +36,9 @@
            tal:content="structure python:member.urlLink(text=member.name(),
                                                     attrs={'target':'_top'})"/>
       </td>
-      <td class="tablevalues" tal:content="disk/diskType"/>
-      <td class="tablevalues" tal:content="disk/accessType"/>
-      <td class="tablevalues" tal:content="disk/totalBytesString"/>
+      <td class="tablevalues" tal:content="member/diskType"/>
+      <td class="tablevalues" tal:content="member/accessType"/>
+      <td class="tablevalues" tal:content="member/totalBytesString"/>
       <td tal:define="color member/statusDot|string:grey"
         class="tablevalues" style="text-align:center;">
         <img tal:attributes="src string:img/${color}_dot.png"/>

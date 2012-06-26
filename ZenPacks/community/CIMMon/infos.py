@@ -12,9 +12,9 @@ __doc__="""infos.py
 
 Representation of CIM components.
 
-$Id: infos.py,v 1.5 2012/06/25 21:11:23 egor Exp $"""
+$Id: infos.py,v 1.6 2012/06/26 19:44:25 egor Exp $"""
 
-__version__ = "$Revision: 1.5 $"[11:-2]
+__version__ = "$Revision: 1.6 $"[11:-2]
 
 from Products.Zuul.infos import ProxyProperty
 from Products.Zuul.infos.component import ComponentInfo
@@ -210,6 +210,10 @@ class RedundancySetInfo(ComponentInfo):
     typeOfSet = ProxyProperty('typeOfSet')
     loadBalanceAlgorithm = ProxyProperty('loadBalanceAlgorithm')
     minNumberNeeded = ProxyProperty('minNumberNeeded')
+
+    @property
+    def membersCount(self):
+        return self._object.members.countObjects()
 
     @property
     def state(self):

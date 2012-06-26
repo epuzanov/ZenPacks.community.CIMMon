@@ -12,9 +12,9 @@ __doc__="""ComputerSystemMap
 
 ComputerSystemMap maps CIM_ComputerSystem class to hw product.
 
-$Id: ComputerSystemMap.py,v 1.2 2012/06/19 22:46:23 egor Exp $"""
+$Id: ComputerSystemMap.py,v 1.3 2012/06/26 19:47:05 egor Exp $"""
 
-__version__ = '$Revision: 1.2 $'[11:-2]
+__version__ = '$Revision: 1.3 $'[11:-2]
 
 
 from ZenPacks.community.CIMMon.CIMPlugin import CIMPlugin
@@ -57,6 +57,9 @@ class CIMComputerSystemMap(CIMPlugin):
                 self._findInstance(results, "CIM_ComputerSystemPackage", "dep",
                 inst.get("setPath")).get("ant"))
 
+    def _monitor(self, inst):
+        return True
+    
     def process(self, device, results, log):
         """collect CIM information from this device"""
         log.info('processing %s for device %s', self.name(), device.id)
@@ -95,9 +98,9 @@ class CIMComputerSystemMap(CIMPlugin):
                 if productKey:
                     om.setProductKey = MultiArgs(productKey,
                                         inst.get("_manuf") or "Unknown")
-                om.setCollection = self._getCollection(results, inst)
+                om.setCollections = self._getCollections(results, inst)
                 om.setStatPath = self._getStatPath(results, inst)
-                om.monitor = True
+                om.monitor = self._monitor(inst)
                 rm.append(om)
             except:
                 log.warning('processing error')

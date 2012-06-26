@@ -4086,7 +4086,7 @@ AVERAGE
 <!-- ('', 'zport', 'dmd', 'Devices', 'rrdTemplates', 'CIM_RedundancySet') -->
 <object id='/zport/dmd/Devices/rrdTemplates/CIM_RedundancySet' module='Products.ZenModel.RRDTemplate' class='RRDTemplate'>
 <property type="text" id="description" mode="w" >
-Place holder for future use.
+RedundancySet template that uses CIM_RedundancySet Class.
 </property>
 <property type="string" id="targetPythonClass" mode="w" >
 ZenPacks.community.CIM_RedundancySet

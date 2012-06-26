@@ -12,9 +12,9 @@ __doc__="""CIMPlugin
 
 CIMPlugin extends SQLPlugin with CIM specific attributes and methods.
 
-$Id: CIMPlugin.py,v 1.3 2012/06/25 21:05:22 egor Exp $"""
+$Id: CIMPlugin.py,v 1.4 2012/06/26 19:42:16 egor Exp $"""
 
-__version__ = '$Revision: 1.3 $'[11:-2]
+__version__ = '$Revision: 1.4 $'[11:-2]
 
 from ZenPacks.community.SQLDataSource.SQLPlugin import SQLPlugin
 
@@ -72,9 +72,14 @@ class CIMPlugin(SQLPlugin):
         return self._getComputerSystemPath(results,
                                         cs.get("gc", "")) or cs.get("gc", "")
 
-    def _getCollection(self, results, inst):
-        return self._findInstance(results, "CIM_MemberOfCollection", "member",
-            inst.get("setPath")).get("collection") or ""
+    def _getCollections(self, results, inst):
+        collections = []
+        member = inst.get("setPath")
+        if member:
+            for moc in results.get("CIM_MemberOfCollection") or ():
+                if moc.get("member") == member:
+                    collections.append(moc.get("collection"))
+        return collections
 
     def _getStatPath(self, results, inst):
         return self._findInstance(results, "CIM_ElementStatisticalData", "me",

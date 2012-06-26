@@ -12,9 +12,9 @@ __doc__="""CIM_RedundancySet
 
 CIM_RedundancySet is an abstraction of a CIM_RedundancySet
 
-$Id: CIM_RedundancySet.py,v 1.1 2012/06/18 23:13:46 egor Exp $"""
+$Id: CIM_RedundancySet.py,v 1.2 2012/06/26 19:43:09 egor Exp $"""
 
-__version__ = "$Revision: 1.1 $"[11:-2]
+__version__ = "$Revision: 1.2 $"[11:-2]
 
 from Products.ZenModel.OSComponent import OSComponent
 from Products.ZenRelations.RelSchema import ToOne, ToMany, ToManyCont
@@ -62,9 +62,9 @@ class CIM_RedundancySet(OSComponent, CIM_ManagedSystemElement):
             "Products.ZenModel.OperatingSystem",
             "redundancysets")),
         ("members", ToMany(
-            ToOne,
+            ToMany,
             "ZenPacks.community.CIMMon.CIM_ManagedSystemElement",
-            "redundancyset")),
+            "redundancysets")),
         )
 
     factory_type_information = ( 
