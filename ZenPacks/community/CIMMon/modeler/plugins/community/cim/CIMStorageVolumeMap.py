@@ -12,9 +12,9 @@ __doc__="""CIMStorageVolumeMap
 
 CIMStorageVolumeMap maps CIM_StorageVolume class to CIM_StorageVolume class.
 
-$Id: CIMStorageVolumeMap.py,v 1.5 2012/06/26 23:18:29 egor Exp $"""
+$Id: CIMStorageVolumeMap.py,v 1.6 2012/06/27 19:46:34 egor Exp $"""
 
-__version__ = '$Revision: 1.5 $'[11:-2]
+__version__ = '$Revision: 1.6 $'[11:-2]
 
 from ZenPacks.community.CIMMon.CIMPlugin import CIMPlugin
 
@@ -46,6 +46,7 @@ class CIMStorageVolumeMap(CIMPlugin):
                         "id":"DeviceID",
                         "title":"ElementName",
                         "_pr":"PackageRedundancy",
+                        "totalBlocks":"NumberOfBlocks",
                         "_sysname":"SystemName",
                     },
                 ),

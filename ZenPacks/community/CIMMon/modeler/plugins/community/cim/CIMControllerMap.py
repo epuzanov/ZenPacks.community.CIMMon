@@ -16,7 +16,6 @@ $Id: CIMControllerMap.py,v 1.5 2012/06/26 23:09:11 egor Exp $"""
 
 __version__ = '$Revision: 1.5 $'[11:-2]
 
-
 from ZenPacks.community.CIMMon.CIMPlugin import CIMPlugin
 from Products.DataCollector.plugins.DataMaps import MultiArgs
 

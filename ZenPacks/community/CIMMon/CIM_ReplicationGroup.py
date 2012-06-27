@@ -12,9 +12,9 @@ __doc__="""CIM_ReplicationGroup
 
 CIM_ReplicationGroup is an abstraction of a CIM_ReplicationGroup
 
-$Id: CIM_ReplicationGroup.py,v 1.1 2012/06/26 19:43:31 egor Exp $"""
+$Id: CIM_ReplicationGroup.py,v 1.2 2012/06/27 19:43:21 egor Exp $"""
 
-__version__ = "$Revision: 1.1 $"[11:-2]
+__version__ = "$Revision: 1.2 $"[11:-2]
 
 from Products.ZenModel.OSComponent import OSComponent
 from Products.ZenRelations.RelSchema import ToOne, ToMany, ToManyCont
@@ -67,8 +67,8 @@ class CIM_ReplicationGroup(OSComponent, CIM_ManagedSystemElement):
                 , 'action'        : 'viewCIMReplicationGroup'
                 , 'permissions'   : (ZEN_VIEW,)
                 },
-                { 'id'            : 'members'
-                , 'name'          : 'Members'
+                { 'id'            : 'volumes'
+                , 'name'          : 'Volumes'
                 , 'action'        : 'viewCIMReplicationGroupMembers'
                 , 'permissions'   : (ZEN_VIEW, )
                 },

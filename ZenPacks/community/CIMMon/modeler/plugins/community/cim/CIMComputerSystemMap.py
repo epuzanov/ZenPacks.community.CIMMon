@@ -12,9 +12,9 @@ __doc__="""CIMComputerSystemMap
 
 CIMComputerSystemMap maps CIM_ComputerSystem class to hw product.
 
-$Id: CIMComputerSystemMap.py,v 1.4 2012/06/26 23:08:48 egor Exp $"""
+$Id: CIMComputerSystemMap.py,v 1.5 2012/06/27 19:45:38 egor Exp $"""
 
-__version__ = '$Revision: 1.4 $'[11:-2]
+__version__ = '$Revision: 1.5 $'[11:-2]
 
 
 from ZenPacks.community.CIMMon.CIMPlugin import CIMPlugin
@@ -22,7 +22,7 @@ from Products.DataCollector.plugins.DataMaps import MultiArgs, ObjectMap
 
 class CIMComputerSystemMap(CIMPlugin):
     """
-    ComputerSystemMap maps CIM_ComputerSystem classes to get
+    CIMComputerSystemMap maps CIM_ComputerSystem classes to get
     hw and os products.
     """
 
@@ -114,5 +114,6 @@ class CIMComputerSystemMap(CIMPlugin):
                 rm.append(om)
             except:
                 log.warning('processing error')
-        maps.append(rm)
+        if len(rm.maps) > 0:
+            maps.append(rm)
         return maps

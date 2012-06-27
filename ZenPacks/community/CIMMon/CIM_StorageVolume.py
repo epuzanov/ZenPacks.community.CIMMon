@@ -12,9 +12,9 @@ __doc__="""CIM_StorageVolume
 
 CIM_StorageVolume is an abstraction of a CIM_StorageVolume
 
-$Id: CIM_StorageVolume.py,v 1.9 2012/06/26 19:43:56 egor Exp $"""
+$Id: CIM_StorageVolume.py,v 1.10 2012/06/27 19:43:45 egor Exp $"""
 
-__version__ = "$Revision: 1.9 $"[11:-2]
+__version__ = "$Revision: 1.10 $"[11:-2]
 
 from Products.ZenModel.OSComponent import OSComponent
 from Products.ZenRelations.RelSchema import ToOne, ToMany, ToManyCont
@@ -45,11 +45,13 @@ class CIM_StorageVolume(OSComponent, CIM_ManagedSystemElement):
 
     accessType = ""
     blockSize = 0
+    totalBlocks = 0
     diskType = ""
 
     _properties = OSComponent._properties + (
                  {'id':'accessType', 'type':'string', 'mode':'w'},
                  {'id':'blockSize', 'type':'int', 'mode':'w'},
+                 {'id':'totalBlocks', 'type':'int', 'mode':'w'},
                  {'id':'diskType', 'type':'string', 'mode':'w'},
                 ) + CIM_ManagedSystemElement._properties
 
@@ -151,7 +153,10 @@ class CIM_StorageVolume(OSComponent, CIM_ManagedSystemElement):
         """
         Return the number of total bytes
         """
-        return self.cacheRRDValue('NumberOfBlocks', 0) * self.blockSize
+        tb = self.cacheRRDValue('NumberOfBlocks', 0)
+        if not tb:
+            tb = self.totalBlocks
+        return int(tb) * int(self.blockSize)
 
     def totalBytesString(self):
         """

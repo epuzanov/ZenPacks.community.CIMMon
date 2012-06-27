@@ -122,7 +122,10 @@ class ZenPack(ZenPackBase):
                 raise KeyError
         except KeyError:
             dcp, newdcp = dcp.rsplit('/', 1)
-            dc = self.addDeviceClass(app, dcp, self.dcProperties.get(dcp, {}))
+            if dcp == '':
+                dc = app.zport.dmd.Devices
+            else:
+                dc = self.addDeviceClass(app,dcp,self.dcProperties.get(dcp,{}))
             manage_addDeviceClass(dc, newdcp)
             dc = app.zport.dmd.Devices.getOrganizer("%s/%s"%(dcp, newdcp))
             dc.description = ''
