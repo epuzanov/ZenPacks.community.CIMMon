@@ -71,40 +71,6 @@ zProperties
 - **zCIMHWConnectionString** - connection string for Hardware components (Fans,
   HardDisks, Temperature Sensors)
 
-an example for HP ProLiant Server running Windows with HP Management Agent
-installed (both OS and HW monitored over WMI):
-
-zCIMConnectionString:
-
-    ::
-
-        'pywmidb',host='${here/manageIp}',user='${here/zWinUser}',password='${here/zWinPassword}',namespace='root/cimv2'
-
-zCIMHWConnectionString:
-
-    ::
-
-        'pywmidb',host='${here/manageIp}',user='${here/zWinUser}',password='${here/zWinPassword}',namespace='root/hpq'
-
-an example for IBM Server (WBEM monitored) running Windows (WinRM2 monitored):
-
-zCIMConnectionString:
-
-    ::
-
-        'pywsmandb',scheme='http',host='${here/manageIp}',port=5985,user='${here/zWinUser}',password='${here/zWinPassword}',namespace='root/cimv2'
-
-zCIMHWConnectionString:
-
-    ::
-
-        'pywbemdb',scheme='https',host='${here/manageIp}',port=5989,user='${here/zWinUser}',password='${here/zWinPassword}',namespace='root/ibmsd'
-
-for HP EVA monitoring set both zCIMConnectionString and zCIMHWConnectionString to:
-
-    ::
-
-        'pywbemdb',scheme='https',host='CommandViewIpAddress',port=5989,user='${here/zWinUser}',password='${here/zWinPassword}',namespace='root/eva'
 
 
 Modeler Plugins
@@ -222,3 +188,129 @@ Reports
 
 - Reports/Device Reports/SMI-S Reports/Hard Disks
 - Reports/Device Reports/SMI-S Reports/Controllers
+
+Configuration Examples
+----------------------
+
+#. HP ProLiant Server running Windows Server 2003 with HP Management Agent
+   installed (both OS and HW monitored over WMI):
+
+   - zCIMConnectionString:
+
+    ::
+
+        'pywmidb',host='${here/manageIp}',user='${here/zWinUser}',password='${here/zWinPassword}',namespace='root/cimv2'
+
+   - zCIMHWConnectionString:
+
+    ::
+
+        'pywmidb',host='${here/manageIp}',user='${here/zWinUser}',password='${here/zWinPassword}',namespace='root/hpq'
+
+   - zCollectorPlugins (Modeler Plugins):
+
+    ::
+
+        community.cim.SNIAComputerSystemMap
+        community.cim.SNIAChassisMap
+        community.cim.SNIAStoragePoolMap
+        community.cim.SNIADiskDriveMap
+        community.cim.SNIAStorageVolumeMap
+        community.cim.CIMOperatingSystemMap
+        community.cim.CIMProcessorMap
+        community.cim.CIMPowerSupplyMap
+        community.cim.CIMFanMap
+        community.cim.CIMTemperatureSensorMap
+        community.cim.CIMPhysicalMemoryMap
+        community.cim.Win32NetworkAdapterMap
+        community.cim.Win32VolumeMap
+        community.cim.Win32ProcessMap
+        community.cim.Win32IP4RouteTableMap
+        community.cim.Win32ServiceMap
+        community.cim.Win32ProductMap
+        zenoss.portscan.IpServiceMap
+
+#. IBM Server (WBEM monitored) running SLES 10 Linux with IBM Director agent
+   installed:
+
+   - zCIMConnectionString:
+
+    ::
+
+        'pywbemdb',scheme='http',host='${here/manageIp}',port=5985,user='${here/zWinUser}',password='${here/zWinPassword}',namespace='smash'
+
+   - zCIMHWConnectionString:
+
+    ::
+
+        'pywbemdb',scheme='https',host='${here/manageIp}',port=5989,user='${here/zWinUser}',password='${here/zWinPassword}',namespace='root/ibmsd'
+
+   - zCollectorPlugins (Modeler Plugins):
+
+    ::
+
+        community.cim.CIMComputerSystemMap
+        community.cim.CIMOperatingSystemMap
+        community.cim.CIMChassisMap
+        community.cim.CIMPowerSupplyMap
+        community.cim.CIMFanMap
+        community.cim.CIMTemperatureSensorMap
+        community.cim.CIMPhysicalMemoryMap
+        community.cim.CIMUnixProcessMap
+        community.cim.CIMFileSystemMap
+        community.cim.CIMNetworkPortMap
+        zenoss.portscan.IpServiceMap
+
+#. Dell Server (WMI monitored) running Windows Server 2003 (WinRM2 monitored)
+   with OpenManage agent installed:
+
+   - zCIMConnectionString:
+
+    ::
+
+        'pywsmandb',scheme='http',host='${here/manageIp}',port=5985,user='${here/zWinUser}',password='${here/zWinPassword}',namespace='root/cimv2'
+
+   - zCIMHWConnectionString:
+
+    ::
+
+        'pywmidb',host='${here/manageIp}',user='${here/zWinUser}',password='${here/zWinPassword}',namespace='root/DellOMCI'
+
+   - zCollectorPlugins (Modeler Plugins):
+
+    ::
+
+        community.cim.CIMComputerSystemMap
+        community.cim.CIMOperatingSystemMap
+        community.cim.CIMChassisMap
+        community.cim.CIMPowerSupplyMap
+        community.cim.CIMFanMap
+        community.cim.CIMTemperatureSensorMap
+        community.cim.CIMPhysicalMemoryMap
+        community.cim.Win32DiskDriveMap
+        community.cim.Win32ProcessorMap
+        community.cim.Win32NetworkAdapterMap
+        community.cim.Win32VolumeMap
+        community.cim.Win32ProcessMap
+        community.cim.Win32IP4RouteTableMap
+        community.cim.Win32ServiceMap
+        zenoss.portscan.IpServiceMap
+
+#. HP EVA Storage monitoring
+
+   - zCIMConnectionString and zCIMHWConnectionString:
+
+    ::
+
+        'pywbemdb',scheme='https',host='CommandViewIpAddress',port=5989,user='${here/zWinUser}',password='${here/zWinPassword}',namespace='root/eva'
+
+   - zCollectorPlugins (Modeler Plugins):
+
+    ::
+
+        community.cim.SNIAComputerSystemMap
+        community.cim.SNIAChassisMap
+        community.cim.SNIAStoragePoolMap
+        community.cim.SNIAStorageVolumeMap
+        community.cim.SNIADiskDriveMap
+        community.cim.SNIANetworkPortMap
