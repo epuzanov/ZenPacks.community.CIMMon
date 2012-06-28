@@ -12,9 +12,9 @@ __doc__="""CIMComputerSystemMap
 
 CIMComputerSystemMap maps CIM_ComputerSystem class to hw product.
 
-$Id: CIMComputerSystemMap.py,v 1.5 2012/06/27 19:45:38 egor Exp $"""
+$Id: CIMComputerSystemMap.py,v 1.6 2012/06/28 18:35:36 egor Exp $"""
 
-__version__ = '$Revision: 1.5 $'[11:-2]
+__version__ = '$Revision: 1.6 $'[11:-2]
 
 
 from ZenPacks.community.CIMMon.CIMPlugin import CIMPlugin
@@ -97,11 +97,11 @@ class CIMComputerSystemMap(CIMPlugin):
                         om.setHWTag = tag
                     maps.append(om)
                     continue
+                if not productKey: continue
                 om = self.objectMap(inst)
                 om.id = self.prepId(inst.get("_sysname") or "")
                 if not om.id: continue
-                if productKey:
-                    om.setProductKey = MultiArgs(productKey,
+                om.setProductKey = MultiArgs(productKey,
                                         inst.get("_manuf") or "Unknown")
                 om.slot = self._getSlot(results, inst)
                 collections = self._getCollections(results, inst)

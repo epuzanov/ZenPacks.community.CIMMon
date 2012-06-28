@@ -12,9 +12,9 @@ __doc__="""CIMDiskDriveMap
 
 CIMDiskDriveMap maps CIM_DiskDrive class to CIM_DiskDrive class.
 
-$Id: CIMDiskDriveMap.py,v 1.6 2012/06/23 19:09:40 egor Exp $"""
+$Id: CIMDiskDriveMap.py,v 1.7 2012/06/28 18:36:16 egor Exp $"""
 
-__version__ = '$Revision: 1.6 $'[11:-2]
+__version__ = '$Revision: 1.7 $'[11:-2]
 
 from ZenPacks.community.CIMMon.CIMPlugin import CIMPlugin
 from Products.DataCollector.plugins.DataMaps import ObjectMap, MultiArgs
@@ -83,6 +83,9 @@ class CIMDiskDriveMap(CIMPlugin):
         if not iPath: return ""
         comp = self._findInstance(results, "CIM_Container", "pc", iPath)
         if not comp: return "gc" in inst and iPath or ""
+        gc = comp.get("gc") or ""
+        if gc in [ch.get("_path") for ch in results.get("CIM_Chassis") or ()]:
+            return gc
         return self._getChassis(results, comp) or comp.get("pc") or ""
 
     def _getPool(self, results, inst):

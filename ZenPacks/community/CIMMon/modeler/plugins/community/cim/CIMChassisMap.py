@@ -12,9 +12,9 @@ __doc__="""CIMChassisMap
 
 CIMChassisMap maps CIM_Chassis class to CIM_Chassis class.
 
-$Id: CIMChassisMap.py,v 1.2 2012/06/26 23:08:22 egor Exp $"""
+$Id: CIMChassisMap.py,v 1.3 2012/06/28 18:35:06 egor Exp $"""
 
-__version__ = '$Revision: 1.2 $'[11:-2]
+__version__ = '$Revision: 1.3 $'[11:-2]
 
 
 from ZenPacks.community.CIMMon.CIMPlugin import CIMPlugin
@@ -56,8 +56,9 @@ class CIMChassisMap(CIMPlugin):
 
     def _isSystemChassis(self, results, sysname, inst):
         p = inst.get("setPath")
-        if not ("CIM_ComputerSystemPackage" in results and p): return False
-        if len(results.get("CIM_Chassis", ())) > 1:
+        if len(results.get("CIM_Chassis") or ()) > 1:
+            if not ("CIM_ComputerSystemPackage" in results and p):
+                return False
             for sp in results.get("CIM_ComputerSystemPackage", ()):
                 if not sp.get("ant","").endswith(p): continue
                 if sysname in sp.get("dep","").lower(): break
@@ -94,7 +95,7 @@ class CIMChassisMap(CIMPlugin):
                 if not maps and self._isSystemChassis(results, sysname, inst):
                     if not inst: continue
                     om = ObjectMap()
-                    if productKey:
+                    if productKey or (manuf != "Unknown"):
                         om.setHWProductKey = MultiArgs(productKey, manuf)
                     serialNumber = inst.get("serialNumber") or ""
                     if serialNumber:
@@ -108,7 +109,7 @@ class CIMChassisMap(CIMPlugin):
                     continue
                 om = self.objectMap(inst)
                 om.id = self.prepId(om.id)
-                if productKey:
+                if productKey or (manuf != "Unknown"):
                     om.setProductKey = MultiArgs(productKey, manuf)
                 if layout:
                     om.layout = layout

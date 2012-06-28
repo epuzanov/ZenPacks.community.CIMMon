@@ -9,6 +9,55 @@ Windows template that requires SQLDataSource Zenpack
 Products.ZenModel.Device
 </property>
 <tomanycont id='datasources'>
+<object id='OperatingSystem' module='ZenPacks.community.SQLDataSource.datasources.SQLDataSource' class='SQLDataSource'>
+<property select_variable="sourcetypes" type="selection" id="sourcetype" mode="w" >
+SQL
+</property>
+<property type="boolean" id="enabled" mode="w" >
+True
+</property>
+<property type="string" id="eventClass" mode="w" >
+/Cmd/Fail
+</property>
+<property type="int" id="severity" mode="w" >
+3
+</property>
+<property type="int" id="cycletime" mode="w" >
+300
+</property>
+<property type="string" id="cs" mode="w" >
+${dev/zCIMConnectionString}
+</property>
+<property type="string" id="sql" mode="w" >
+SELECT LastBootUpTime,NumberOfLicensedUsers,NumberOfProcesses,NumberOfUsers FROM CIM_OperatingSystem
+</property>
+<tomanycont id='datapoints'>
+<object id='NumberOfLicensedUsers' module='Products.ZenModel.RRDDataPoint' class='RRDDataPoint'>
+<property select_variable="rrdtypes" type="selection" id="rrdtype" mode="w" >
+GAUGE
+</property>
+<property type="boolean" id="isrow" mode="w" >
+True
+</property>
+</object>
+<object id='NumberOfProcesses' module='Products.ZenModel.RRDDataPoint' class='RRDDataPoint'>
+<property select_variable="rrdtypes" type="selection" id="rrdtype" mode="w" >
+GAUGE
+</property>
+<property type="boolean" id="isrow" mode="w" >
+True
+</property>
+</object>
+<object id='NumberOfUsers' module='Products.ZenModel.RRDDataPoint' class='RRDDataPoint'>
+<property select_variable="rrdtypes" type="selection" id="rrdtype" mode="w" >
+GAUGE
+</property>
+<property type="boolean" id="isrow" mode="w" >
+True
+</property>
+</object>
+</tomanycont>
+</object>
 <object id='PerfOSMemory' module='ZenPacks.community.SQLDataSource.datasources.SQLDataSource' class='SQLDataSource'>
 <property select_variable="sourcetypes" type="selection" id="sourcetype" mode="w" >
 SQL
@@ -138,7 +187,7 @@ True
 ${here/zCIMConnectionString}
 </property>
 <property type="string" id="sql" mode="w" >
-SELECT LastBootUpTime FROM Win32_OperatingSystem
+SELECT LastBootUpTime,NumberOfLicensedUsers,NumberOfProcesses,NumberOfUsers FROM CIM_OperatingSystem
 </property>
 <tomanycont id='datapoints'>
 <object id='sysUpTime' module='Products.ZenModel.RRDDataPoint' class='RRDDataPoint'>
@@ -389,6 +438,149 @@ ${graphPoint/id}
 </property>
 <property type="string" id="dpName" mode="w" >
 PerfOSMemory_PagesPersec
+</property>
+<property type="string" id="cFunc" mode="w" >
+AVERAGE
+</property>
+</object>
+</tomanycont>
+</object>
+<object id='Processes' module='Products.ZenModel.GraphDefinition' class='GraphDefinition'>
+<property type="int" id="height" mode="w" >
+100
+</property>
+<property type="int" id="width" mode="w" >
+500
+</property>
+<property type="string" id="units" mode="w" >
+count
+</property>
+<property type="boolean" id="log" mode="w" >
+False
+</property>
+<property type="boolean" id="base" mode="w" >
+False
+</property>
+<property type="int" id="miny" mode="w" >
+0
+</property>
+<property type="int" id="maxy" mode="w" >
+-1
+</property>
+<property type="boolean" id="hasSummary" mode="w" >
+True
+</property>
+<property type="long" id="sequence" mode="w" >
+4
+</property>
+<tomanycont id='graphPoints'>
+<object id='NumberOfProcesses' module='Products.ZenModel.DataPointGraphPoint' class='DataPointGraphPoint'>
+<property select_variable="lineTypes" type="selection" id="lineType" mode="w" >
+LINE
+</property>
+<property type="long" id="lineWidth" mode="w" >
+1
+</property>
+<property type="boolean" id="stacked" mode="w" >
+False
+</property>
+<property type="string" id="format" mode="w" >
+%5.2lf%s
+</property>
+<property type="string" id="legend" mode="w" >
+${graphPoint/id}
+</property>
+<property type="long" id="limit" mode="w" >
+-1
+</property>
+<property type="string" id="dpName" mode="w" >
+OperatingSystem_NumberOfProcesses
+</property>
+<property type="string" id="cFunc" mode="w" >
+AVERAGE
+</property>
+</object>
+</tomanycont>
+</object>
+<object id='Users' module='Products.ZenModel.GraphDefinition' class='GraphDefinition'>
+<property type="int" id="height" mode="w" >
+100
+</property>
+<property type="int" id="width" mode="w" >
+500
+</property>
+<property type="string" id="units" mode="w" >
+count
+</property>
+<property type="boolean" id="log" mode="w" >
+False
+</property>
+<property type="boolean" id="base" mode="w" >
+False
+</property>
+<property type="int" id="miny" mode="w" >
+0
+</property>
+<property type="int" id="maxy" mode="w" >
+-1
+</property>
+<property type="boolean" id="hasSummary" mode="w" >
+True
+</property>
+<property type="long" id="sequence" mode="w" >
+3
+</property>
+<tomanycont id='graphPoints'>
+<object id='NumberOfLicensedUsers' module='Products.ZenModel.DataPointGraphPoint' class='DataPointGraphPoint'>
+<property type="long" id="sequence" mode="w" >
+1
+</property>
+<property select_variable="lineTypes" type="selection" id="lineType" mode="w" >
+LINE
+</property>
+<property type="long" id="lineWidth" mode="w" >
+1
+</property>
+<property type="boolean" id="stacked" mode="w" >
+False
+</property>
+<property type="string" id="format" mode="w" >
+%5.2lf%s
+</property>
+<property type="string" id="legend" mode="w" >
+Licensed Users
+</property>
+<property type="long" id="limit" mode="w" >
+-1
+</property>
+<property type="string" id="dpName" mode="w" >
+OperatingSystem_NumberOfLicensedUsers
+</property>
+<property type="string" id="cFunc" mode="w" >
+AVERAGE
+</property>
+</object>
+<object id='NumberOfUsers' module='Products.ZenModel.DataPointGraphPoint' class='DataPointGraphPoint'>
+<property select_variable="lineTypes" type="selection" id="lineType" mode="w" >
+LINE
+</property>
+<property type="long" id="lineWidth" mode="w" >
+1
+</property>
+<property type="boolean" id="stacked" mode="w" >
+False
+</property>
+<property type="string" id="format" mode="w" >
+%5.2lf%s
+</property>
+<property type="string" id="legend" mode="w" >
+Users
+</property>
+<property type="long" id="limit" mode="w" >
+-1
+</property>
+<property type="string" id="dpName" mode="w" >
+OperatingSystem_NumberOfUsers
 </property>
 <property type="string" id="cFunc" mode="w" >
 AVERAGE
@@ -2196,6 +2388,15 @@ AVERAGE
 </object>
 </tomanycont>
 </object>
+<!-- ('', 'zport', 'dmd', 'Devices', 'Server', 'Windows', 'CIM', 'rrdTemplates', 'Win32_PhysicalMemory') -->
+<object id='/zport/dmd/Devices/Server/Windows/CIM/rrdTemplates/Win32_PhysicalMemory' module='Products.ZenModel.RRDTemplate' class='RRDTemplate'>
+<property type="text" id="description" mode="w" >
+Place holder for future use.
+</property>
+<property type="string" id="targetPythonClass" mode="w" >
+ZenPacks.community.CIM_PhysicalMemory
+</property>
+</object>
 <!-- ('', 'zport', 'dmd', 'Devices', 'Server', 'Windows', 'CIM', 'rrdTemplates', 'Win32_Volume') -->
 <object id='/zport/dmd/Devices/Server/Windows/CIM/rrdTemplates/Win32_Volume' module='Products.ZenModel.RRDTemplate' class='RRDTemplate'>
 <property type="text" id="description" mode="w" >
@@ -2996,6 +3197,15 @@ AVERAGE
 </tomanycont>
 </object>
 </tomanycont>
+</object>
+<!-- ('', 'zport', 'dmd', 'Devices', 'rrdTemplates', 'CIM_Chassis') -->
+<object id='/zport/dmd/Devices/rrdTemplates/CIM_Chassis' module='Products.ZenModel.RRDTemplate' class='RRDTemplate'>
+<property type="text" id="description" mode="w" >
+Place holder for future use.
+</property>
+<property type="string" id="targetPythonClass" mode="w" >
+ZenPacks.community.CIM_Chassis
+</property>
 </object>
 <!-- ('', 'zport', 'dmd', 'Devices', 'rrdTemplates', 'CIM_Device') -->
 <object id='/zport/dmd/Devices/rrdTemplates/CIM_Device' module='Products.ZenModel.RRDTemplate' class='RRDTemplate'>
@@ -4163,6 +4373,15 @@ Place holder for future use.
 </property>
 <property type="string" id="targetPythonClass" mode="w" >
 ZenPacks.community.CIM_ReplicationGroup
+</property>
+</object>
+<!-- ('', 'zport', 'dmd', 'Devices', 'rrdTemplates', 'CIM_StoragePool') -->
+<object id='/zport/dmd/Devices/rrdTemplates/CIM_StoragePool' module='Products.ZenModel.RRDTemplate' class='RRDTemplate'>
+<property type="text" id="description" mode="w" >
+Place holder for future use.
+</property>
+<property type="string" id="targetPythonClass" mode="w" >
+ZenPacks.community.CIM_StoragePool
 </property>
 </object>
 <!-- ('', 'zport', 'dmd', 'Devices', 'rrdTemplates', 'CIM_StorageVolume') -->

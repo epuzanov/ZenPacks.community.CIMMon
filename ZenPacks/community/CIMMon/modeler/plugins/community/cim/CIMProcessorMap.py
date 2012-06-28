@@ -12,9 +12,9 @@ __doc__="""CIMProcessorMap
 
 CIMProcessorMap maps the CIM_Processor class to cpus objects
 
-$Id: CIMProcessorMap.py,v 1.4 2012/06/14 21:25:12 egor Exp $"""
+$Id: CIMProcessorMap.py,v 1.5 2012/06/28 18:36:58 egor Exp $"""
 
-__version__ = '$Revision: 1.4 $'[11:-2]
+__version__ = '$Revision: 1.5 $'[11:-2]
 
 from ZenPacks.community.CIMMon.CIMPlugin import CIMPlugin
 from Products.DataCollector.plugins.DataMaps import MultiArgs
@@ -188,9 +188,9 @@ class CIMProcessorMap(CIMPlugin):
                     None,
                     cs,
                     {
-                        "_status":"CPUStatus",
                         "id":"DeviceID",
-                        "_name":"Family",
+                        "_name":"ElementName",
+                        "_family":"Family",
                         "clockspeed":"MaxClockSpeed",
                         "_sysname":"SystemName",
                     }
@@ -199,7 +199,12 @@ class CIMProcessorMap(CIMPlugin):
 
     def _getSocketNumber(self, instance):
         """return cpu socket number"""
-        return str(instance.get("id") or "").split()[-1] or 0
+        idstr = str(instance.get("id") or "")
+        if "." in idstr:
+            sep = "."
+        else:
+            sep = " "
+        return idstr.rsplit(sep, 1)[-1] or 0
 
     def _getExtspeed(self, instance):
         """return external bus clock speed"""
@@ -238,8 +243,8 @@ class CIMProcessorMap(CIMPlugin):
         sysnames = self._getSysnames(device, results, "CIM_Processor")
         for inst in instances:
             if (inst.get("_sysname") or "").lower() not in sysnames: continue
+            if inst.get("_status") == 0: continue
             om = self.objectMap(inst)
-            if om._status == 0: continue
             try:
                 om.id = self.prepId(om.id)
                 om.socket = self._getSocketNumber(inst)
@@ -250,8 +255,9 @@ class CIMProcessorMap(CIMPlugin):
                 om.cacheSizeL1 = cache.get(1, 0)
                 om.cacheSizeL2 = cache.get(2, 0)
 #                om.cacheSizeL3 = cache.get(3, 0)
-                if str(om._name).replace('.','').isdigit():
-                    om._name = Families.get(int(om._name), 'Unknown')
+                if not getattr(om, '_name', None):
+                    try: om._name = Families.get(int(om._family), 'Unknown')
+                    except Exception: om._name = 'Unknown'
                 om.setProductKey = getManufacturerAndModel(om._name)
             except AttributeError:
                 continue
