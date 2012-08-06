@@ -23,9 +23,9 @@ ZenPacks
 
 You must first install:
 
-- `SQLDataSource ZenPack <http://community.zenoss.org/docs/DOC-5913>`_.
-- `Advanced Device Details ZenPack <http://community.zenoss.org/docs/DOC-3452>`_ 
-  (Zenoss 2.5.x only)
+- `SQLDataSource ZenPack <http://community.zenoss.org/docs/DOC-5913>`_
+- `Advanced Device Details ZenPack <http://community.zenoss.org/docs/DOC-3452>`_
+  (for Zenoss 2.5.x only)
 
 
 Installation

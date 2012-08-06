@@ -12,9 +12,9 @@ __doc__="""Win32NetworkAdapterMap
 
 Win32NetworkAdapterMap maps the Win32_NetworkAdapter class to filesystems objects
 
-$Id: Win32NetworkAdapterMap.py,v 1.1 2012/06/14 21:32:55 egor Exp $"""
+$Id: Win32NetworkAdapterMap.py,v 1.2 2012/08/06 20:37:23 egor Exp $"""
 
-__version__ = '$Revision: 1.1 $'[11:-2]
+__version__ = '$Revision: 1.2 $'[11:-2]
 
 from ZenPacks.community.CIMMon.modeler.plugins.community.cim.CIMNetworkAdapterMap \
     import CIMNetworkAdapterMap
@@ -78,7 +78,7 @@ class Win32NetworkAdapterMap(CIMNetworkAdapterMap):
 
     def _getOperStatus(self, inst):
         return {0:2,1:3,2:1,3:2,4:6,5:6,6:5,7:7,8:3,9:1,10:2,11:5,12:5}.get(
-            int(inst.get("operStatus", 2))) or 1
+            int(inst.get("operStatus") or 2)) or 1
 
     def _getAdapterConfig(self, results, inst, dontCollectIpAddresses):
         intIdx = str(inst.get("snmpindex") or "")

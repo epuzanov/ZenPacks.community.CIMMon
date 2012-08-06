@@ -118,7 +118,7 @@ class CIMNetworkPortMap(CIMPlugin):
 
     def _getMacAddress(self, value):
         """
-        Return the wwn formatedstring
+        Return the wwn formated string
         """
         if not value: return ""
         if len(str(value)) == 16 and ":" not in value:

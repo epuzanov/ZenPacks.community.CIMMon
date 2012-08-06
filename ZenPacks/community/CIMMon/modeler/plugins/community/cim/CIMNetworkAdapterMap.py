@@ -13,9 +13,9 @@ __doc__ = """CIMNetworkAdapterMap
 Gather IP network interface information from CIMMOM, and 
 create DMD interface objects
 
-$Id: CIMNetworkAdapterMap.py,v 1.3 2012/06/26 23:11:10 egor Exp $"""
+$Id: CIMNetworkAdapterMap.py,v 1.4 2012/08/06 20:35:05 egor Exp $"""
 
-__version__ = '$Revision: 1.3 $'[11:-2]
+__version__ = '$Revision: 1.4 $'[11:-2]
 
 import re
 import types
@@ -84,6 +84,15 @@ class CIMNetworkAdapterMap(CIMPlugin):
                 ),
             }
 
+    def _getMacAddress(self, value):
+        """
+        Return the formated string
+        """
+        if not value: return ""
+        if len(str(value)) == 12 and ":" not in value:
+            return ":".join([value[s*2:s*2+2] for s in range(6)])
+        return value
+
     def _getAdapterConfig(self, results, inst, dontCollectIpAddresses):
         return
 
@@ -142,6 +151,7 @@ class CIMNetworkAdapterMap(CIMPlugin):
                 self._getAdapterConfig(results, inst, dontCollectIpAddresses)
                 om = self.objectMap(inst)
                 om.id = prepId(om.interfaceName)
+                om.macaddress = self._getMacAddress(inst.get("macaddress"))
                 om.operStatus = self._getOperStatus(inst)
                 if om.operStatus == 2: continue
                 om.adminStatus = self._getAdminStatus(inst)
@@ -150,5 +160,7 @@ class CIMNetworkAdapterMap(CIMPlugin):
                     om.setStatPath = statPath
             except AttributeError:
                 continue
+            for a,v in om.__dict__.iteritems():
+                if v is None: print om
             rm.append(om)
         return rm

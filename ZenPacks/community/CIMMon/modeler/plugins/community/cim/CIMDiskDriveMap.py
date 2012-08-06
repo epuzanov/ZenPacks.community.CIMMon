@@ -12,9 +12,9 @@ __doc__="""CIMDiskDriveMap
 
 CIMDiskDriveMap maps CIM_DiskDrive class to CIM_DiskDrive class.
 
-$Id: CIMDiskDriveMap.py,v 1.7 2012/06/28 18:36:16 egor Exp $"""
+$Id: CIMDiskDriveMap.py,v 1.8 2012/08/06 20:32:33 egor Exp $"""
 
-__version__ = '$Revision: 1.7 $'[11:-2]
+__version__ = '$Revision: 1.8 $'[11:-2]
 
 from ZenPacks.community.CIMMon.CIMPlugin import CIMPlugin
 from Products.DataCollector.plugins.DataMaps import ObjectMap, MultiArgs
@@ -142,7 +142,7 @@ class CIMDiskDriveMap(CIMPlugin):
                     if not inst["formFactor"]: del inst["formFactor"]
                 om = self.objectMap(inst)
                 om.id = self.prepId(om.id)
-                om.size = int(getattr(om, "size", 0)) * 1000
+                om.size = int(getattr(om, "size", 0) or 0) * 1000
                 om._manuf = getattr(om, "_manuf", "") or "Unknown"
                 om.setProductKey = MultiArgs(
                     getattr(om, "setProductKey", "") or "Unknown", om._manuf)
