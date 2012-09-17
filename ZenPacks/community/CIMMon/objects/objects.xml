@@ -4734,38 +4734,47 @@ AVERAGE
 <object id='/zport/dmd/Events/Status/CIM_ManagedSystemElement' module='Products.ZenEvents.EventClass' class='EventClass'>
 <property type="text" id="transform" mode="w" >
 statusstr = evt.message.rsplit(' ', 1)[-1]
-status = not statusstr.replace('.','').isdigit() and 3 or int(float(statusstr))
+status = not statusstr.replace('.','').isdigit() and 3 or int(float(round(statusstr)))
 try: comp = component
 except NameError:
     from ZODB.transact import transact
-    for component in device.getMonitoredComponents():
-        if component.id == evt.component: break
+    for comp in device.getMonitoredComponents():
+        if comp.id == evt.component: break
     else:
-        component = None
-if component is not None:
+        comp = None
+if comp is not None:
     evt._action = 'drop'
-    if component.status != status:
+    if comp.status != status:
         @transact
         def updateDb():
-            component.status = status
+            comp.status = status
+            if hasattr(comp, 'statusmap'):
+                col,evt.severity,state = comp.statusmap.get(status,(0,evt.severity,'Unknown'))
+                if hasattr(comp, 'state'):
+                    comp.state = state
         updateDb()
 </property>
 <property type="text" id="transform" mode="w" >
 statusstr = evt.message.rsplit(' ', 1)[-1]
-status = not statusstr.replace('.','').isdigit() and 3 or int(float(statusstr))
+status = not statusstr.replace('.','').isdigit() and 3 or int(float(round(statusstr)))
 try: comp = component
 except NameError:
     from ZODB.transact import transact
-    for component in device.getMonitoredComponents():
-        if component.id == evt.component: break
+    for comp in device.getMonitoredComponents():
+        if comp.id == evt.component: break
     else:
-        component = None
-if component is not None:
-    evt._action = 'drop'
-    if component.status != status:
+        comp = None
+if comp is not None:
+    if comp.status == status:
+        evt._action = 'drop'
+    else:
         @transact
         def updateDb():
-            component.status = status
+            comp.status = status
+            if hasattr(comp, 'statusmap'):
+                col,evt.severity,state = comp.statusmap.get(status,(0,evt.severity,'Unknown'))
+                if hasattr(comp, 'state'):
+                    comp.state = state
         updateDb()
 </property>
 </object>
@@ -4773,31 +4782,32 @@ if component is not None:
 <object id='/zport/dmd/Events/Status/CIM_NetworkAdapter' module='Products.ZenEvents.EventClass' class='EventClass'>
 <property type="text" id="transform" mode="w" >
 statusstr = evt.message.rsplit(' ', 1)[-1]
-status = not statusstr.replace('.','').isdigit() and 3 or int(float(statusstr))
+status = not statusstr.replace('.','').isdigit() and 3 or int(round(float(statusstr)))
 try: comp = component
 except NameError:
     from ZODB.transact import transact
-    for component in device.getMonitoredComponents():
-        if component.id == evt.component: break
+    for comp in device.getMonitoredComponents():
+        if comp.id == evt.component: break
     else:
-        component = None
-if component is not None:
-    evt._action = 'drop'
+        comp = None
+if comp is not None:
     if evt.eventKey == 'CIM_NetworkAdapter_OperationalStatus|OperationalStatusChange':
         propName = 'operStatus'
     elif evt.eventKey == 'CIM_NetworkAdapter_AdminStatus|AdminStatusChange':
         propName = 'adminStatus'
     else:
         propName = 'status'
-    if getattr(component, propName, None) != status:
+    if getattr(comp, propName, None) == status:
+        evt._action = 'drop'
+    else:
         @transact
         def updateDb():
-            setattr(component, propName, status)
+            setattr(comp, propName, status)
         updateDb()
 </property>
 <property type="text" id="transform" mode="w" >
 statusstr = evt.message.rsplit(' ', 1)[-1]
-status = not statusstr.replace('.','').isdigit() and 3 or int(float(statusstr))
+status = not statusstr.replace('.','').isdigit() and 3 or int(round(float(statusstr)))
 try: comp = component
 except NameError:
     from ZODB.transact import transact
@@ -4806,14 +4816,15 @@ except NameError:
     else:
         component = None
 if component is not None:
-    evt._action = 'drop'
     if evt.eventKey == 'CIM_NetworkAdapter_OperationalStatus|OperationalStatusChange':
         propName = 'operStatus'
     elif evt.eventKey == 'CIM_NetworkAdapter_AdminStatus|AdminStatusChange':
         propName = 'adminStatus'
     else:
         propName = 'status'
-    if getattr(component, propName, None) != status:
+    if getattr(comp, propName, None) == status:
+        evt._action = 'drop'
+    else:
         @transact
         def updateDb():
             setattr(component, propName, status)
@@ -4824,7 +4835,7 @@ if component is not None:
 <object id='/zport/dmd/Events/Status/CIM_NetworkPort' module='Products.ZenEvents.EventClass' class='EventClass'>
 <property type="text" id="transform" mode="w" >
 statusstr = evt.message.rsplit(' ', 1)[-1]
-status = not statusstr.replace('.','').isdigit() and 3 or int(float(statusstr))
+status = not statusstr.replace('.','').isdigit() and 3 or int(round(float(statusstr)))
 try: comp = component
 except NameError:
     from ZODB.transact import transact
@@ -4833,14 +4844,15 @@ except NameError:
     else:
         component = None
 if component is not None:
-    evt._action = 'drop'
     if evt.eventKey == 'CIM_NetworkPort_OperationalStatus|OperationalStatusChange':
         propName = 'operStatus'
     elif evt.eventKey == 'CIM_NetworkPort_AdminStatus|AdminStatusChange':
         propName = 'adminStatus'
     else:
         propName = 'status'
-    if getattr(component, propName, None) != status:
+    if getattr(comp, propName, None) == status:
+        evt._action = 'drop'
+    else:
         @transact
         def updateDb():
             setattr(component, propName, status)
@@ -4848,7 +4860,7 @@ if component is not None:
 </property>
 <property type="text" id="transform" mode="w" >
 statusstr = evt.message.rsplit(' ', 1)[-1]
-status = not statusstr.replace('.','').isdigit() and 3 or int(float(statusstr))
+status = not statusstr.replace('.','').isdigit() and 3 or int(round(float(statusstr)))
 try: comp = component
 except NameError:
     from ZODB.transact import transact
@@ -4857,14 +4869,15 @@ except NameError:
     else:
         component = None
 if component is not None:
-    evt._action = 'drop'
     if evt.eventKey == 'CIM_NetworkPort_OperationalStatus|OperationalStatusChange':
         propName = 'operStatus'
     elif evt.eventKey == 'CIM_NetworkPort_AdminStatus|AdminStatusChange':
         propName = 'adminStatus'
     else:
         propName = 'status'
-    if getattr(component, propName, None) != status:
+    if getattr(comp, propName, None) == status:
+        evt._action = 'drop'
+    else:
         @transact
         def updateDb():
             setattr(component, propName, status)
