@@ -2394,7 +2394,7 @@ AVERAGE
 Place holder for future use.
 </property>
 <property type="string" id="targetPythonClass" mode="w" >
-ZenPacks.community.CIM_PhysicalMemory
+ZenPacks.community.CIMMon.CIM_PhysicalMemory
 </property>
 </object>
 <!-- ('', 'zport', 'dmd', 'Devices', 'Server', 'Windows', 'CIM', 'rrdTemplates', 'Win32_Volume') -->
@@ -3204,7 +3204,7 @@ AVERAGE
 Place holder for future use.
 </property>
 <property type="string" id="targetPythonClass" mode="w" >
-ZenPacks.community.CIM_Chassis
+ZenPacks.community.CIMMon.CIM_Chassis
 </property>
 </object>
 <!-- ('', 'zport', 'dmd', 'Devices', 'rrdTemplates', 'CIM_Device') -->
@@ -4299,7 +4299,7 @@ AVERAGE
 RedundancySet template that uses CIM_RedundancySet Class.
 </property>
 <property type="string" id="targetPythonClass" mode="w" >
-ZenPacks.community.CIM_RedundancySet
+ZenPacks.community.CIMMon.CIM_RedundancySet
 </property>
 <tomanycont id='datasources'>
 <object id='RedundancySet' module='ZenPacks.community.SQLDataSource.datasources.SQLDataSource' class='SQLDataSource'>
@@ -4372,7 +4372,7 @@ True
 Place holder for future use.
 </property>
 <property type="string" id="targetPythonClass" mode="w" >
-ZenPacks.community.CIM_ReplicationGroup
+ZenPacks.community.CIMMon.CIM_ReplicationGroup
 </property>
 </object>
 <!-- ('', 'zport', 'dmd', 'Devices', 'rrdTemplates', 'CIM_StoragePool') -->
@@ -4381,7 +4381,7 @@ ZenPacks.community.CIM_ReplicationGroup
 Place holder for future use.
 </property>
 <property type="string" id="targetPythonClass" mode="w" >
-ZenPacks.community.CIM_StoragePool
+ZenPacks.community.CIMMon.CIM_StoragePool
 </property>
 </object>
 <!-- ('', 'zport', 'dmd', 'Devices', 'rrdTemplates', 'CIM_StorageVolume') -->
