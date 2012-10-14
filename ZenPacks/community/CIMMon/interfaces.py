@@ -12,9 +12,9 @@ __doc__="""interfaces
 
 describes the form field to the user interface.
 
-$Id: interfaces.py,v 1.5 2012/06/26 19:45:07 egor Exp $"""
+$Id: interfaces.py,v 1.6 2012/10/14 17:36:23 egor Exp $"""
 
-__version__ = "$Revision: 1.5 $"[11:-2]
+__version__ = "$Revision: 1.6 $"[11:-2]
 
 from Products.Zuul.interfaces import IComponentInfo,\
                                     IIpInterfaceInfo,\
@@ -32,6 +32,10 @@ class IPhysicalMemoryInfo(IComponentInfo):
     product = schema.Entity(title=u"Model", readonly=True, group='Details')
     slot = schema.Int(title=u"Slot", readonly=False,group='Details')
     size = schema.Text(title=u"Size", readonly=True, group='Details')
+    cimClassName = schema.Text(title=u"CIM Class Name", readonly=True,
+                                                                group='Details')
+    cimStatClassName = schema.Text(title=u"CIM Statistics Class Name",
+                                                readonly=True, group='Details')
 
 class IDiskDriveInfo(IComponentInfo):
     """
@@ -48,6 +52,10 @@ class IDiskDriveInfo(IComponentInfo):
     storagePool = schema.Entity(title=u"Disk Group", readonly=True,
                                                                 group='Details')
     bay = schema.Int(title=u"Bay", readonly=False, group='Details')
+    cimClassName = schema.Text(title=u"CIM Class Name", readonly=True,
+                                                                group='Details')
+    cimStatClassName = schema.Text(title=u"CIM Statistics Class Name",
+                                                readonly=True, group='Details')
 
 class IChassisInfo(IComponentInfo):
     """
@@ -58,6 +66,10 @@ class IChassisInfo(IComponentInfo):
     product = schema.Entity(title=u"Model", readonly=True, group='Details')
     serialNumber = schema.Text(title=u"Serial #", readonly=True,group='Details')
     layout = schema.Text(title=u"Layout String", readonly=False,group='Details')
+    cimClassName = schema.Text(title=u"CIM Class Name", readonly=True,
+                                                                group='Details')
+    cimStatClassName = schema.Text(title=u"CIM Statistics Class Name",
+                                                readonly=True, group='Details')
 
 class IStoragePoolInfo(IComponentInfo):
     """
@@ -72,6 +84,10 @@ class IStoragePoolInfo(IComponentInfo):
     availBytesString = schema.Text(title=u"Available Bytes", readonly=True,
                                                                 group="Details")
     capacity = schema.Text(title=u"Utilization", readonly=True, group="Details")
+    cimClassName = schema.Text(title=u"CIM Class Name", readonly=True,
+                                                                group='Details')
+    cimStatClassName = schema.Text(title=u"CIM Statistics Class Name",
+                                                readonly=True, group='Details')
 
 class IStorageVolumeInfo(IComponentInfo):
     """
@@ -84,21 +100,33 @@ class IStorageVolumeInfo(IComponentInfo):
     diskType = schema.Text(title=u"Disk Type", readonly=True, group='Details')
     totalBytesString = schema.Text(title=u"Total Bytes", readonly=True,
                                                                 group="Details")
+    cimClassName = schema.Text(title=u"CIM Class Name", readonly=True,
+                                                                group='Details')
+    cimStatClassName = schema.Text(title=u"CIM Statistics Class Name",
+                                                readonly=True, group='Details')
+
 class IPowerSupplyInfo(IComponentInfo):
     """
     Info adapter for PowerSupply components.
     """
     watts = schema.Int(title=u'Watts', group='Overview', readonly=True)
     type = schema.Text(title=u'Type', group='Overview', readonly=True)
-    millivolts = schema.Int(
-        title=u'Millivolts', group='Overview', readonly=True)
+    millivolts = schema.Int(title=u'Millivolts', group='Overview',readonly=True)
+    cimClassName = schema.Text(title=u"CIM Class Name", readonly=True,
+                                                                group='Details')
+    cimStatClassName = schema.Text(title=u"CIM Statistics Class Name",
+                                                readonly=True, group='Details')
 
 class ITemperatureSensorInfo(IComponentInfo):
     """
     Info adapter for TemperatureSensor components.
     """
-    temperature = schema.Int(
-        title=u'Temperature (Fahrenheit)', group='Overview', readonly=True)
+    temperature = schema.Int(title=u'Temperature (Fahrenheit)',group='Overview',
+                                                                readonly=True)
+    cimClassName = schema.Text(title=u"CIM Class Name", readonly=True,
+                                                                group='Details')
+    cimStatClassName = schema.Text(title=u"CIM Statistics Class Name",
+                                                readonly=True, group='Details')
 
 class IFanInfo(IComponentInfo):
     """
@@ -106,6 +134,10 @@ class IFanInfo(IComponentInfo):
     """
     type = schema.Text(title=u'Type', group='Overview', readonly=True)
     rpm = schema.Text(title=u'RPM', group='Overview', readonly=True)
+    cimClassName = schema.Text(title=u"CIM Class Name", readonly=True,
+                                                                group='Details')
+    cimStatClassName = schema.Text(title=u"CIM Statistics Class Name",
+                                                readonly=True, group='Details')
 
 class IComputerSystemInfo(IExpansionCardInfo):
     """
@@ -113,12 +145,20 @@ class IComputerSystemInfo(IExpansionCardInfo):
     """
     FWRev = schema.Text(title=u"Firmware", readonly=True, group='Details')
     uptime = schema.Text(title=u"Uptime", readonly=True, group='Details')
+    cimClassName = schema.Text(title=u"CIM Class Name", readonly=True,
+                                                                group='Details')
+    cimStatClassName = schema.Text(title=u"CIM Statistics Class Name",
+                                                readonly=True, group='Details')
 
 class INetworkPortInfo(IIpInterfaceInfo):
     """
     Info adapter for Controller components.
     """
     controller =schema.Entity(title=u"Controller",readonly=True,group='Details')
+    cimClassName = schema.Text(title=u"CIM Class Name", readonly=True,
+                                                                group='Details')
+    cimStatClassName = schema.Text(title=u"CIM Statistics Class Name",
+                                                readonly=True, group='Details')
 
 class IRedundancySetInfo(IComponentInfo):
     """
@@ -131,9 +171,16 @@ class IRedundancySetInfo(IComponentInfo):
                                                                 group='Details')
     membersCount = schema.Int(title=u"Members Count", readonly=True,
                                                                 group='Details')
+    cimClassName = schema.Text(title=u"CIM Class Name", readonly=True,
+                                                                group='Details')
+    cimStatClassName = schema.Text(title=u"CIM Statistics Class Name",
+                                                readonly=True, group='Details')
 
 class IReplicationGroupInfo(IComponentInfo):
     """
     Info adapter for ReplicationGroup components.
     """
-    pass
+    cimClassName = schema.Text(title=u"CIM Class Name", readonly=True,
+                                                                group='Details')
+    cimStatClassName = schema.Text(title=u"CIM Statistics Class Name",
+                                                readonly=True, group='Details')

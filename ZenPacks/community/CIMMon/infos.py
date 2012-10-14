@@ -12,9 +12,9 @@ __doc__="""infos.py
 
 Representation of CIM components.
 
-$Id: infos.py,v 1.6 2012/06/26 19:44:25 egor Exp $"""
+$Id: infos.py,v 1.7 2012/10/14 17:32:22 egor Exp $"""
 
-__version__ = "$Revision: 1.6 $"[11:-2]
+__version__ = "$Revision: 1.7 $"[11:-2]
 
 from Products.Zuul.infos import ProxyProperty
 from Products.Zuul.infos.component import ComponentInfo
@@ -24,6 +24,8 @@ from Products.ZenUtils.Utils import convToUnits
 
 class DiskDriveInfo(ComponentInfo):
 
+    cimClassName = ProxyProperty("cimClassName")
+    cimStatClassName = ProxyProperty("cimStatClassName")
     serialNumber = ProxyProperty("serialNumber")
     diskType = ProxyProperty("diskType")
     FWRev = ProxyProperty("FWRev")
@@ -57,6 +59,8 @@ class DiskDriveInfo(ComponentInfo):
 
 class PhysicalMemoryInfo(ComponentInfo):
 
+    cimClassName = ProxyProperty("cimClassName")
+    cimStatClassName = ProxyProperty("cimStatClassName")
     slot = ProxyProperty("slot")
 
     @property
@@ -77,6 +81,8 @@ class PhysicalMemoryInfo(ComponentInfo):
 
 class ChassisInfo(ComponentInfo):
 
+    cimClassName = ProxyProperty("cimClassName")
+    cimStatClassName = ProxyProperty("cimStatClassName")
     serialNumber = ProxyProperty("serialNumber")
     layout = ProxyProperty("layout")
 
@@ -94,6 +100,8 @@ class ChassisInfo(ComponentInfo):
 
 class StoragePoolInfo(ComponentInfo):
 
+    cimClassName = ProxyProperty("cimClassName")
+    cimStatClassName = ProxyProperty("cimStatClassName")
     usage = ProxyProperty("usage")
 
     @property
@@ -121,6 +129,8 @@ class StoragePoolInfo(ComponentInfo):
 
 class StorageVolumeInfo(ComponentInfo):
 
+    cimClassName = ProxyProperty("cimClassName")
+    cimStatClassName = ProxyProperty("cimStatClassName")
     accessType = ProxyProperty("accessType")
     diskType = ProxyProperty("diskType")
 
@@ -135,6 +145,8 @@ class StorageVolumeInfo(ComponentInfo):
 
 class FanInfo(ComponentInfo):
 
+    cimClassName = ProxyProperty("cimClassName")
+    cimStatClassName = ProxyProperty("cimStatClassName")
     type = ProxyProperty('type')
 
     @property
@@ -147,6 +159,8 @@ class FanInfo(ComponentInfo):
 
 class PowerSupplyInfo(ComponentInfo):
 
+    cimClassName = ProxyProperty("cimClassName")
+    cimStatClassName = ProxyProperty("cimStatClassName")
     watts = ProxyProperty('watts')
     type = ProxyProperty('type')
 
@@ -160,6 +174,8 @@ class PowerSupplyInfo(ComponentInfo):
 
 class TemperatureSensorInfo(ComponentInfo):
 
+    cimClassName = ProxyProperty("cimClassName")
+    cimStatClassName = ProxyProperty("cimStatClassName")
     @property
     def state(self):
         return self._object.getStatusString()
@@ -170,6 +186,8 @@ class TemperatureSensorInfo(ComponentInfo):
 
 class ComputerSystemInfo(ComponentInfo):
 
+    cimClassName = ProxyProperty("cimClassName")
+    cimStatClassName = ProxyProperty("cimStatClassName")
     slot = ProxyProperty('slot')
     serialNumber = ProxyProperty('serialNumber')
     FWRev = ProxyProperty('FWRev')
@@ -196,6 +214,8 @@ class ComputerSystemInfo(ComponentInfo):
 
 class NetworkPortInfo(IpInterfaceInfo):
 
+    cimClassName = ProxyProperty("cimClassName")
+    cimStatClassName = ProxyProperty("cimStatClassName")
     @property
     @info
     def controller(self):
@@ -207,6 +227,8 @@ class NetworkPortInfo(IpInterfaceInfo):
 
 class RedundancySetInfo(ComponentInfo):
 
+    cimClassName = ProxyProperty("cimClassName")
+    cimStatClassName = ProxyProperty("cimStatClassName")
     typeOfSet = ProxyProperty('typeOfSet')
     loadBalanceAlgorithm = ProxyProperty('loadBalanceAlgorithm')
     minNumberNeeded = ProxyProperty('minNumberNeeded')
@@ -221,6 +243,8 @@ class RedundancySetInfo(ComponentInfo):
 
 class ReplicationGroupInfo(ComponentInfo):
 
+    cimClassName = ProxyProperty("cimClassName")
+    cimStatClassName = ProxyProperty("cimStatClassName")
     @property
     def state(self):
         return self._object.getStatusString()
