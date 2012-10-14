@@ -12,9 +12,9 @@ __doc__="""CIMPowerSupplyMap
 
 CIMPowerSupplyMap maps CIM_PowerSupply CIM class to CIMPowerSupply class.
 
-$Id: CIMPowerSupplyMap.py,v 1.5 2012/06/26 21:20:28 egor Exp $"""
+$Id: CIMPowerSupplyMap.py,v 1.6 2012/10/14 16:28:58 egor Exp $"""
 
-__version__ = '$Revision: 1.5 $'[11:-2]
+__version__ = '$Revision: 1.6 $'[11:-2]
 
 
 from ZenPacks.community.CIMMon.CIMPlugin import CIMPlugin
@@ -44,6 +44,8 @@ class CIMPowerSupplyMap(CIMPlugin):
                         "id":"DeviceID",
                         "watts":"TotalOutputPower",
                         "_sysname":"SystemName",
+                        "state":"Status",
+                        "status":"OperationalStatus",
                     },
                 ),
 #            "CIM_VoltageSensor":
@@ -60,6 +62,8 @@ class CIMPowerSupplyMap(CIMPlugin):
 #                        "upperThresholdCritical":"UpperThresholdCritical",
 #                        "upperThresholdFatal":"UpperThresholdFatal",
 #                        "upperThresholdNonCritical":"UpperThresholdNonCritical",
+#                        "state":"Status",
+#                        "status":"OperationalStatus",
 #                    }
 #                ),
 #            "CIM_AssociatedSensor":
@@ -109,6 +113,7 @@ class CIMPowerSupplyMap(CIMPlugin):
                 collections = self._getCollections(results, inst)
                 if collections:
                     om.setCollections = collections
+                om.cimStatusName = self._getCimStatusName(inst)
                 rm.append(om)
             except AttributeError:
                 continue

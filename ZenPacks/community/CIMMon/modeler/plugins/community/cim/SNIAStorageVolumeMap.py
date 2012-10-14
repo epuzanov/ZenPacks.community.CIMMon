@@ -12,9 +12,9 @@ __doc__="""SNIAStorageVolumeMap
 
 SNIAStorageVolumeMap maps SNIA_StorageVolume class to CIM_StorageVolume class.
 
-$Id: SNIAStorageVolumeMap.py,v 1.1 2012/06/27 19:47:05 egor Exp $"""
+$Id: SNIAStorageVolumeMap.py,v 1.2 2012/10/14 16:43:06 egor Exp $"""
 
-__version__ = '$Revision: 1.1 $'[11:-2]
+__version__ = '$Revision: 1.2 $'[11:-2]
 
 from ZenPacks.community.CIMMon.modeler.plugins.community.cim.CIMStorageVolumeMap \
     import CIMStorageVolumeMap
@@ -43,6 +43,8 @@ class SNIAStorageVolumeMap(CIMStorageVolumeMap):
                         "_pr":"PackageRedundancy",
                         "totalBlocks":"NumberOfBlocks",
                         "_sysname":"SystemName",
+                        "state":"Status",
+                        "status":"OperationalStatus",
                     },
                 ),
             "CIM_SystemComponent":

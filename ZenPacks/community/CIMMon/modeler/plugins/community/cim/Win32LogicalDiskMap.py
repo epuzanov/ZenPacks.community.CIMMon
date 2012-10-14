@@ -12,9 +12,9 @@ __doc__="""Win32LogicalDiskMap
 
 Win32LogicalDiskMap maps the Win32_LogicalDisk class to filesystems objects
 
-$Id: Win32LogicalDiskMap.py,v 1.0 2012/06/13 20:52:39 egor Exp $"""
+$Id: Win32LogicalDiskMap.py,v 1.1 2012/10/14 16:45:10 egor Exp $"""
 
-__version__ = '$Revision: 1.0 $'[11:-2]
+__version__ = '$Revision: 1.1 $'[11:-2]
 
 from ZenPacks.community.CIMMon.modeler.plugins.community.cim.CIMFileSystemMap \
     import CIMFileSystemMap
@@ -40,6 +40,8 @@ class Win32LogicalDiskMap(CIMFileSystemMap):
                         "maxNameLen":"MaximumComponentLenght",
                         "mount":"Name",
                         "totalBlocks":"Size",
+                        "state":"Status",
+                        "status":"OperationalStatus",
                     }
                 ),
             }

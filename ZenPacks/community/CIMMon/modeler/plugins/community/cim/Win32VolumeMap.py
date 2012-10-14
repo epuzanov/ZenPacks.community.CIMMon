@@ -12,9 +12,9 @@ __doc__="""Win32VolumeMap
 
 Win32VolumeMap maps the Win32_Volume class to filesystems objects
 
-$Id: Win32VolumeMap.py,v 1.0 2012/06/13 20:54:56 egor Exp $"""
+$Id: Win32VolumeMap.py,v 1.1 2012/10/14 16:46:13 egor Exp $"""
 
-__version__ = '$Revision: 1.0 $'[11:-2]
+__version__ = '$Revision: 1.1 $'[11:-2]
 
 from ZenPacks.community.CIMMon.modeler.plugins.community.cim.CIMFileSystemMap \
     import CIMFileSystemMap
@@ -40,6 +40,8 @@ class Win32VolumeMap(CIMFileSystemMap):
                         "type":"FileSystem",
                         "maxNameLen":"MaximumFileNameLength",
                         "mount":"Name",
+                        "state":"Status",
+                        "status":"OperationalStatus",
                     }
                 ),
             }

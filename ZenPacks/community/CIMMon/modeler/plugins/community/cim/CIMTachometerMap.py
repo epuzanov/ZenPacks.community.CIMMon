@@ -12,9 +12,9 @@ __doc__="""CIMTachometerMap
 
 CIMTachometerMap maps CIM_Tachometer class to CIM_Tachometer class.
 
-$Id: CIMTachometerMap.py,v 1.3 2012/06/13 20:48:37 egor Exp $"""
+$Id: CIMTachometerMap.py,v 1.4 2012/10/14 16:37:00 egor Exp $"""
 
-__version__ = '$Revision: 1.3 $'[11:-2]
+__version__ = '$Revision: 1.4 $'[11:-2]
 
 
 from ZenPacks.community.CIMMon.modeler.plugins.community.cim.CIMFanMap \
@@ -45,6 +45,8 @@ class CIMTachometerMap(CIMFanMap):
                         "_sensorType":"SensorType",
                         "_sysname":"SystemName",
                         "unitModifier":"UnitModifier",
+                        "state":"Status",
+                        "status":"OperationalStatus",
                     }
                 ),
             }

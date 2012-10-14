@@ -13,9 +13,9 @@ __doc__="""CIMTemperatureSensorMap
 CIMTemperatureSensorMap maps CIM_TemperatureSensor class to TemperatureSensor
 class.
 
-$Id: CIMTemperatureSensorMap.py,v 1.4 2012/06/26 23:19:16 egor Exp $"""
+$Id: CIMTemperatureSensorMap.py,v 1.5 2012/10/14 16:38:44 egor Exp $"""
 
-__version__ = '$Revision: 1.4 $'[11:-2]
+__version__ = '$Revision: 1.5 $'[11:-2]
 
 
 from ZenPacks.community.CIMMon.CIMPlugin import CIMPlugin
@@ -50,6 +50,8 @@ class CIMTemperatureSensorMap(CIMPlugin):
                         "upperThresholdNonCritical":"UpperThresholdNonCritical",
                         "_sensorType":"SensorType",
                         "_sysname":"SystemName",
+                        "state":"Status",
+                        "status":"OperationalStatus",
                     },
                 ),
             }
@@ -73,6 +75,7 @@ class CIMTemperatureSensorMap(CIMPlugin):
                     if not inst["type"]: del inst["type"]
                 om = self.objectMap(inst)
                 om.id = self.prepId(om.id)
+                om.cimStatusName = self._getCimStatusName(inst)
                 rm.append(om)
             except AttributeError:
                 continue

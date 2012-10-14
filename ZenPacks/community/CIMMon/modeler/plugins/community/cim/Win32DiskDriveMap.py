@@ -12,9 +12,9 @@ __doc__="""Win32DiskDriveMap
 
 Win32DiskDriveMap maps Win32_DiskDrive class to CIM_DiskDrive class.
 
-$Id: Win32DiskDriveMap.py,v 1.2 2012/06/18 23:29:23 egor Exp $"""
+$Id: Win32DiskDriveMap.py,v 1.3 2012/10/14 16:44:06 egor Exp $"""
 
-__version__ = '$Revision: 1.2 $'[11:-2]
+__version__ = '$Revision: 1.3 $'[11:-2]
 
 from ZenPacks.community.CIMMon.CIMPlugin import CIMPlugin
 from ZenPacks.community.CIMMon.modeler.plugins.community.cim.CIMDiskDriveMap \
@@ -48,6 +48,8 @@ class Win32DiskDriveMap(CIMDiskDriveMap):
                         "_mediatype":"MediaType",
                         "bay":"SCSILogicalUnit",
                         "_sysname":"SystemName",
+                        "state":"Status",
+                        "status":"OperationalStatus",
                     }
                 ),
             "CIM_ElementStatisticalData":

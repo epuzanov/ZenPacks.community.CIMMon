@@ -12,9 +12,9 @@ __doc__="""CIM_ManagedSystemElement
 
 CIM_ManagedSystemElement is an abstraction for CIM_ManagedSystemElement class.
 
-$Id: CIM_ManagedSystemElement.py,v 1.5 2012/06/26 19:42:36 egor Exp $"""
+$Id: CIM_ManagedSystemElement.py,v 1.6 2012/10/14 16:46:59 egor Exp $"""
 
-__version__ = "$Revision: 1.5 $"[11:-2]
+__version__ = "$Revision: 1.6 $"[11:-2]
 
 from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
@@ -31,6 +31,7 @@ class CIM_ManagedSystemElement:
     cimKeybindings = ''
     cimStatClassName = ''
     cimStatKeybindings = ''
+    cimStatusName = ''
 
     _properties=(
                 {'id':'status', 'type':'int', 'mode':'w'},
@@ -39,6 +40,7 @@ class CIM_ManagedSystemElement:
                 {'id':'cimKeybindings', 'type':'string', 'mode':'w'},
                 {'id':'cimStatClassName', 'type':'string', 'mode':'w'},
                 {'id':'cimStatKeybindings', 'type':'string', 'mode':'w'},
+                {'id':'cimStatusName', 'type':'string', 'mode':'w'},
                 )
 
     _relations = (
@@ -190,8 +192,9 @@ class CIM_ManagedSystemElement:
         """
         templates = self.getRRDStatTemplates()
         if self.cimStatClassName == self.cimClassName: return templates
-        tnames = (self.cimClassName, self.__class__.__name__, self.meta_type,
-                                                    'CIM_ManagedSystemElement')
+        tnames = [self.cimClassName, self.__class__.__name__, self.meta_type]
+        if self.cimStatusName:
+            tnames.append('CIM_ManagedSystemElement')
         for tname in tnames:
             templ = self.getRRDTemplateByName(tname)
             if not templ: continue

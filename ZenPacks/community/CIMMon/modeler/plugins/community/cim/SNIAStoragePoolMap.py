@@ -12,9 +12,9 @@ __doc__="""SNIAStoragePoolMap
 
 SNIAStoragePoolMap maps SNIA_StoragePool class to CIM_StoragePool class.
 
-$Id: SNIAStoragePoolMap.py,v 1.0 2012/01/23 23:51:14 egor Exp $"""
+$Id: SNIAStoragePoolMap.py,v 1.1 2012/10/14 16:42:35 egor Exp $"""
 
-__version__ = '$Revision: 1.0 $'[11:-2]
+__version__ = '$Revision: 1.1 $'[11:-2]
 
 from ZenPacks.community.CIMMon.modeler.plugins.community.cim.CIMStoragePoolMap \
     import CIMStoragePoolMap
@@ -42,6 +42,8 @@ class SNIAStoragePoolMap(CIMStoragePoolMap):
                         "totalManagedSpace":"TotalManagedSpace",
                         "usage":"Usage",
                         "_sysname":"InstanceID",
+                        "state":"Status",
+                        "status":"OperationalStatus",
                     },
                 ),
             "CIM_SystemComponent":

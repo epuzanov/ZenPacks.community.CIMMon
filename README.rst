@@ -158,7 +158,6 @@ Monitoring Templates
 
 - Devices/Server/Windows/CIM/Device
 - Devices/Server/Windows/CIM/OSProcess
-- Devices/Server/Windows/CIM/Win32_DiskDrive
 - Devices/Server/Windows/CIM/Win32_LogicalDisk
 - Devices/Server/Windows/CIM/Win32_NetworkAdapter
 - Devices/Server/Windows/CIM/Win32_PerfRawData_PerfDisk_LogicalDisk

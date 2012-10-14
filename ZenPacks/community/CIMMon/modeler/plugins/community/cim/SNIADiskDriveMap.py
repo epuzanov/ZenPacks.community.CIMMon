@@ -12,9 +12,9 @@ __doc__="""SNIADiskDriveMap
 
 SNIADiskDriveMap maps SNIA_DiskDrive class to CIM_DiskDrive class.
 
-$Id: SNIADiskDriveMap.py,v 1.1 2012/06/14 23:03:00 egor Exp $"""
+$Id: SNIADiskDriveMap.py,v 1.2 2012/10/14 16:40:54 egor Exp $"""
 
-__version__ = '$Revision: 1.1 $'[11:-2]
+__version__ = '$Revision: 1.2 $'[11:-2]
 
 from ZenPacks.community.CIMMon.modeler.plugins.community.cim.CIMDiskDriveMap \
     import CIMDiskDriveMap
@@ -42,6 +42,8 @@ class SNIADiskDriveMap(CIMDiskDriveMap):
                         "description":"ElementName",
                         "title":"ElementName",
                         "_sysname":"SystemName",
+                        "state":"Status",
+                        "status":"OperationalStatus",
                     }
                 ),
             "CIM_PhysicalPackage":

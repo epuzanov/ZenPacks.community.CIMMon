@@ -12,9 +12,9 @@ __doc__="""SNIAChassisMap
 
 SNIAChassisMap maps SNIA_Chassis class to CIM_Chassis class.
 
-$Id: SNIAChassisMap.py,v 1.0 2012/01/23 23:46:12 egor Exp $"""
+$Id: SNIAChassisMap.py,v 1.1 2012/10/14 16:41:45 egor Exp $"""
 
-__version__ = '$Revision: 1.0 $'[11:-2]
+__version__ = '$Revision: 1.1 $'[11:-2]
 
 from ZenPacks.community.CIMMon.modeler.plugins.community.cim.CIMChassisMap \
     import CIMChassisMap
@@ -43,6 +43,8 @@ class SNIAChassisMap(CIMChassisMap):
                         "_pn":"PartNumber",
                         "id":"Tag",
                         "_sysname":"Tag",
+                        "state":"Status",
+                        "status":"OperationalStatus",
                     },
                 ),
             "CIM_SystemComponent":

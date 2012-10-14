@@ -12,9 +12,9 @@ __doc__="""CIMPhysicalMemoryMap
 
 CIMPhysicalMemoryMap maps the CIM_PhysicalMemory to CIMPhysicalMemory objects
 
-$Id: CIMPhysicalMemoryMap.py,v 1.3 2012/06/26 23:11:57 egor Exp $"""
+$Id: CIMPhysicalMemoryMap.py,v 1.4 2012/10/14 16:27:29 egor Exp $"""
 
-__version__ = '$Revision: 1.3 $'[11:-2]
+__version__ = '$Revision: 1.4 $'[11:-2]
 
 from Products.ZenUtils.Utils import convToUnits
 from ZenPacks.community.CIMMon.CIMPlugin import CIMPlugin
@@ -51,6 +51,8 @@ class CIMPhysicalMemoryMap(CIMPlugin):
                         "serialNumber":"SerialNumber",
                         "_speed":"Speed",
                         "id":"Tag",
+                        "state":"Status",
+                        "status":"OperationalStatus",
                     },
                 ),
             }
@@ -147,6 +149,7 @@ class CIMPhysicalMemoryMap(CIMPlugin):
                     int(inst.get("_slottype") or 0), "Slot"), om.slot)
                 if int(getattr(om, "size", 0) or 0) > 0:
                     om.setProductKey = self._getProductKey(results, inst)
+                om.cimStatusName = self._getCimStatusName(inst)
             except AttributeError:
                 continue
             rm.append(om)

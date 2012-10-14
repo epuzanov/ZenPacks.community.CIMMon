@@ -12,9 +12,9 @@ __doc__="""CIMControllerMap
 
 CIMControllerMap maps CIM_Controller class to Controller class.
 
-$Id: CIMControllerMap.py,v 1.5 2012/06/26 23:09:11 egor Exp $"""
+$Id: CIMControllerMap.py,v 1.6 2012/10/14 17:23:28 egor Exp $"""
 
-__version__ = '$Revision: 1.5 $'[11:-2]
+__version__ = '$Revision: 1.6 $'[11:-2]
 
 from ZenPacks.community.CIMMon.CIMPlugin import CIMPlugin
 from Products.DataCollector.plugins.DataMaps import MultiArgs
@@ -45,6 +45,8 @@ class CIMControllerMap(CIMPlugin):
                         "setProductKey":"Description",
                         "id":"DeviceID",
                         "_sysname":"SystemName",
+                        "state":"Status",
+                        "status":"OperationalStatus",
                     },
                 ),
             }
@@ -90,6 +92,7 @@ class CIMControllerMap(CIMPlugin):
                 if statPath:
                     om.setStatPath = statPath
                 om.monitor = self._monitor(inst)
+                om.cimStatusName = self._getCimStatusName(inst)
             except AttributeError:
                 continue
             rm.append(om)

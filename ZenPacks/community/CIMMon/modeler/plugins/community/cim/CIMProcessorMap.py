@@ -12,9 +12,9 @@ __doc__="""CIMProcessorMap
 
 CIMProcessorMap maps the CIM_Processor class to cpus objects
 
-$Id: CIMProcessorMap.py,v 1.5 2012/06/28 18:36:58 egor Exp $"""
+$Id: CIMProcessorMap.py,v 1.6 2012/10/14 16:33:57 egor Exp $"""
 
-__version__ = '$Revision: 1.5 $'[11:-2]
+__version__ = '$Revision: 1.6 $'[11:-2]
 
 from ZenPacks.community.CIMMon.CIMPlugin import CIMPlugin
 from Products.DataCollector.plugins.DataMaps import MultiArgs
@@ -254,7 +254,7 @@ class CIMProcessorMap(CIMPlugin):
                 cache = self._getCacheMemory(results, inst)
                 om.cacheSizeL1 = cache.get(1, 0)
                 om.cacheSizeL2 = cache.get(2, 0)
-#                om.cacheSizeL3 = cache.get(3, 0)
+                om.cacheSizeL3 = cache.get(3, 0)
                 if not getattr(om, '_name', None):
                     try: om._name = Families.get(int(om._family), 'Unknown')
                     except Exception: om._name = 'Unknown'

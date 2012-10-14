@@ -50,6 +50,8 @@ class CIMFileSystemMap(CIMPlugin):
                         "mount":"Root",
                         "totalBlocks":"FileSystemSize",
                         "_sysname":"CSName",
+                        "state":"Status",
+                        "status":"OperationalStatus",
                     }
                 ),
             }
@@ -83,6 +85,7 @@ class CIMFileSystemMap(CIMPlugin):
                 statPath = self._getStatPath(results, inst)
                 if statPath:
                     om.setStatPath = statPath
+                om.cimStatusName = self._getCimStatusName(inst)
             except AttributeError:
                 continue
             rm.append(om)
