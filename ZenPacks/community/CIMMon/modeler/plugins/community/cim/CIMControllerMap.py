@@ -12,9 +12,9 @@ __doc__="""CIMControllerMap
 
 CIMControllerMap maps CIM_Controller class to Controller class.
 
-$Id: CIMControllerMap.py,v 1.6 2012/10/14 17:23:28 egor Exp $"""
+$Id: CIMControllerMap.py,v 1.7 2012/10/15 17:22:16 egor Exp $"""
 
-__version__ = '$Revision: 1.6 $'[11:-2]
+__version__ = '$Revision: 1.7 $'[11:-2]
 
 from ZenPacks.community.CIMMon.CIMPlugin import CIMPlugin
 from Products.DataCollector.plugins.DataMaps import MultiArgs
@@ -76,6 +76,7 @@ class CIMControllerMap(CIMPlugin):
             if self._ignoreController(inst): continue
             try:
                 inst.update(self._getPackage(results, inst))
+                self._setCimStatusName(inst)
                 om = self.objectMap(inst)
                 om.id = self.prepId(om.id)
                 manuf = getattr(om, "_manuf", "") or "Unknown"
@@ -92,7 +93,6 @@ class CIMControllerMap(CIMPlugin):
                 if statPath:
                     om.setStatPath = statPath
                 om.monitor = self._monitor(inst)
-                om.cimStatusName = self._getCimStatusName(inst)
             except AttributeError:
                 continue
             rm.append(om)

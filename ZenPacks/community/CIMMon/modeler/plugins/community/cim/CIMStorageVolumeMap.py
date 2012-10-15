@@ -12,9 +12,9 @@ __doc__="""CIMStorageVolumeMap
 
 CIMStorageVolumeMap maps CIM_StorageVolume class to CIM_StorageVolume class.
 
-$Id: CIMStorageVolumeMap.py,v 1.7 2012/10/14 16:37:28 egor Exp $"""
+$Id: CIMStorageVolumeMap.py,v 1.8 2012/10/15 17:28:18 egor Exp $"""
 
-__version__ = '$Revision: 1.7 $'[11:-2]
+__version__ = '$Revision: 1.8 $'[11:-2]
 
 from ZenPacks.community.CIMMon.CIMPlugin import CIMPlugin
 
@@ -90,6 +90,7 @@ class CIMStorageVolumeMap(CIMPlugin):
         for inst in instances:
             if (inst.get("_sysname") or "").lower() not in sysnames: continue
             try:
+                self._setCimStatusName(inst)
                 om = self.objectMap(inst)
                 om.id = self.prepId(om.id)
                 om.diskType = self._getDiskType(inst)
@@ -103,7 +104,6 @@ class CIMStorageVolumeMap(CIMPlugin):
                 statPath = self._getStatPath(results, inst)
                 if statPath:
                     om.setStatPath = statPath
-                om.cimStatusName = self._getCimStatusName(inst)
             except AttributeError:
                 continue
             rm.append(om)

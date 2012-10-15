@@ -12,9 +12,9 @@ __doc__="""CIMPowerSupplyMap
 
 CIMPowerSupplyMap maps CIM_PowerSupply CIM class to CIMPowerSupply class.
 
-$Id: CIMPowerSupplyMap.py,v 1.6 2012/10/14 16:28:58 egor Exp $"""
+$Id: CIMPowerSupplyMap.py,v 1.7 2012/10/15 17:26:38 egor Exp $"""
 
-__version__ = '$Revision: 1.6 $'[11:-2]
+__version__ = '$Revision: 1.7 $'[11:-2]
 
 
 from ZenPacks.community.CIMMon.CIMPlugin import CIMPlugin
@@ -107,13 +107,13 @@ class CIMPowerSupplyMap(CIMPlugin):
                 if "type" in inst:
                     inst["type"] = self._getType(inst["type"])
                     if not inst["type"]: del inst["type"]
+                self._setCimStatusName(inst)
                 om = self.objectMap(inst)
                 om.id = self.prepId(om.id)
                 om.watts = int(inst.get("watts") or 0) / 1000
                 collections = self._getCollections(results, inst)
                 if collections:
                     om.setCollections = collections
-                om.cimStatusName = self._getCimStatusName(inst)
                 rm.append(om)
             except AttributeError:
                 continue

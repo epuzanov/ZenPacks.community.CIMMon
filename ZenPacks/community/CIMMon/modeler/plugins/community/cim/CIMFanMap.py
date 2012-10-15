@@ -12,9 +12,9 @@ __doc__="""CIMFanMap
 
 CIMFanMap maps CIM_Fan class to Fan class.
 
-$Id: CIMFanMap.py,v 1.5 2012/10/14 16:25:27 egor Exp $"""
+$Id: CIMFanMap.py,v 1.6 2012/10/15 17:23:24 egor Exp $"""
 
-__version__ = '$Revision: 1.5 $'[11:-2]
+__version__ = '$Revision: 1.6 $'[11:-2]
 
 
 from ZenPacks.community.CIMMon.CIMPlugin import CIMPlugin
@@ -111,12 +111,12 @@ class CIMFanMap(CIMPlugin):
                     if not inst['type']: del inst["type"]
                 elif "setStatPath" in inst:
                     inst["type"] = "Active Cooling"
+                self._setCimStatusName(inst)
                 om = self.objectMap(inst)
                 om.id = self.prepId(om.id)
                 collections = self._getCollections(results, inst)
                 if collections:
                     om.setCollections = collections
-                om.cimStatusName = self._getCimStatusName(inst)
                 rm.append(om)
             except AttributeError:
                 continue

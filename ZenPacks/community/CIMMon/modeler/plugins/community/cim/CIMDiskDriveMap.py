@@ -12,9 +12,9 @@ __doc__="""CIMDiskDriveMap
 
 CIMDiskDriveMap maps CIM_DiskDrive class to CIM_DiskDrive class.
 
-$Id: CIMDiskDriveMap.py,v 1.9 2012/10/14 17:23:52 egor Exp $"""
+$Id: CIMDiskDriveMap.py,v 1.10 2012/10/15 17:22:33 egor Exp $"""
 
-__version__ = '$Revision: 1.9 $'[11:-2]
+__version__ = '$Revision: 1.10 $'[11:-2]
 
 from ZenPacks.community.CIMMon.CIMPlugin import CIMPlugin
 from Products.DataCollector.plugins.DataMaps import ObjectMap, MultiArgs
@@ -142,6 +142,7 @@ class CIMDiskDriveMap(CIMPlugin):
                 if "formFactor" in inst:
                     inst["formFactor"] = self._formFactors(inst["formFactor"])
                     if not inst["formFactor"]: del inst["formFactor"]
+                self._setCimStatusName(inst)
                 om = self.objectMap(inst)
                 om.id = self.prepId(om.id)
                 om.size = int(getattr(om, "size", 0) or 0) * 1000
@@ -161,7 +162,6 @@ class CIMDiskDriveMap(CIMPlugin):
                 statPath = self._getStatPath(results, inst)
                 if statPath:
                     om.setStatPath = statPath
-                om.cimStatusName = self._getCimStatusName(inst)
             except AttributeError:
                 continue
             rm.append(om)

@@ -12,9 +12,9 @@ __doc__="""CIMFileSystemMap
 
 CIMFileSystemMap maps the CIM_FileSystem class to filesystems objects
 
-$Id: CIMFileSystemMap.py,v 1.4 2012/06/26 23:10:40 egor Exp $"""
+$Id: CIMFileSystemMap.py,v 1.5 2012/10/15 15:25:22 egor Exp $"""
 
-__version__ = '$Revision: 1.4 $'[11:-2]
+__version__ = '$Revision: 1.5 $'[11:-2]
 
 import re
 from ZenPacks.community.CIMMon.CIMPlugin import CIMPlugin
@@ -78,6 +78,7 @@ class CIMFileSystemMap(CIMPlugin):
                     log.info("Skipping %s (%s) as it matches zFileSystemMapIgnoreTypes.",
                             mount, fstype)
                     continue
+                self._setCimStatusName(inst)
                 om = self.objectMap(inst)
                 om.id = self.prepId(om.mount)
                 om.blockSize = int(getattr(om, "blockSize", None) or 4096)
@@ -85,7 +86,6 @@ class CIMFileSystemMap(CIMPlugin):
                 statPath = self._getStatPath(results, inst)
                 if statPath:
                     om.setStatPath = statPath
-                om.cimStatusName = self._getCimStatusName(inst)
             except AttributeError:
                 continue
             rm.append(om)

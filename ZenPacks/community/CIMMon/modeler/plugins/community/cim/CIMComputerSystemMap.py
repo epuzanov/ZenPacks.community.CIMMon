@@ -12,9 +12,9 @@ __doc__="""CIMComputerSystemMap
 
 CIMComputerSystemMap maps CIM_ComputerSystem class to hw product.
 
-$Id: CIMComputerSystemMap.py,v 1.7 2012/10/14 16:22:17 egor Exp $"""
+$Id: CIMComputerSystemMap.py,v 1.8 2012/10/15 17:21:19 egor Exp $"""
 
-__version__ = '$Revision: 1.7 $'[11:-2]
+__version__ = '$Revision: 1.8 $'[11:-2]
 
 
 from ZenPacks.community.CIMMon.CIMPlugin import CIMPlugin
@@ -100,6 +100,7 @@ class CIMComputerSystemMap(CIMPlugin):
                     maps.append(om)
                     continue
                 if not productKey: continue
+                self._setCimStatusName(inst)
                 om = self.objectMap(inst)
                 om.id = self.prepId(inst.get("_sysname") or "")
                 if not om.id: continue
@@ -113,7 +114,6 @@ class CIMComputerSystemMap(CIMPlugin):
                 if statPath:
                     om.setStatPath = statPath
                 om.monitor = self._monitor(inst)
-                om.cimStatusName = self._getCimStatusName(inst)
                 rm.append(om)
             except:
                 log.warning('processing error')

@@ -12,9 +12,9 @@ __doc__="""CIMChassisMap
 
 CIMChassisMap maps CIM_Chassis class to CIM_Chassis class.
 
-$Id: CIMChassisMap.py,v 1.5 2012/10/14 16:20:16 egor Exp $"""
+$Id: CIMChassisMap.py,v 1.6 2012/10/15 17:20:21 egor Exp $"""
 
-__version__ = '$Revision: 1.5 $'[11:-2]
+__version__ = '$Revision: 1.6 $'[11:-2]
 
 
 from ZenPacks.community.CIMMon.CIMPlugin import CIMPlugin
@@ -109,6 +109,7 @@ class CIMChassisMap(CIMPlugin):
                         om.setHWTag = tag
                     maps.append(om)
                     continue
+                self._setCimStatusName(inst)
                 om = self.objectMap(inst)
                 om.id = self.prepId(om.id)
                 if not om.id: continue
@@ -116,7 +117,6 @@ class CIMChassisMap(CIMPlugin):
                     om.setProductKey = MultiArgs(productKey, manuf)
                 if layout:
                     om.layout = layout
-                om.cimStatusName = self._getCimStatusName(inst)
             except AttributeError:
                 continue
             rm.append(om)

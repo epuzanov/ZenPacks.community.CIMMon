@@ -12,9 +12,9 @@ __doc__="""CIMStoragePoolMap
 
 CIMStoragePoolMap maps CIM_StoragePool class to CIM_StoragePool class.
 
-$Id: CIMStoragePoolMap.py,v 1.3 2012/10/14 16:37:49 egor Exp $"""
+$Id: CIMStoragePoolMap.py,v 1.4 2012/10/15 17:27:33 egor Exp $"""
 
-__version__ = '$Revision: 1.3 $'[11:-2]
+__version__ = '$Revision: 1.4 $'[11:-2]
 
 
 from ZenPacks.community.CIMMon.CIMPlugin import CIMPlugin
@@ -80,13 +80,13 @@ class CIMStoragePoolMap(CIMPlugin):
             if (str(inst.get("_primordial")).lower() == "true" or (
                         'rimordial' in (inst.get("setPath") or ""))): continue
             try:
+                self._setCimStatusName(inst)
                 om = self.objectMap(inst)
                 om.id = self.prepId(om.id)
                 if not hasattr(om, "title"):
                     om.title = om.poolId
                 if hasattr(om, "usage"):
                     om.usage = self._getUsage(om.usage)
-                om.cimStatusName = self._getCimStatusName(inst)
             except AttributeError:
                 continue
             rm.append(om)

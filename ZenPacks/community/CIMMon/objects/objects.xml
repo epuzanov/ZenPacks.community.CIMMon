@@ -4686,7 +4686,7 @@ AVERAGE
 <object id='/zport/dmd/Events/Status/CIM_ManagedSystemElement' module='Products.ZenEvents.EventClass' class='EventClass'>
 <property type="text" id="transform" mode="w" >
 statusstr = evt.message.rsplit(' ', 1)[-1]
-status = not statusstr.replace('.','').isdigit() and 3 or int(float(round(statusstr)))
+status = not statusstr.replace('.','').isdigit() and 3 or int(round(float(statusstr)))
 try: comp = component
 except NameError:
     from ZODB.transact import transact
@@ -4708,7 +4708,7 @@ if comp is not None:
 </property>
 <property type="text" id="transform" mode="w" >
 statusstr = evt.message.rsplit(' ', 1)[-1]
-status = not statusstr.replace('.','').isdigit() and 3 or int(float(round(statusstr)))
+status = not statusstr.replace('.','').isdigit() and 3 or int(round(float(statusstr)))
 try: comp = component
 except NameError:
     from ZODB.transact import transact
