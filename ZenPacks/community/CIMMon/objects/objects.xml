@@ -2312,15 +2312,6 @@ AVERAGE
 </object>
 </tomanycont>
 </object>
-<!-- ('', 'zport', 'dmd', 'Devices', 'Server', 'Windows', 'CIM', 'rrdTemplates', 'Win32_PhysicalMemory') -->
-<object id='/zport/dmd/Devices/Server/Windows/CIM/rrdTemplates/Win32_PhysicalMemory' module='Products.ZenModel.RRDTemplate' class='RRDTemplate'>
-<property type="text" id="description" mode="w" >
-Place holder for future use.
-</property>
-<property type="string" id="targetPythonClass" mode="w" >
-ZenPacks.community.CIMMon.CIM_PhysicalMemory
-</property>
-</object>
 <!-- ('', 'zport', 'dmd', 'Devices', 'Server', 'Windows', 'CIM', 'rrdTemplates', 'Win32_Volume') -->
 <object id='/zport/dmd/Devices/Server/Windows/CIM/rrdTemplates/Win32_Volume' module='Products.ZenModel.RRDTemplate' class='RRDTemplate'>
 <property type="text" id="description" mode="w" >
@@ -3121,15 +3112,6 @@ AVERAGE
 </tomanycont>
 </object>
 </tomanycont>
-</object>
-<!-- ('', 'zport', 'dmd', 'Devices', 'rrdTemplates', 'CIM_Chassis') -->
-<object id='/zport/dmd/Devices/rrdTemplates/CIM_Chassis' module='Products.ZenModel.RRDTemplate' class='RRDTemplate'>
-<property type="text" id="description" mode="w" >
-Place holder for future use.
-</property>
-<property type="string" id="targetPythonClass" mode="w" >
-ZenPacks.community.CIMMon.CIM_Chassis
-</property>
 </object>
 <!-- ('', 'zport', 'dmd', 'Devices', 'rrdTemplates', 'CIM_Device') -->
 <object id='/zport/dmd/Devices/rrdTemplates/CIM_Device' module='Products.ZenModel.RRDTemplate' class='RRDTemplate'>
@@ -4298,24 +4280,6 @@ True
 </property>
 </object>
 </tomanycont>
-</object>
-<!-- ('', 'zport', 'dmd', 'Devices', 'rrdTemplates', 'CIM_ReplicationGroup') -->
-<object id='/zport/dmd/Devices/rrdTemplates/CIM_ReplicationGroup' module='Products.ZenModel.RRDTemplate' class='RRDTemplate'>
-<property type="text" id="description" mode="w" >
-Place holder for future use.
-</property>
-<property type="string" id="targetPythonClass" mode="w" >
-ZenPacks.community.CIMMon.CIM_ReplicationGroup
-</property>
-</object>
-<!-- ('', 'zport', 'dmd', 'Devices', 'rrdTemplates', 'CIM_StoragePool') -->
-<object id='/zport/dmd/Devices/rrdTemplates/CIM_StoragePool' module='Products.ZenModel.RRDTemplate' class='RRDTemplate'>
-<property type="text" id="description" mode="w" >
-Place holder for future use.
-</property>
-<property type="string" id="targetPythonClass" mode="w" >
-ZenPacks.community.CIMMon.CIM_StoragePool
-</property>
 </object>
 <!-- ('', 'zport', 'dmd', 'Devices', 'rrdTemplates', 'CIM_StorageVolume') -->
 <object id='/zport/dmd/Devices/rrdTemplates/CIM_StorageVolume' module='Products.ZenModel.RRDTemplate' class='RRDTemplate'>
