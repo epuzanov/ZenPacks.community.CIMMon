@@ -3757,6 +3757,8 @@ GAUGE
 True
 </property>
 <tomanycont id='aliases'>
+<object id='OperationalStatus' module='Products.ZenModel.RRDDataPointAlias' class='RRDDataPointAlias'>
+</object>
 <object id='Status' module='Products.ZenModel.RRDDataPointAlias' class='RRDDataPointAlias'>
 <property type="string" id="formula" mode="w" >
 "OK":2,"Error":6,"Degraded":3,"Unknown":2,"Pred Fail":5,"Starting":8,"Stopping":9,"Service":11,"Stressed":4,"NonRecover":7,"No Contact":12,"Lost Comm":13,"good":2
@@ -4363,6 +4365,8 @@ GAUGE
 True
 </property>
 <tomanycont id='aliases'>
+<object id='OperationalStatus' module='Products.ZenModel.RRDDataPointAlias' class='RRDDataPointAlias'>
+</object>
 <object id='Status' module='Products.ZenModel.RRDDataPointAlias' class='RRDDataPointAlias'>
 <property type="string" id="formula" mode="w" >
 "OK":2,"Error":6,"Degraded":3,"Unknown":2,"Pred Fail":5,"Starting":8,"Stopping":9,"Service":11,"Stressed":4,"NonRecover":7,"No Contact":12,"Lost Comm":13,"good":2
@@ -4447,6 +4451,8 @@ GAUGE
 True
 </property>
 <tomanycont id='aliases'>
+<object id='OperationalStatus' module='Products.ZenModel.RRDDataPointAlias' class='RRDDataPointAlias'>
+</object>
 <object id='Status' module='Products.ZenModel.RRDDataPointAlias' class='RRDDataPointAlias'>
 <property type="string" id="formula" mode="w" >
 "OK":2,"Error":6,"Degraded":3,"Unknown":2,"Pred Fail":5,"Starting":8,"Stopping":9,"Service":11,"Stressed":4,"NonRecover":7,"No Contact":12,"Lost Comm":13,"good":2
@@ -4587,6 +4593,8 @@ GAUGE
 True
 </property>
 <tomanycont id='aliases'>
+<object id='OperationalStatus' module='Products.ZenModel.RRDDataPointAlias' class='RRDDataPointAlias'>
+</object>
 <object id='Status' module='Products.ZenModel.RRDDataPointAlias' class='RRDDataPointAlias'>
 <property type="string" id="formula" mode="w" >
 "OK":2,"Error":6,"Degraded":3,"Unknown":2,"Pred Fail":5,"Starting":8,"Stopping":9,"Service":11,"Stressed":4,"NonRecover":7,"No Contact":12,"Lost Comm":13,"good":2
