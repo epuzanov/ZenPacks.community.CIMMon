@@ -4373,7 +4373,7 @@ True
 CIM_Tachometer Template
 </property>
 <property type="string" id="targetPythonClass" mode="w" >
-ZenPacks.community.CIMMon.CIM_Tachometer
+ZenPacks.community.CIMMon.CIM_Fan
 </property>
 <tomanycont id='datasources'>
 <object id='Tachometer' module='ZenPacks.community.SQLDataSource.datasources.SQLDataSource' class='SQLDataSource'>

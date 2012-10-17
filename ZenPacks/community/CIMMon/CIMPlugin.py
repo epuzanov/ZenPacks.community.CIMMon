@@ -12,9 +12,9 @@ __doc__="""CIMPlugin
 
 CIMPlugin extends SQLPlugin with CIM specific attributes and methods.
 
-$Id: CIMPlugin.py,v 1.6 2012/10/15 17:03:33 egor Exp $"""
+$Id: CIMPlugin.py,v 1.7 2012/10/17 18:09:10 egor Exp $"""
 
-__version__ = '$Revision: 1.6 $'[11:-2]
+__version__ = '$Revision: 1.7 $'[11:-2]
 
 from ZenPacks.community.SQLDataSource.SQLPlugin import SQLPlugin
 
@@ -87,23 +87,23 @@ class CIMPlugin(SQLPlugin):
 
     def _setCimStatusName(self, inst):
         status = None
-        if 'status' in inst:
-            getCimStatusName = 'OperationalStatus'
-            status = inst.pop('status')
+        if "status" in inst:
+            cimStatusName = "OperationalStatus"
+            status = inst.pop("status")
             if isinstance(status, (list, tuple)):
                 status = len(status) > 0 and status[0] or 0
-                if str(status).replace('.','').isdigit():
+                if str(status).replace(".","").isdigit():
                     status = int(float(status))
-        if 'state' in inst:
-            state = inst.pop('state')
-            if status is None:
-                getCimStatusName = 'Status'
+        if "state" in inst:
+            state = inst.pop("state")
+            if status in (None, ""):
+                cimStatusName = "Status"
                 status = {"OK":2, "Error":6, "Degraded":3, "Unknown":0,
                     "Pred Fail":5, "Starting":8, "Stopping":9, "Service":11,
                     "Stressed":4, "NonRecover":7, "No Contact":12,
                     "Lost Comm":13, "good":2}.get(state)
         if status is None:
             status = 0
-            getCimStatusName = ''
+            cimStatusName = ""
         # inst['status'] = status
-        inst["getCimStatusName"] = getCimStatusName
+        inst["cimStatusName"] = cimStatusName
