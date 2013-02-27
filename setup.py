@@ -3,9 +3,9 @@
 # or saved.  Do not modify them directly here.
 # NB: PACKAGES is deprecated
 NAME = "ZenPacks.community.CIMMon"
-VERSION = "0.97"
+VERSION = "0.98"
 AUTHOR = "Egor Puzanov"
-LICENSE = ""
+LICENSE = "GPLv2"
 NAMESPACE_PACKAGES = ['ZenPacks', 'ZenPacks.community']
 PACKAGES = ['ZenPacks', 'ZenPacks.community', 'ZenPacks.community.CIMMon']
 INSTALL_REQUIRES = ['ZenPacks.community.SQLDataSource>=2.4.3']

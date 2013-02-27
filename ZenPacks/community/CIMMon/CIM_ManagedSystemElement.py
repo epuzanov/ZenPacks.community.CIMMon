@@ -1,7 +1,7 @@
 ################################################################################
 #
 # This program is part of the CIMMon Zenpack for Zenoss.
-# Copyright (C) 2012 Egor Puzanov.
+# Copyright (C) 2012-2013 Egor Puzanov.
 #
 # This program can be used under the GNU General Public License version 2
 # You can find full information here: http://www.zenoss.com/oss
@@ -12,9 +12,9 @@ __doc__="""CIM_ManagedSystemElement
 
 CIM_ManagedSystemElement is an abstraction for CIM_ManagedSystemElement class.
 
-$Id: CIM_ManagedSystemElement.py,v 1.6 2012/10/14 16:46:59 egor Exp $"""
+$Id: CIM_ManagedSystemElement.py,v 1.7 2013/02/27 23:37:10 egor Exp $"""
 
-__version__ = "$Revision: 1.6 $"[11:-2]
+__version__ = "$Revision: 1.7 $"[11:-2]
 
 from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
@@ -201,3 +201,14 @@ class CIM_ManagedSystemElement:
             templates.append(templ)
             break
         return templates
+
+    def manage_deleteComponent(self, REQUEST=None):
+        """
+        Delete CIM Component
+        """
+        if hasattr(self, 'os'):
+            super(CIM_ManagedSystemElement,self).manage_deleteComponent(REQUEST)
+        else:
+            self.getPrimaryParent()._delObject(self.id)
+            if REQUEST is not None:
+                REQUEST['RESPONSE'].redirect(self.device().hw.absolute_url())

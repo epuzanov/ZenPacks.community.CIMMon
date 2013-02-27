@@ -4735,11 +4735,11 @@ status = not statusstr.replace('.','').isdigit() and 3 or int(round(float(status
 try: comp = component
 except NameError:
     from ZODB.transact import transact
-    for component in device.getMonitoredComponents():
-        if component.id == evt.component: break
+    for comp in device.getMonitoredComponents():
+        if comp.id == evt.component: break
     else:
-        component = None
-if component is not None:
+        comp = None
+if comp is not None:
     if evt.eventKey == 'CIM_NetworkAdapter_OperationalStatus|OperationalStatusChange':
         propName = 'operStatus'
     elif evt.eventKey == 'CIM_NetworkAdapter_AdminStatus|AdminStatusChange':
@@ -4751,7 +4751,7 @@ if component is not None:
     else:
         @transact
         def updateDb():
-            setattr(component, propName, status)
+            setattr(comp, propName, status)
         updateDb()
 </property>
 </object>
@@ -4763,11 +4763,11 @@ status = not statusstr.replace('.','').isdigit() and 3 or int(round(float(status
 try: comp = component
 except NameError:
     from ZODB.transact import transact
-    for component in device.getMonitoredComponents():
-        if component.id == evt.component: break
+    for comp in device.getMonitoredComponents():
+        if comp.id == evt.component: break
     else:
-        component = None
-if component is not None:
+        comp = None
+if comp is not None:
     if evt.eventKey == 'CIM_NetworkPort_OperationalStatus|OperationalStatusChange':
         propName = 'operStatus'
     elif evt.eventKey == 'CIM_NetworkPort_AdminStatus|AdminStatusChange':
@@ -4779,7 +4779,7 @@ if component is not None:
     else:
         @transact
         def updateDb():
-            setattr(component, propName, status)
+            setattr(comp, propName, status)
         updateDb()
 </property>
 <property type="text" id="transform" mode="w" >
@@ -4788,11 +4788,11 @@ status = not statusstr.replace('.','').isdigit() and 3 or int(round(float(status
 try: comp = component
 except NameError:
     from ZODB.transact import transact
-    for component in device.getMonitoredComponents():
-        if component.id == evt.component: break
+    for comp in device.getMonitoredComponents():
+        if comp.id == evt.component: break
     else:
-        component = None
-if component is not None:
+        comp = None
+if comp is not None:
     if evt.eventKey == 'CIM_NetworkPort_OperationalStatus|OperationalStatusChange':
         propName = 'operStatus'
     elif evt.eventKey == 'CIM_NetworkPort_AdminStatus|AdminStatusChange':
@@ -4804,7 +4804,7 @@ if component is not None:
     else:
         @transact
         def updateDb():
-            setattr(component, propName, status)
+            setattr(comp, propName, status)
         updateDb()
 </property>
 </object>
