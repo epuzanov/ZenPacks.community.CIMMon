@@ -1,7 +1,7 @@
 ################################################################################
 #
 # This program is part of the CIMMon Zenpack for Zenoss.
-# Copyright (C) 2012 Egor Puzanov.
+# Copyright (C) 2012-2013 Egor Puzanov.
 #
 # This program can be used under the GNU General Public License version 2
 # You can find full information here: http://www.zenoss.com/oss
@@ -12,9 +12,9 @@ __doc__="""CIM_DiskDrive
 
 CIM_DiskDrive is an abstraction of a Hard Disk.
 
-$Id: CIM_DiskDrive.py,v 1.3 2012/06/21 19:31:47 egor Exp $"""
+$Id: CIM_DiskDrive.py,v 1.4 2013/02/28 21:42:28 egor Exp $"""
 
-__version__ = "$Revision: 1.3 $"[11:-2]
+__version__ = "$Revision: 1.4 $"[11:-2]
 
 from Products.ZenModel.HardDisk import HardDisk
 from Products.ZenRelations.RelSchema import ToOne, ToMany
@@ -222,5 +222,13 @@ class CIM_DiskDrive(HardDisk, CIM_ManagedSystemElement):
             if not templ: continue
             return [templ]
         return []
+
+    def manage_deleteComponent(self, REQUEST=None):
+        """
+        Delete CIM Component
+        """
+        self.getPrimaryParent()._delObject(self.id)
+        if REQUEST is not None:
+            REQUEST['RESPONSE'].redirect(self.device().hw.absolute_url())
 
 InitializeClass(CIM_DiskDrive)

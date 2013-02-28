@@ -1,7 +1,7 @@
 ################################################################################
 #
 # This program is part of the CIMMon Zenpack for Zenoss.
-# Copyright (C) 2012 Egor Puzanov.
+# Copyright (C) 2012-2013 Egor Puzanov.
 #
 # This program can be used under the GNU General Public License version 2
 # You can find full information here: http://www.zenoss.com/oss
@@ -12,9 +12,9 @@ __doc__="""CIM_Fan
 
 CIM_Fan is an abstraction of a Fan.
 
-$Id: CIM_Fan.py,v 1.2 2012/06/18 23:16:14 egor Exp $"""
+$Id: CIM_Fan.py,v 1.3 2013/02/28 21:43:02 egor Exp $"""
 
-__version__ = "$Revision: 1.2 $"[11:-2]
+__version__ = "$Revision: 1.3 $"[11:-2]
 
 from Products.ZenModel.Fan import Fan
 from Products.ZenModel.HWComponent import HWComponent
@@ -61,5 +61,13 @@ class CIM_Fan(Fan, CIM_NumericSensor):
             if not templ: continue
             return [templ]
         return []
+
+    def manage_deleteComponent(self, REQUEST=None):
+        """
+        Delete CIM Component
+        """
+        self.getPrimaryParent()._delObject(self.id)
+        if REQUEST is not None:
+            REQUEST['RESPONSE'].redirect(self.device().hw.absolute_url())
 
 InitializeClass(CIM_Fan)

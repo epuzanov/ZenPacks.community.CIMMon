@@ -1,7 +1,7 @@
 ################################################################################
 #
 # This program is part of the CIMMon Zenpack for Zenoss.
-# Copyright (C) 2012 Egor Puzanov.
+# Copyright (C) 2012-2013 Egor Puzanov.
 #
 # This program can be used under the GNU General Public License version 2
 # You can find full information here: http://www.zenoss.com/oss
@@ -12,9 +12,9 @@ __doc__="""CIM_PhysicalMemory
 
 CIM_PhysicalMemory is an abstraction of a Memory module.
 
-$Id: CIM_PhysicalMemory.py,v 1.2 2012/06/18 23:19:32 egor Exp $"""
+$Id: CIM_PhysicalMemory.py,v 1.3 2013/02/28 21:45:34 egor Exp $"""
 
-__version__ = "$Revision: 1.2 $"[11:-2]
+__version__ = "$Revision: 1.3 $"[11:-2]
 
 from Globals import DTMLFile
 
@@ -82,5 +82,13 @@ class CIM_PhysicalMemory(HWComponent, CIM_ManagedSystemElement):
         Return the number of total bytes in human readable form ie 10MB
         """
         return self.size > 0 and convToUnits(self.size) or ''
+
+    def manage_deleteComponent(self, REQUEST=None):
+        """
+        Delete CIM Component
+        """
+        self.getPrimaryParent()._delObject(self.id)
+        if REQUEST is not None:
+            REQUEST['RESPONSE'].redirect(self.device().hw.absolute_url())
 
 InitializeClass(CIM_PhysicalMemory)

@@ -12,7 +12,7 @@ __doc__="""CIM_ManagedSystemElement
 
 CIM_ManagedSystemElement is an abstraction for CIM_ManagedSystemElement class.
 
-$Id: CIM_ManagedSystemElement.py,v 1.7 2013/02/27 23:37:10 egor Exp $"""
+$Id: CIM_ManagedSystemElement.py,v 1.8 2013/02/28 21:30:59 egor Exp $"""
 
 __version__ = "$Revision: 1.7 $"[11:-2]
 
@@ -202,13 +202,4 @@ class CIM_ManagedSystemElement:
             break
         return templates
 
-    def manage_deleteComponent(self, REQUEST=None):
-        """
-        Delete CIM Component
-        """
-        if hasattr(self, 'os'):
-            super(CIM_ManagedSystemElement,self).manage_deleteComponent(REQUEST)
-        else:
-            self.getPrimaryParent()._delObject(self.id)
-            if REQUEST is not None:
-                REQUEST['RESPONSE'].redirect(self.device().hw.absolute_url())
+InitializeClass(CIM_ManagedSystemElement)

@@ -1,7 +1,7 @@
 ################################################################################
 #
 # This program is part of the CIMMon Zenpack for Zenoss.
-# Copyright (C) 2012 Egor Puzanov.
+# Copyright (C) 2012-2013 Egor Puzanov.
 #
 # This program can be used under the GNU General Public License version 2
 # You can find full information here: http://www.zenoss.com/oss
@@ -12,9 +12,9 @@ __doc__="""CIM_TemperatureSensor
 
 CIM_TemperatureSensor is an abstraction of a temperature sensor or probe.
 
-$Id: CIM_TemperatureSensor.py,v 1.2 2012/06/18 23:21:17 egor Exp $"""
+$Id: CIM_TemperatureSensor.py,v 1.3 2013/02/28 21:47:59 egor Exp $"""
 
-__version__ = "$Revision: 1.2 $"[11:-2]
+__version__ = "$Revision: 1.3 $"[11:-2]
 
 from Products.ZenModel.TemperatureSensor import TemperatureSensor
 from Products.ZenModel.HWComponent import HWComponent
@@ -45,5 +45,13 @@ class CIM_TemperatureSensor(TemperatureSensor, CIM_NumericSensor):
         if self.baseUnits == 4: return long(temp - 273.15)
         return long(temp)
     temperature = temperatureCelsius
+
+    def manage_deleteComponent(self, REQUEST=None):
+        """
+        Delete CIM Component
+        """
+        self.getPrimaryParent()._delObject(self.id)
+        if REQUEST is not None:
+            REQUEST['RESPONSE'].redirect(self.device().hw.absolute_url())
 
 InitializeClass(CIM_TemperatureSensor)

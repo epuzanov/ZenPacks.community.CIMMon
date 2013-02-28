@@ -8,7 +8,7 @@ AUTHOR = "Egor Puzanov"
 LICENSE = "GPLv2"
 NAMESPACE_PACKAGES = ['ZenPacks', 'ZenPacks.community']
 PACKAGES = ['ZenPacks', 'ZenPacks.community', 'ZenPacks.community.CIMMon']
-INSTALL_REQUIRES = ['ZenPacks.community.SQLDataSource>=2.4.3']
+INSTALL_REQUIRES = ['ZenPacks.community.SQLDataSource>=2.5.0']
 COMPAT_ZENOSS_VERS = ">=2.5"
 PREV_ZENPACK_NAME = ""
 # STOP_REPLACEMENTS
